@@ -2,7 +2,7 @@
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary>よくあるタプル型を表します。</summary>
+    /// <summary>複数の要素を一括りにして扱うタプル型を表します。</summary>
     public class QiTuple : QiAnyValue
     {
         private QiTuple(QiValue value, string sig)

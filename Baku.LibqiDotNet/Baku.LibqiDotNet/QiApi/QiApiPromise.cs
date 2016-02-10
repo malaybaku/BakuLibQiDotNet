@@ -31,10 +31,11 @@ namespace Baku.LibqiDotNet.QiApi
 
         #endregion
 
-        internal static QiPromise Create(int asyncCallback) => new QiPromise(qi_promise_create(asyncCallback));
+        internal static QiPromise Create(bool asyncCallback) 
+            => new QiPromise(qi_promise_create(Convert.ToInt32(asyncCallback)));
 
-        internal static QiPromise CreateCancelable(int async, QiFutureCancel callback, IntPtr userdata)
-            => new QiPromise(qi_promise_cancelable_create(async, callback, userdata));
+        internal static QiPromise CreateCancelable(bool isAsync, QiFutureCancel callback, IntPtr userdata)
+            => new QiPromise(qi_promise_cancelable_create(Convert.ToInt32(isAsync), callback, userdata));
 
         internal static void Destroy(QiPromise promise) => qi_promise_destroy(promise.Handle);
 

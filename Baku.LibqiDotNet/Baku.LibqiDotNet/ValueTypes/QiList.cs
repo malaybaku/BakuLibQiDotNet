@@ -5,7 +5,8 @@ using System.Linq;
 namespace Baku.LibqiDotNet
 {
     /// <summary>可変な配列型を表します。配列は単調に伸びる処理だけが許可されています。</summary>
-    public class QiList : QiAnyValue
+    public class QiList<T> : QiAnyValue
+        where T : QiAnyValue
     {
         private QiList(QiValue value, string sig)
         {
@@ -17,8 +18,20 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; }
 
-        public static QiList Create<T>(IEnumerable<T> values, bool createDynamicList=false)
-            where T : QiAnyValue
+        public int Count => QiValue.Count;
+
+        public QiValue this[int i]
+        {
+            get { return this.QiValue[i]; }
+            set { this.QiValue[i] = value; }
+        }
+
+        /// <summary>
+        /// 列挙された<see cref="QiAnyValue"/>派生型から、それに対応したリストを生成します。
+        /// </summary>
+        /// <param name="values">何かしらの値の列挙</param>
+        /// <returns></returns>
+        public static QiList<T> Create(IEnumerable<T> values)
         {
             if (!values.Any())
             {
@@ -26,14 +39,10 @@ namespace Baku.LibqiDotNet
             }
 
             //リストは中身のシグネチャ揃ってないとアウト(ダイナミックリストの場合は例外)
-            string elemSig = QiSignatures.TypeDynamic;
-            if(!createDynamicList)
+            string elemSig = values.First().Signature;
+            if (values.Any(v => v.Signature != elemSig))
             {
-                elemSig = values.First().Signature;
-                if (values.Any(v => v.Signature != elemSig))
-                {
-                    throw new InvalidOperationException("values kind is not same");
-                }
+                throw new InvalidOperationException("values kind is not same");
             }
 
             string sig = QiSignatures.TypeListBegin + elemSig + QiSignatures.TypeListEnd;
@@ -43,19 +52,23 @@ namespace Baku.LibqiDotNet
             {
                 list.AddElement(v.QiValue);
             }
-            return new QiList(list, sig);
+
+            return new QiList<T>(list, sig);
         }
 
     }
 
+    /// <summary><see cref="QiList"/>を扱いやすくするための拡張メソッドを定義します。</summary>
     public static class QiListExtension
     {
-        public static QiList ToQiList<T>(this IEnumerable<T> values)
+        /// <summary>
+        /// IEnumerableを対応する<see cref="QiList"/>に変換します。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static QiList<T> ToQiList<T>(this IEnumerable<T> values)
             where T : QiAnyValue
-            => QiList.Create(values, false);
-
-        public static QiList ToDynamicQiList<T>(this IEnumerable<T> values)
-            where T : QiAnyValue
-            => QiList.Create(values, true);
+            => QiList<T>.Create(values);
     }
 }

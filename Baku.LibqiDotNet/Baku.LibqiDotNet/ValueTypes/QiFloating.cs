@@ -1,10 +1,13 @@
-﻿using System;
-
+﻿
 namespace Baku.LibqiDotNet
 {
-
+    /// <summary>4バイトデータからなる単精度浮動小数点数を表します。</summary>
     public class QiFloat : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiFloat(float value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeFloat);
@@ -15,6 +18,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeFloat;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public float Value
         {
             get { return (float)QiValue.Value; }
@@ -23,8 +27,13 @@ namespace Baku.LibqiDotNet
 
     }
 
+    /// <summary>8バイトデータからなる倍精度浮動小数点数を表します。</summary>
     public class QiDouble : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiDouble(double value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeFloat);
@@ -35,6 +44,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeDouble;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public double Value
         {
             get { return (double)QiValue.Value; }

@@ -5,6 +5,10 @@ namespace Baku.LibqiDotNet
     /// <summary>ブール型を表します。</summary>
     public class QiBool : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiBool(bool value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeBool);
@@ -15,7 +19,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeBool;
 
-        //TODO:boolってIOどうだったか確認してないよね確か。バイト割り当て数含めて要チェック
+        /// <summary>格納される値を取得、設定します。</summary>
         public bool Value
         {
             get { return (bool)QiValue.Value; }
@@ -27,6 +31,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号あり1バイト整数を表します。</summary>
     public class QiInt8 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiInt8 (sbyte value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeInt8);
@@ -37,6 +45,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeInt8;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public sbyte Value
         {
             get { return (sbyte)QiValue.Value; }
@@ -48,6 +57,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号あり2バイト整数を表します。</summary>
     public class QiInt16 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiInt16(short value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeInt16);
@@ -58,6 +71,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeInt16;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public short Value
         {
             get { return (short)QiValue.Value; }
@@ -69,6 +83,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号あり4バイト整数を表します。</summary>
     public class QiInt32 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiInt32(int value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeInt32);
@@ -79,6 +97,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeInt32;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public int Value
         {
             get { return (int)QiValue.Value; }
@@ -89,6 +108,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号あり8バイト整数を表します。</summary>
     public class QiInt64 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiInt64(long value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeInt64);
@@ -99,6 +122,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeInt64;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public long Value
         {
             get { return (long)QiValue.Value; }
@@ -110,6 +134,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号なし1バイト整数を表します。</summary>
     public class QiUInt8 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiUInt8(byte value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeUInt8);
@@ -120,6 +148,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeUInt8;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public byte Value
         {
             get { return (byte)QiValue.Value; }
@@ -131,6 +160,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号なし2バイト整数を表します。</summary>
     public class QiUInt16 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiUInt16(ushort value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeUInt16);
@@ -141,6 +174,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeUInt16;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public ushort Value
         {
             get { return (ushort)QiValue.Value; }
@@ -153,6 +187,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号なし4バイト整数を表します。</summary>
     public class QiUInt32 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiUInt32(uint value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeUInt32);
@@ -163,6 +201,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeUInt32;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public uint Value
         {
             get { return (uint)QiValue.Value; }
@@ -173,6 +212,10 @@ namespace Baku.LibqiDotNet
     /// <summary>符号なし8バイト整数を表します。</summary>
     public class QiUInt64 : QiAnyValue
     {
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiUInt64(ulong value)
         {
             QiValue = QiValue.Create(QiSignatures.TypeUInt64);
@@ -183,6 +226,7 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; } = QiSignatures.TypeUInt64;
 
+        /// <summary>格納される値を取得、設定します。</summary>
         public ulong Value
         {
             get { return (ulong)QiValue.Value; }

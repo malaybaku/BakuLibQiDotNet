@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Enums.cs" />
-    <Compile Include="Core\QiAnyValue.cs" />
+    <Compile Include="ValueTypes\QiAnyValue.cs" />
     <Compile Include="Core\QiApplication.cs" />
     <Compile Include="Core\QiFuture.cs" />
     <Compile Include="Core\QiMethodInfo.cs" />

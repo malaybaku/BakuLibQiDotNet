@@ -5,7 +5,9 @@ using System.Linq;
 namespace Baku.LibqiDotNet
 {
     /// <summary>連想配列(辞書)型を表します。</summary>
-    public class QiMap : QiAnyValue
+    public class QiMap<K, V> : QiAnyValue
+        where K : QiAnyValue
+        where V : QiAnyValue
     {
         public QiMap(QiValue value, string sig)
         {
@@ -17,9 +19,14 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; }
 
-        public static QiMap Create<K, V>(IEnumerable<KeyValuePair<K, V>> values)
-            where K : QiAnyValue
-            where V : QiAnyValue
+        //NOTE: 機構上値の型をVにするのがちょっと難しいので妥協
+        public QiValue this[K key]
+        {
+            get { return QiValue[key.QiValue]; }
+            set { QiValue[key.QiValue] = value; }
+        }
+
+        public static QiMap<K, V> Create(IEnumerable<KeyValuePair<K, V>> values)
         {
             if (!values.Any())
             {
@@ -36,7 +43,6 @@ namespace Baku.LibqiDotNet
                 throw new InvalidOperationException("key or values type is inconsistent");
             }
 
-
             string sig = QiSignatures.TypeMapBegin + ksig + vsig + QiSignatures.TypeMapEnd;
 
             var map = QiValue.Create(sig);
@@ -44,7 +50,7 @@ namespace Baku.LibqiDotNet
             {
                 map[pair.Key.QiValue] = pair.Value.QiValue;
             }
-            return new QiMap(map, sig);
+            return new QiMap<K, V>(map, sig);
         }
 
     }

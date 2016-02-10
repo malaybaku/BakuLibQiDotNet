@@ -18,19 +18,52 @@ namespace Baku.LibqiDotNet
 
         #region 基本処理
 
+
+        /// <summary>値の種類を取得します。</summary>
         public QiValueKind ValueKind => QiApiValue.GetKind(this);
 
+        /// <summary>値のシグネチャを取得します。</summary>
+        /// <param name="resolveDynamics">シグネチャの解決法(サンプル見た限り既定値の<see cref="0"/>で十分そう)</param>
+        /// <returns>値のシグネチャ</returns>
         public string GetSignature(int resolveDynamics = 0) => QiApiValue.GetSignature(this, resolveDynamics);
 
+        /// <summary>
+        /// (動作未確認)値を規定値に戻します。
+        /// </summary>
+        /// <param name="signature"></param>
         public void Reset(string signature) => QiApiValue.Reset(this, signature);
 
+        /// <summary>
+        /// 型情報を取得します。
+        /// </summary>
+        /// <returns>インスタンスに対応する型情報</returns>
         public QiType GetQiType() => QiApiValue.GetQiType(this);
 
+        /// <summary>インスタンスを破棄します。</summary>
         public void Destroy() => QiApiValue.Destroy(this);
+        /// <summary>
+        /// 値をコピーします。
+        /// </summary>
+        /// <returns>コピーされた値</returns>
         public QiValue Copy() => GetCopy(this);
 
+        /// <summary>
+        /// シグネチャを指定して値を初期化します。
+        /// </summary>
+        /// <param name="sig">値のシグネチャを表す文字列</param>
+        /// <returns>初期化された値</returns>
         public static QiValue Create(string sig) => QiApiValue.Create(sig);
+        /// <summary>
+        /// 値のコピーを生成します。
+        /// </summary>
+        /// <param name="src">生成元の値</param>
+        /// <returns>コピーされた値</returns>
         public static QiValue GetCopy(QiValue src) => QiApiValue.Copy(src);
+        /// <summary>
+        /// 指定した2つの値を入れ替えます。
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
         public static void Swap(QiValue v1, QiValue v2) => QiApiValue.Swap(v1, v2);
 
         #endregion
@@ -96,9 +129,26 @@ namespace Baku.LibqiDotNet
         public bool SetValue(QiValue v) => QiApiValue.SetDynamic(this, v);
         public bool SetValue(QiObject obj) => QiApiValue.SetObject(this, obj);
 
+        /// <summary>
+        /// Rawデータにバイナリを設定します。
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public bool SetValue(byte[] data, int size) => QiApiValue.SetRaw(this, data, size);
+
+        /// <summary>
+        /// Rawデータにバイナリを取得します。
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool SetValue(byte[] data) => SetValue(data, data.Length);
 
+        /// <summary>
+        /// リストに要素を追加します。
+        /// </summary>
+        /// <param name="value">追加する値</param>
+        /// <returns></returns>
         public bool AddElement(QiValue value)
         {
             if (ValueKind != QiValueKind.QiList)
@@ -108,6 +158,10 @@ namespace Baku.LibqiDotNet
             return QiApiValue.AddList(this, value);
         }
 
+        /// <summary>
+        /// 連想配列のキー一覧を取得します。
+        /// </summary>
+        /// <returns>キー一覧</returns>
         public QiValue GetKeys()
         {
             if (ValueKind != QiValueKind.QiMap)
@@ -117,6 +171,9 @@ namespace Baku.LibqiDotNet
             return QiApiValue.KeysMap(this);
         }
 
+        /// <summary>
+        /// リスト、連想配列、タプルの要素数を取得します。それ以外の値の場合0を返します。
+        /// </summary>
         public int Count
         {
             get
@@ -129,6 +186,11 @@ namespace Baku.LibqiDotNet
             }
         }
 
+        /// <summary>
+        /// リストまたはタプルにインデクスでアクセスします。境界チェックは行われません。
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public QiValue this[int index]
         {
             //TODO: Map型でキーが整数だった場合、とかどう思いますかね
@@ -160,6 +222,11 @@ namespace Baku.LibqiDotNet
             }
         }
 
+        /// <summary>
+        /// 連想配列にキー要素でアクセスします。キーが連想配列に含まれるかどうかはチェックされません。
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public QiValue this[QiValue key]
         {
             get

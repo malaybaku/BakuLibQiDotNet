@@ -35,8 +35,8 @@ namespace HelloWorld
             //Waitすることで接続処理が完了するのを確実に待機
             session.Connect("tcp://" + targetMachine).Wait();
 
-            Console.WriteLine($"Connected? {session.CheckIsConnected()}");
-            if(!session.CheckIsConnected())
+            Console.WriteLine($"Connected? {session.IsConnected}");
+            if(!session.IsConnected)
             {
                 Console.WriteLine("end program because there is no connection");
                 return;

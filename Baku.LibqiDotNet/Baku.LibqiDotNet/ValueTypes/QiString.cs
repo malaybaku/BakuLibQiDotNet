@@ -1,15 +1,13 @@
 ﻿
-
 namespace Baku.LibqiDotNet
 {
     /// <summary>文字列型を表します。</summary>
     public class QiString : QiAnyValue
     {
-        public QiString(QiValue value)
-        {
-            QiValue = value;
-        }
-
+        /// <summary>
+        /// 格納する値を指定してインスタンスを初期化します。
+        /// </summary>
+        /// <param name="value">格納する値</param>
         public QiString(string value)
         {
             var val = QiValue.Create(QiSignatures.TypeString);
