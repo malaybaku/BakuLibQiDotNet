@@ -12,7 +12,7 @@ namespace Baku.LibqiDotNet
         {
             Handle = handle;
         }
-        public IntPtr Handle { get; }
+        internal IntPtr Handle { get; }
 
         public QiTypeKind TypeKind => QiApiType.GetKind(this);
 

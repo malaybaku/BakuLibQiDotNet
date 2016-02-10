@@ -14,7 +14,7 @@ namespace Baku.LibqiDotNet
             Handle = handle;
         }
 
-        public IntPtr Handle { get; }
+        internal IntPtr Handle { get; }
 
         #region 基本処理
 

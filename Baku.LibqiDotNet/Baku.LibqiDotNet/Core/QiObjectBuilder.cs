@@ -15,7 +15,7 @@ namespace Baku.LibqiDotNet
             Handle = handle;
         }
 
-        public IntPtr Handle { get; }
+        internal IntPtr Handle { get; }
 
         public void Destroy() => QiApiObjectBuilder.DestroyBuilder(this);
 

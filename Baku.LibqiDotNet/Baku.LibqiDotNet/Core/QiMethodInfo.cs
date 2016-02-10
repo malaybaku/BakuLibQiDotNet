@@ -6,7 +6,7 @@ namespace Baku.LibqiDotNet
     /// <summary>Qiで受け渡されるメソッド情報を表します。</summary>
     public class QiMethodInfo
     {
-        public QiMethodInfo(QiValue mInfo)
+        internal QiMethodInfo(QiValue mInfo)
         {
             UID = (long)mInfo[0].Value;
             ReturnValueSignature = (string)mInfo[1].Value;
@@ -21,38 +21,40 @@ namespace Baku.LibqiDotNet
             ReturnValueDescription = (string)mInfo[6].Value;
         }
 
-        /// <summary>メソッドに割り当てられたID</summary>
+        /// <summary>メソッドに割り当てられたIDを取得します。</summary>
         public long UID { get; }
 
-        /// <summary>戻り値の型に対応するシグネチャ文字列</summary>
+        /// <summary>戻り値の型に対応するシグネチャ文字列を取得します。</summary>
         public string ReturnValueSignature { get; }
         
-        /// <summary>メソッド名</summary>
+        /// <summary>メソッド名を取得します。</summary>
         public string Name { get; }
 
-        /// <summary>引数の型に対応するシグネチャ文字列。必ず最上位はタプルになっている</summary>
+        /// <summary>引数の型に対応するシグネチャ文字列を取得します。引数はタプルで一括りになっています。</summary>
         public string ArgumentSignature { get; }
 
-        /// <summary>メソッドを簡単に説明したプレーンテキスト文字列</summary>
+        /// <summary>メソッドの役割についての要約文を取得します。</summary>
         public string Description { get; }
 
-        /// <summary>戻り値の意味を簡単に説明したプレーンテキスト文字列</summary>
+        /// <summary>戻り値の意味についての要約文を取得します。</summary>
         public string ReturnValueDescription { get; }
 
         /// <summary>引数のインフォメーション一覧(ロジック的には割とどうでもいい)</summary>
         public IReadOnlyList<QiMethodArgumentInfo> ArgumentsInfo { get; }
     }
 
-    /// <summary>引数の名前と意味の情報を表します。シグネチャを持つわけではないことに注意してください。</summary>
+    /// <summary>Qiの関数引数に関する情報を表します。</summary>
     public class QiMethodArgumentInfo
     {
-        public QiMethodArgumentInfo(QiValue argInfo)
+        internal QiMethodArgumentInfo(QiValue argInfo)
         {
             Name = (string)argInfo[0].Value;
             Description = (string)argInfo[1].Value;
         }
 
+        /// <summary>引数の名前を取得します。</summary>
         public string Name { get; }
+        /// <summary>引数の意味について要約文を取得します。</summary>
         public string Description { get; }
     }
 

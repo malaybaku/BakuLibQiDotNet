@@ -11,6 +11,10 @@ namespace Baku.LibqiDotNet
             Handle = handle;
         }
 
+        private QiServiceInfo _serviceInfo = null;
+        public QiServiceInfo ServiceInfo
+            => _serviceInfo ?? (_serviceInfo = new QiServiceInfo(this));
+
         public IntPtr Handle { get; }
 
         public void Destroy() => QiApiObject.Destroy(this);

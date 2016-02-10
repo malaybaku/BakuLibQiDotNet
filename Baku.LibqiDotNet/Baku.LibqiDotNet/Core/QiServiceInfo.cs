@@ -7,7 +7,7 @@ namespace Baku.LibqiDotNet
     /// <summary>サービスに含まれるメソッド情報などの一覧を表します。</summary>
     public class QiServiceInfo
     {
-        public QiServiceInfo(QiObject qiObj)
+        internal QiServiceInfo(QiObject qiObj)
         {
             var mObj = qiObj.GetMetaObject();
             //観察事実としてmObjは4要素タプルであり、第0要素にメソッド一覧が入ってる
