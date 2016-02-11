@@ -15,6 +15,8 @@ namespace Baku.LibqiDotNet
 
         public override string Signature { get; }
 
+        public int Count => QiValue.Count;
+
         public static QiTuple Create(params QiAnyValue[] values)
         {
             string sig = 
@@ -39,7 +41,27 @@ namespace Baku.LibqiDotNet
             return new QiTuple(tuple, sig);
         }
 
-        
+        /// <summary>
+        /// 全ての要素が<see cref="QiDynamic"/>であるようなタプルを生成します。
+        /// このようなタプルは<see cref="QiObject.Call"/>の引数として渡す処理に適しています。
+        /// </summary>
+        /// <param name="values">タプルの要素</param>
+        /// <returns>生成されたタプル</returns>
+        public static QiTuple CreateDynamic(params QiAnyValue[] values)
+        {
+            string sig = QiSignatures.TypeTupleBegin +
+                string.Join("", values.Select(_ => QiSignatures.TypeDynamic)) +
+                QiSignatures.TypeTupleEnd;
+
+            var tuple = QiValue.Create(sig);
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                tuple[i] = values[i].QiValue;
+            }
+            return new QiTuple(tuple, sig);
+
+        }
 
     }
 }

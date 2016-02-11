@@ -77,12 +77,19 @@ namespace Baku.LibqiDotNet
         /// <param name="methodName">関数名</param>
         /// <param name="args">関数の引数</param>
         /// <returns>結果に対する予約</returns>
-        public QiFuture Call(string methodName, params QiAnyValue[] args)
+        public QiValue Call(string methodName, params QiAnyValue[] args)
         {
-            var argTuple = QiTuple.Create(args);
-            string signature = methodName + QiSignatures.MethodNameSuffix + argTuple.Signature;
+            if(!CheckMethodExists(methodName))
+            {
+                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
+            }
 
-            return CallDirect(signature, argTuple.QiValue);
+            return CallDirect(
+                GetMethodSignature(methodName, args),
+                QiTuple.CreateDynamic(args).QiValue
+                )
+                .Wait()
+                .GetValue();
         }
 
         /// <summary>
@@ -93,33 +100,62 @@ namespace Baku.LibqiDotNet
         /// <returns>非同期呼び出しの結果確認に使うID</returns>
         public int Post(string methodName, params QiAnyValue[] args)
         {
-            var argTuple = QiTuple.Create(args);
-            string signature = methodName + QiSignatures.MethodNameSuffix + argTuple.Signature;
+            if (!CheckMethodExists(methodName))
+            {
+                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
+            }
 
-            return PostDirect(signature, argTuple.QiValue);
+            return PostDirect(
+                GetMethodSignature(methodName, args), 
+                QiTuple.CreateDynamic(args).QiValue
+                );
         }
 
+        /// <summary>
+        /// メソッド名を指定して、そのメソッド名に対応した引数シグネチャの一覧を返します。
+        /// 存在しないメソッドを指定した場合は空の配列を返します。
+        /// </summary>
+        /// <param name="methodName">メソッド名</param>
+        /// <returns>メソッドが取りうるシグネチャ一覧</returns>
+        public string[] GetMethodSignatures(string methodName)
+            => ServiceInfo
+            .MethodInfos
+            .Values
+            .Where(mi => mi.Name == methodName)
+            .Select(mi => mi.ArgumentSignature)
+            .ToArray();
+
+
+        private bool CheckMethodExists(string methodName)
+            => ServiceInfo.MethodInfos.Values.Any(mi => mi.Name == methodName);
 
         private string GetMethodSignature(string methodName, QiAnyValue[] args)
         {
             var targets = ServiceInfo.MethodInfos.Values.Where(mi => mi.Name == methodName);
-            if (!targets.Any())
-            {
-                throw new InvalidOperationException($"Method {methodName} is not defined in this service");
-            }
-
+            //基本ケース: オーバーロード無い場合はチェック入れない(結果的にシグネチャ間違いあるかもしれないが無視)
             if (targets.Count() == 1)
             {
-                return targets.First().ArgumentSignature;
+                return methodName + QiSignatures.MethodNameSuffix + targets.First().ArgumentSignature;
             }
 
-            //オーバーロードがある場合引数リストに準拠してそれっぽく選ぶ…のだけどどう実装しようかな。
-
-            throw new NotImplementedException(
-                $"Failed to call: not implemented for the multi overload case, {methodName}"
+            //オーバーロードがある場合は引数リストと見比べて適合するのがあるか判定
+            var fittedMethod = targets.FirstOrDefault(t =>
+                QiSignatureValidityChecker.CheckValidity(t.ArgumentSignature, args)
                 );
 
+            if (fittedMethod != null)
+            {
+                return methodName + QiSignatures.MethodNameSuffix + fittedMethod.ArgumentSignature;
+            }
+
+            throw new InvalidOperationException(
+                $"Could not find proper overload for {methodName}, " +
+                $"args: {QiTuple.Create(args).Signature}, " +
+                $"existing method signatures: {string.Join(",", targets.Select(t => t.ArgumentSignature))}"
+                );
         }
+
+
     }
 
     public delegate QiValue QiObjectMethod(string completeSignature, QiValue msg, IntPtr userdata);

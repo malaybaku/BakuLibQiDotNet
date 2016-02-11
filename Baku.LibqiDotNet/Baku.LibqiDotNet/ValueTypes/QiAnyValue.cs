@@ -1,4 +1,5 @@
-﻿namespace Baku.LibqiDotNet
+﻿
+namespace Baku.LibqiDotNet
 {
     /// <summary>Qiの値型の基底</summary>
     public abstract class QiAnyValue
@@ -12,5 +13,6 @@
         /// <summary>値の情報をデバッグ用文字列として取得します。</summary>
         /// <returns>値をあらわすデバッグ用の文字列</returns>
         public string Dump() => QiValue.Dump();
+
     }
 }
