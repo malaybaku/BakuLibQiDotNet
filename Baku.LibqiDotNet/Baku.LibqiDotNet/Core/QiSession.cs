@@ -45,14 +45,22 @@ namespace Baku.LibqiDotNet
         /// サービス名の一覧を取得します。
         /// </summary>
         /// <returns>サービス一覧</returns>
-        public QiFuture GetServices() => QiApiSession.GetServices(this);
+        public QiFuture GetServices()
+        {
+            ThrowIfNotConnected();
+            return QiApiSession.GetServices(this);
+        }
 
         /// <summary>
         /// サービス名を指定してサービスを取得します。
         /// </summary>
         /// <param name="name">サービス名</param>
         /// <returns>サービス名に対応した<see cref="QiObject"/>の取得予約</returns>
-        public QiFuture GetService(string name) => QiApiSession.GetService(this, name);
+        public QiFuture GetService(string name)
+        {
+            ThrowIfNotConnected();
+            return QiApiSession.GetService(this, name);
+        }
 
         /// <summary>
         /// セッションを閉じます。
@@ -62,7 +70,6 @@ namespace Baku.LibqiDotNet
 
         /// <summary>セッションを破棄します。</summary>
         public void Destroy() => QiApiSession.Destroy(this);
-
 
         /// <summary>
         /// (動作未確認)セッションに対応したURLを取得します。
@@ -84,7 +91,11 @@ namespace Baku.LibqiDotNet
         /// <param name="address"></param>
         /// <param name="standAlone"></param>
         /// <returns></returns>
-        public QiFuture Listen(string address, bool standAlone = false) => QiApiSession.Listen(this, address, standAlone);
+        public QiFuture Listen(string address, bool standAlone = false)
+        {
+            ThrowIfNotConnected();
+            return QiApiSession.Listen(this, address, standAlone);
+        }
 
         /// <summary>
         /// サービスに名前を付けて登録します。
@@ -92,14 +103,22 @@ namespace Baku.LibqiDotNet
         /// <param name="name">サービス名</param>
         /// <param name="obj">サービスの実体</param>
         /// <returns>未確認(たぶんサービスのID)</returns>
-        public QiFuture RegisterService(string name, QiObject obj) => QiApiSession.RegisterService(this, name, obj);
+        public QiFuture RegisterService(string name, QiObject obj)
+        {
+            ThrowIfNotConnected();
+            return QiApiSession.RegisterService(this, name, obj);
+        }
 
         /// <summary>
         /// IDを指定してサービスを登録解除します。
         /// </summary>
         /// <param name="idx">解除の対象となるサービスのID</param>
         /// <returns>未確認</returns>
-        public QiFuture UnregisterService(uint idx) => QiApiSession.UnregisterService(this, idx);
+        public QiFuture UnregisterService(uint idx)
+        {
+            ThrowIfNotConnected();
+            return QiApiSession.UnregisterService(this, idx);
+        }
 
         /// <summary>
         /// セッションのエンドポイントを取得します。
@@ -107,6 +126,13 @@ namespace Baku.LibqiDotNet
         /// <returns>エンドポイント情報</returns>
         public QiValue GetEndpoints() => QiApiSession.GetEndpoints(this);
 
+        private void ThrowIfNotConnected()
+        {
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("Connection is not established");
+            }
+        }
     }
 
 
