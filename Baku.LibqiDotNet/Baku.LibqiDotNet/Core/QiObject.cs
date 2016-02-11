@@ -1,5 +1,6 @@
 ﻿using System;
 using Baku.LibqiDotNet.QiApi;
+using System.Linq;
 
 namespace Baku.LibqiDotNet
 {
@@ -98,6 +99,27 @@ namespace Baku.LibqiDotNet
             return PostDirect(signature, argTuple.QiValue);
         }
 
+
+        private string GetMethodSignature(string methodName, QiAnyValue[] args)
+        {
+            var targets = ServiceInfo.MethodInfos.Values.Where(mi => mi.Name == methodName);
+            if (!targets.Any())
+            {
+                throw new InvalidOperationException($"Method {methodName} is not defined in this service");
+            }
+
+            if (targets.Count() == 1)
+            {
+                return targets.First().ArgumentSignature;
+            }
+
+            //オーバーロードがある場合引数リストに準拠してそれっぽく選ぶ…のだけどどう実装しようかな。
+
+            throw new NotImplementedException(
+                $"Failed to call: not implemented for the multi overload case, {methodName}"
+                );
+
+        }
     }
 
     public delegate QiValue QiObjectMethod(string completeSignature, QiValue msg, IntPtr userdata);
