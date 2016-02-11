@@ -39,7 +39,6 @@ Windows 10/Visual Studio 2015 Community
 
 ```
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -51,46 +50,37 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            //作業ディレクトリだけでなく"dlls"というフォルダのライブラリも
-            //実行中に参照できるよう設定を変更
-            PathModifier.AddEnvironmentPaths(
-                new string[]
-                {
-                    Path.Combine(Environment.CurrentDirectory, "dlls")
-                });
+            //作業ディレクトリだけでなく"dlls"というフォルダのライブラリも実行中に参照できるよう設定を変更
+            PathModifier.AddEnvironmentPaths(Path.Combine(Environment.CurrentDirectory, "dlls"));
 
+            //HelloWorldの対象とするマシンのアドレスをIPとポート(ポートは通常9559)で指定
+            string address = "tcp://127.0.0.1:9559";
 
-            //ハローワールドしたいマシンのIPとポート(ポートは通常9559)で指定
-            string targetIp = "127.0.0.1:9559";
+            var app = QiApplication.Create();
+            var session = QiSession.Create(address);
 
-            SayHelloWorld(targetIp);
-        }
-
-        static void SayHelloWorld(string targetMachine = "")
-        {
-            var app = QiApplication.Create(new string[] { "HelloWorld.exe", "--qi-url", targetMachine });
-            var session = QiSession.Create();
-
-            //Waitすることで接続処理が完了するのを確実に待機
-            session.Connect("tcp://" + targetMachine).Wait();
-
-            Console.WriteLine($"Connected? {session.CheckIsConnected()}");
+            Console.WriteLine($"Connected? {session.IsConnected}");
+            if (!session.IsConnected)
+            {
+                Console.WriteLine("end program because there is no connection");
+                return;
+            }
 
             //最も基本的なモジュールの一つとして合成音声のモジュールを取得
-            var tts = session
-                .GetService("ALTextToSpeech")
-                .Wait()
-                .GetObject();
+            var tts = session.GetService("ALTextToSpeech").GetObject();
 
             //"say"関数に文字列引数を指定して実行し、完了を待機
             tts.Call("say", new QiString("this is test")).Wait();
 
+            session.Close();
+            session.Destroy();
+            app.Destroy();
         }
     }
 
     static class PathModifier
     {
-        public static void AddEnvironmentPaths(IEnumerable<string> paths)
+        public static void AddEnvironmentPaths(params string[] paths)
         {
             var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? "" };
 
@@ -99,7 +89,6 @@ namespace HelloWorld
             Environment.SetEnvironmentVariable("PATH", newPath);
         }
     }
-
 }
 ```
 
@@ -107,7 +96,7 @@ namespace HelloWorld
 
 ## Caution
 
-MIT Licenseにあるように免責は宣言しているのでご留意下さい。とくに外部依存ライブラリの解決関係をマジメに調査していないため、複雑な操作に挑戦するとクラッシュする可能性があります。
+Licenseにも明記していますが免責は宣言しているのでご留意下さい。とくに外部依存ライブラリの解決関係をマジメに調査していないため、複雑な操作に挑戦するとクラッシュする可能性があります。細かい条件まで負えていませんが、異常系の一部のコードでは```AccessViolationException```が出ることも確認しています。
 
 
 
