@@ -23,6 +23,7 @@ namespace Baku.LibqiDotNet
             QiApiFuture.Wait(this, timeout);
             return this;
         }
+
         /// <summary>
         /// 無期限に待機します。
         /// </summary>
@@ -35,6 +36,7 @@ namespace Baku.LibqiDotNet
         /// <param name="timeout">待機時間の上限(ミリ秒)</param>
         /// <returns>エラーの有無</returns>
         public bool CheckHasError(int timeout) => QiApiFuture.HasError(this, timeout);
+
         /// <summary>
         /// エラーが起きたかどうかを無期限待機ののち確認します。
         /// </summary>
@@ -47,6 +49,7 @@ namespace Baku.LibqiDotNet
         /// <param name="timeout">待機時間の上限(ミリ秒)</param>
         /// <returns>値の所持の有無</returns>
         public bool CheckHasValue(int timeout) => QiApiFuture.HasValue(this, timeout);
+
         /// <summary>
         /// 値を持っているかどうかを無期限待機ののち確認します。
         /// </summary>
@@ -54,7 +57,7 @@ namespace Baku.LibqiDotNet
         public bool CheckHasValue() => CheckHasValue(InfiniteTimeout);
 
         /// <summary>結果取得をキャンセルします。</summary>
-        public void Cancel() => QiApiFuture.IsCanceled(this);
+        public void Cancel() => QiApiFuture.Cancel(this);
 
         /// <summary>インスタンスを破棄します。</summary>
         public void Destroy() => QiApiFuture.Destroy(this);

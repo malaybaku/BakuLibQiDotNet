@@ -58,6 +58,20 @@ namespace Baku.LibqiDotNet
 
     }
 
+    /// <summary><see cref="QiList{T}"/>のファクトリメソッドを定義します。</summary>
+    public static class QiList
+    {
+        /// <summary>
+        /// 列挙された<see cref="QiAnyValue"/>派生型から、それに対応したリストを生成します。
+        /// </summary>
+        /// <param name="values">何かしらの値の列挙</param>
+        /// <returns></returns>
+        public static QiList<T> Create<T>(IEnumerable<T> values)
+            where T : QiAnyValue
+            => QiList<T>.Create(values);
+    }
+
+
     /// <summary><see cref="QiList"/>を扱いやすくするための拡張メソッドを定義します。</summary>
     public static class QiListExtension
     {
@@ -71,4 +85,5 @@ namespace Baku.LibqiDotNet
             where T : QiAnyValue
             => QiList<T>.Create(values);
     }
+
 }

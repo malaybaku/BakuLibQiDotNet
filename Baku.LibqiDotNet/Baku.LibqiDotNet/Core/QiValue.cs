@@ -113,7 +113,28 @@ namespace Baku.LibqiDotNet
                 }
                 throw new NotImplementedException();
             }
+            set
+            {
+
+
+            }
         }
+
+        #region 関数名によって型を分けるケース
+        public bool GetBool() => Convert.ToBoolean(GetValue(0L));
+        public sbyte GetSByte() => Convert.ToSByte(GetValue(0L));
+        public short GetInt16() => Convert.ToInt16(GetValue(0L));
+        public int GetInt32() => Convert.ToInt32(GetValue(0L));
+        public long GetInt64() => Convert.ToInt64(GetValue(0L));
+        public byte GetByte() => Convert.ToByte(GetValue(0UL));
+        public ushort GetUInt16() => Convert.ToUInt16(GetValue(0UL));
+        public uint GetUInt32() => Convert.ToUInt32(GetValue(0UL));
+        public ulong GetUInt64() => Convert.ToUInt64(GetValue(0UL));
+        public string GetString() => QiApiValue.GetString(this);
+        public QiValue GetDynamic() => QiApiValue.GetDynamic(this);
+        public QiObject GetObject() => QiApiValue.GetObject(this);
+        #endregion
+
 
         public long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(this, defaultValue);
         public ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(this, defaultValue);
@@ -245,6 +266,49 @@ namespace Baku.LibqiDotNet
                 }
                 QiApiValue.SetMap(this, key, value);
             }
+        }
+
+        /// <summary>
+        /// 指定された型のデータの取得を試みます。
+        /// 失敗した場合は<see cref="ArgumentException"/>が送出されます。
+        /// </summary>
+        /// <typeparam name="T">取り出したい値の型</typeparam>
+        /// <returns>成功した場合その値の型</returns>
+        /// <exception cref="ArgumentException"/>
+        public T TryGet<T>()
+        {
+            var t = typeof(T);
+            switch(Type.GetTypeCode(t))
+            {
+                case TypeCode.Boolean:
+                    return (T)Convert.ChangeType(GetBool(), t);
+                case TypeCode.SByte:
+                    return (T)Convert.ChangeType(GetSByte(), t);
+                case TypeCode.Int16:
+                    return (T)Convert.ChangeType(GetInt16(), t);
+                case TypeCode.Int32:
+                    return (T)Convert.ChangeType(GetInt32(), t);
+                case TypeCode.Int64:
+                    return (T)Convert.ChangeType(GetInt64(), t);
+                case TypeCode.Byte:
+                    return (T)Convert.ChangeType(GetByte(), t);
+                case TypeCode.UInt16:
+                    return (T)Convert.ChangeType(GetUInt16(), t);
+                case TypeCode.UInt32:
+                    return (T)Convert.ChangeType(GetUInt32(), t);
+                case TypeCode.UInt64:
+                    return (T)Convert.ChangeType(GetUInt64(), t);
+                case TypeCode.String:
+                    return (T)Convert.ChangeType(GetString(), t);
+                default:
+                    break;
+            }
+            //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートしますかね。
+
+
+
+            throw new ArgumentException("Given type parameter is not supported currently");
+
         }
 
 
