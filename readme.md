@@ -69,8 +69,8 @@ namespace HelloWorld
             //最も基本的なモジュールの一つとして合成音声のモジュールを取得
             var tts = session.GetService("ALTextToSpeech").GetObject();
 
-            //"say"関数に文字列引数を指定して実行し、完了を待機
-            tts.Call("say", new QiString("this is test")).Wait();
+            //"say"関数に文字列引数を指定して実行
+            tts.Call("say", new QiString("this is test"));
 
             session.Close();
             session.Destroy();
