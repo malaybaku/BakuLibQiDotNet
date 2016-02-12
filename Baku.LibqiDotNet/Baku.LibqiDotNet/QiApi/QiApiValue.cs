@@ -135,10 +135,10 @@ namespace Baku.LibqiDotNet.QiApi
 
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int qi_value_raw_set(IntPtr container, [In]byte[] data, int size);
+        private static extern int qi_value_raw_set(IntPtr container, IntPtr data, int size);
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int qi_value_raw_get(IntPtr container, out byte[] data, out int size);
+        private static extern int qi_value_raw_get(IntPtr container, ref IntPtr result, ref int size);
 
         #endregion
 
@@ -277,21 +277,37 @@ namespace Baku.LibqiDotNet.QiApi
             => new QiValue(qi_value_dynamic_get(container.Handle));
 
 
-        internal static bool SetRaw(QiValue v, byte[] data, int size)
-            => Convert.ToBoolean(qi_value_raw_set(v.Handle, data, size));
-
         internal static bool SetRaw(QiValue v, byte[] data)
-            => SetRaw(v, data, data.Length);
+        {
+            var dataPtr = Marshal.AllocHGlobal(data.Length);
+
+            Marshal.Copy(data, 0, dataPtr, data.Length);
+            var result = Convert.ToBoolean(qi_value_raw_set(v.Handle, dataPtr, data.Length));
+            Marshal.FreeHGlobal(dataPtr);
+
+            return result;
+        }
 
         internal static byte[] GetRaw(QiValue v)
         {
-            byte[] result;
-            int size;
+            IntPtr data = IntPtr.Zero;
+            int size = 0;
 
-            return (qi_value_raw_get(v.Handle, out result, out size) != 0) ?
-                result :
-                new byte[0];
-
+            int response = qi_value_raw_get(v.Handle, ref data, ref size);
+            //冗長だけど念のためサイズも確認
+            if(response > 0 && size > 0)
+            {
+                byte[] result = new byte[size];
+                Marshal.Copy(data, result, 0, size);
+                //(少なくとも自作実装では)元データのポインタを貰う想定なので解放しない
+                //Marshal.FreeHGlobal(data);
+                return result;
+            }
+            else
+            {
+                Marshal.FreeHGlobal(data);
+                return new byte[0];
+            }
         }
 
         #endregion

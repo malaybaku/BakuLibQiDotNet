@@ -113,15 +113,11 @@ namespace Baku.LibqiDotNet
                 }
                 throw new NotImplementedException();
             }
-            set
-            {
-
-
-            }
         }
 
-        #region 関数名によって型を分けるケース
+        #region 関数名によって型を区別したいときの為に。
         public bool GetBool() => Convert.ToBoolean(GetValue(0L));
+
         public sbyte GetSByte() => Convert.ToSByte(GetValue(0L));
         public short GetInt16() => Convert.ToInt16(GetValue(0L));
         public int GetInt32() => Convert.ToInt32(GetValue(0L));
@@ -130,11 +126,15 @@ namespace Baku.LibqiDotNet
         public ushort GetUInt16() => Convert.ToUInt16(GetValue(0UL));
         public uint GetUInt32() => Convert.ToUInt32(GetValue(0UL));
         public ulong GetUInt64() => Convert.ToUInt64(GetValue(0UL));
+
+        public float GetFloat() => QiApiValue.GetFloatWithDefault(this, 0.0f);
+        public double GetDouble() => QiApiValue.GetDoubleWithDefault(this, 0.0);
+
         public string GetString() => QiApiValue.GetString(this);
+        public byte[] GetRaw() => QiApiValue.GetRaw(this);
         public QiValue GetDynamic() => QiApiValue.GetDynamic(this);
         public QiObject GetObject() => QiApiValue.GetObject(this);
         #endregion
-
 
         public long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(this, defaultValue);
         public ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(this, defaultValue);
@@ -156,14 +156,7 @@ namespace Baku.LibqiDotNet
         /// <param name="data"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public bool SetValue(byte[] data, int size) => QiApiValue.SetRaw(this, data, size);
-
-        /// <summary>
-        /// Rawデータにバイナリを取得します。
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public bool SetValue(byte[] data) => SetValue(data, data.Length);
+        public bool SetValue(byte[] data) => QiApiValue.SetRaw(this, data);
 
         /// <summary>
         /// リストに要素を追加します。
@@ -392,8 +385,8 @@ namespace Baku.LibqiDotNet
                 return result.ToString();
             }
 
-            //ポインタとかは再帰してもアレなので。
-            return kind.ToString();
+            //ポインタとかバイナリは適切な表示法が特に無いので種類名だけ表示
+            return indent + kind.ToString();
         }
     }
 

@@ -21,7 +21,7 @@ namespace Baku.LibqiDotNet
 
         public string Value
         {
-            get { return (string)QiValue.Value; }
+            get { return QiValue.GetString(); }
             set { QiValue.SetValue(value); }
         }
 
