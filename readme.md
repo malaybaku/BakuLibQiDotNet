@@ -2,11 +2,11 @@
 
 Baku/獏(ばく)
 
-2016/Feb/7
+2016/Feb/12
 
 ## About
 
-Aldebaran社が公開しているメッセージングライブラリ```libqi```を.NETから使えるようにするためのラッパーライブラリです。Aldebaranのlibqiライブラリ群については下記を参照ください。
+Aldebaran社が公開しているメッセージングフレームワーク```libqi```を.NETから使えるようにするためのラッパーライブラリです。Aldebaranのlibqiライブラリ群については下記等を参照ください。
 
 - [libqi](https://github.com/aldebaran/libqi)
 - [libqi-capi](https://github.com/aldebaran/libqi-capi)
@@ -14,17 +14,26 @@ Aldebaran社が公開しているメッセージングライブラリ```libqi```
 
 ## Environment
 
-Windows 10/Visual Studio 2015 Community
+本ライブラリはWindows 10/Visual Studio 2015 Communityで開発されています。ターゲットプラットフォーム32bitでのみ動作します。
 
-現時点ではWindowsアプリケーションのみをターゲットとしているため動作保証は.NET Framework 4.5.2に対してのみ行っています。
+現時点ではWindowsアプリケーションのみをターゲットとしており、動作保証は.NET Framework 4.5.2に対してのみ行っています。
 
-うまく移植したらUnityとかMac/Linux環境でも使いまわせるかもしれません。
+うまく移植したらUnityEngineとかMac/Linux環境でも使いまわせるかもしれません。
 
 ## Library Files Preparation
 
-本プロジェクトはあくまでラッパーでありラップ元のライブラリ("qic.dll"を含むライブラリ群)は同梱していません。
+本プロジェクトはあくまでラッパーでありラップ元のライブラリ("qic.dll"を含むライブラリ群)は同梱していません。次のいずれかの手順を踏んでライブラリを手に入れて下さい。
 
-手順は細かく書きませんが次のような手順を踏んでライブラリを手に入れて下さい。
+#### 推奨する方法
+
+本ラッパー用にビルドしたライブラリを使う方法です。ラップ元である[libqi-capi](https://github.com/aldebaran/libqi-capi)の一部機能が2016年2月時点で実装されていなかったため、不足していた機能を補完してビルドを行ったものを配布しています。下記の手順で入手、配置してください。
+
+1. [Google Drive](https://drive.google.com/folderview?id=0BzVgwIMLJboJeHI1N2pwTlc4ZlE&usp=sharing)にライブラリ群を固めたzipがあるのでダウンロードして解凍
+3. プログラムの実行ファイルディレクトリに```dlls```ディレクトリを作り、解答した中身のライブラリを全てその下にペースト
+
+#### 推奨しない方法
+
+Google Driveからライブラリを拾うのに抵抗ある方のために古いほうの手順を記載しています。この方法で入手したライブラリでもほぼ全ての機能が使えますが、バイト配列型のデータを読み書き出来ないことに注意してください。
 
 1. PythonのNaoqi SDKをアルデバランの公式サイトから入手し、インストールする
 2. インストールするとPythonのパッケージのディレクトリにコア相当ライブラリ(らしい)"qi.dll"や"qic.dll"とboostのdllが配置されるハズなので、それらを全部コピー
