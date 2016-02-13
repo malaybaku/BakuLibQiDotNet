@@ -201,7 +201,7 @@ namespace Baku.LibqiDotNet
             throw new InvalidOperationException(
                 $"Could not find proper overload for {methodName}, " +
                 $"args: {QiTuple.Create(args).Signature}, " +
-                $"existing method signatures: {string.Join(",", targets.Select(t => t.ArgumentSignature))}"
+                $"existing method signatures: {string.Join(",", targets.Select(t => t.ArgumentSignature).ToArray())}"
                 );
         }
 

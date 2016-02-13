@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Baku.LibqiDotNet.Utils;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Baku.LibqiDotNet
@@ -14,9 +15,10 @@ namespace Baku.LibqiDotNet
             ArgumentSignature = (string)mInfo[3].Value;
             Description = (string)mInfo[4].Value;
 
-            ArgumentsInfo = Enumerable.Range(0, mInfo[5].Count)
+            ArgumentsInfo = new ReadOnlyList<QiMethodArgumentInfo>(
+                Enumerable.Range(0, mInfo[5].Count)
                 .Select(i => new QiMethodArgumentInfo(mInfo[5][i]))
-                .ToList();
+                .ToList());
 
             ReturnValueDescription = (string)mInfo[6].Value;
         }
@@ -40,7 +42,7 @@ namespace Baku.LibqiDotNet
         public string ReturnValueDescription { get; }
 
         /// <summary>引数のインフォメーション一覧(ロジック的には割とどうでもいい)</summary>
-        public IReadOnlyList<QiMethodArgumentInfo> ArgumentsInfo { get; }
+        public ReadOnlyList<QiMethodArgumentInfo> ArgumentsInfo { get; }
     }
 
     /// <summary>Qiの関数引数に関する情報を表します。</summary>

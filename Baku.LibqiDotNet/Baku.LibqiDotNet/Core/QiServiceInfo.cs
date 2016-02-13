@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Baku.LibqiDotNet.Utils;
 
 namespace Baku.LibqiDotNet
 {
@@ -18,19 +18,20 @@ namespace Baku.LibqiDotNet
 
             var qKeys = mObj[0].GetKeys();
 
-            MethodInfos = Enumerable
+            MethodInfos = new ReadOnlyDictionary<long, QiMethodInfo>(
+                Enumerable
                 .Range(0, qKeys.Count)
                 .Select(i => qKeys[i])
                 .ToDictionary(
                     k => (long)k.Value,
                     k => new QiMethodInfo(mObj[0][k])
-                );
+                ));
 
             Description = (string)mObj[3].Value;
         }
 
         /// <summary>サービスに含まれるメソッドの一覧</summary>
-        public IReadOnlyDictionary<long, QiMethodInfo> MethodInfos { get; }
+        public ReadOnlyDictionary<long, QiMethodInfo> MethodInfos { get; }
 
         /// <summary>サービスの機能について簡単に説明したプレーンテキスト文字列</summary>
         public string Description { get; }

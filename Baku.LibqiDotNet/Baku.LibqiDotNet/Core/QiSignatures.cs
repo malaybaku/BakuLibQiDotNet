@@ -64,7 +64,7 @@ namespace Baku.LibqiDotNet
         public static bool CheckValidity(string signature, QiAnyValue[] args)
             => CheckValiditySubroutine(
                 signature.Substring(1, signature.Length - 2),
-                string.Concat(args.Select(a => a.Signature))
+                string.Join("", args.Select(a => a.Signature).ToArray())
                 );
 
         private static bool CheckValiditySubroutine(string methodSignature, string argsSignature)
