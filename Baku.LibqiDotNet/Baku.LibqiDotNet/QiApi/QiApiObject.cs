@@ -57,9 +57,9 @@ namespace Baku.LibqiDotNet.QiApi
             => qi_object_post(obj.Handle, signature, qiTuple.Handle);
 
         internal static QiFuture SignalConnect(
-            QiObject obj, string signature, QiObjectSignalCallbackHolder cbHolder, IntPtr userdata
+            QiObject obj, string signature, QiApiObjectSignalCallback callback, IntPtr userdata
             )
-            => new QiFuture(qi_object_signal_connect(obj.Handle, signature, cbHolder.ApiCallback, userdata));
+            => new QiFuture(qi_object_signal_connect(obj.Handle, signature, callback, userdata));
 
         internal static QiFuture SignalDisconnect(QiObject obj, ulong id)
             => new QiFuture(qi_object_signal_disconnect(obj.Handle, id));
@@ -75,23 +75,5 @@ namespace Baku.LibqiDotNet.QiApi
 
     internal delegate void QiApiObjectMethod(string completeSignature, IntPtr msg, IntPtr ret, IntPtr userdata);
     internal delegate void QiApiObjectSignalCallback(IntPtr parameters, IntPtr userdata);
-
-    //TODO: 「アンマネージド領域に関数ポインタ渡したままGC」という典型的なコケ方を回避するために
-    //デリゲートをコンストラクタで受け取ってホールドするような型が欲しいのでは。
-
-
-    public class QiObjectSignalCallbackHolder
-    {
-        public QiObjectSignalCallbackHolder(QiObjectSignalCallback callback)
-        {
-            Callback = callback;
-            ApiCallback = new QiApiObjectSignalCallback((qValue, userdata) => callback(new QiValue(qValue), userdata));
-        }
-
-        public QiObjectSignalCallback Callback { get; }
-
-        internal QiApiObjectSignalCallback ApiCallback { get; }
-    }
-    
 
 }

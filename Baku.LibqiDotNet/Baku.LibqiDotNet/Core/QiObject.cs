@@ -1,6 +1,8 @@
 ﻿using System;
-using Baku.LibqiDotNet.QiApi;
 using System.Linq;
+using System.Collections.Generic;
+
+using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
@@ -49,12 +51,60 @@ namespace Baku.LibqiDotNet
         public int PostDirect(string signature, QiValue argsTuple)
             => QiApiObject.Post(this, signature, argsTuple);
 
-        //NOTE: ここ本来ならeventっぽく書きたい所である(Disconnectも)
-        public QiFuture ConnectSignal(string signature, QiObjectSignalCallbackHolder cbHolder, IntPtr userdata)
-            => QiApiObject.SignalConnect(this, signature, cbHolder, userdata);
 
+        /// <summary>シグナル(イベント)にハンドラを登録します。</summary>
+        /// <param name="signature">シグナルの名前("signal"など)</param>
+        /// <param name="callback">そのシグナルに対するコールバック関数</param>
+        /// <returns>
+        /// コールバックへの対応を表した整数。<see cref="DisconnectSignal(ulong)"/>でハンドラを解除する場合は必要ですが、
+        /// <see cref="DisconnectSignal(Action{QiValue})"/>を用いる場合は不要です。
+        /// </returns>
+        public ulong ConnectSignal(string signature, Action<QiValue> callback)
+        {
+            var handler = new QiSignalHandler(callback);
+            var result = QiApiObject
+                .SignalConnect(this, signature, handler.ApiCallback, IntPtr.Zero)
+                .GetUInt64(0UL);
+
+            _handlers[result] = handler;
+            return result;
+        }
+
+        /// <summary>
+        /// 識別IDを師弟してシグナルの登録を解除します。
+        /// </summary>
+        /// <param name="id"><see cref="ConnectSignal(string, Action{QiValue})"/>の戻り値として受け取ったID</param>
+        /// <returns>解除に成功した場合は非nullの戻り値、存在しないIDを指定した場合などはnull</returns>
         public QiFuture DisconnectSignal(ulong id)
-            => QiApiObject.SignalDisconnect(this, id);
+        {
+            if(_handlers.ContainsKey(id))
+            {
+                _handlers.Remove(id);
+                return QiApiObject.SignalDisconnect(this, id);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// ハンドラーを指定tしてシグナルへの登録を解除します。
+        /// </summary>
+        /// <param name="callback"><see cref="ConnectSignal(string, Action{QiValue})"/>で指定したコールバック関数</param>
+        /// <returns>解除に成功した場合は非nullの戻り値、存在しないIDを指定した場合などはnull</returns>
+        public QiFuture DisconnectSignal(Action<QiValue> callback)
+        {
+            var disconnectTargetPair = _handlers.FirstOrDefault(pair => pair.Value.TargetAction.Equals(callback));
+            if(disconnectTargetPair.Value != null)
+            {
+                return DisconnectSignal(disconnectTargetPair.Key);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// (動作未確認)オブジェクトのプロパティ値を取得します。
@@ -155,10 +205,28 @@ namespace Baku.LibqiDotNet
                 );
         }
 
+        //ID、マネージドハンドラ、アンマネージドハンドラをまとめるためのキャッシュ
+        //キャッシュを持たないと関数オブジェクトがGCで回収される可能性があるので注意
+        private readonly Dictionary<ulong, QiSignalHandler> _handlers = new Dictionary<ulong, QiSignalHandler>();
+
+        /// <summary>マネージドハンドラとアンマネージドハンドラを両方持っておくためのホルダー</summary>
+        class QiSignalHandler
+        {
+            internal QiSignalHandler(Action<QiValue> action)
+            {
+                TargetAction = action;
+                ApiCallback = (qiValueHandle, userdata) => action(new QiValue(qiValueHandle));
+            }
+
+            /// <summary>ユーザが指定したイベントハンドラ</summary>
+            internal Action<QiValue> TargetAction { get; }
+            /// <summary><see cref="TargetAction"/>をAPIに通す形に変形して得たハンドラ</summary>
+            internal QiApiObjectSignalCallback ApiCallback { get; }
+        }
 
     }
 
     public delegate QiValue QiObjectMethod(string completeSignature, QiValue msg, IntPtr userdata);
-    public delegate void QiObjectSignalCallback(QiValue parameter, IntPtr userdata);
+
 
 }
