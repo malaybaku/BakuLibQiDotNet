@@ -91,11 +91,7 @@ namespace Baku.LibqiDotNet
         /// <param name="address"></param>
         /// <param name="standAlone"></param>
         /// <returns></returns>
-        public QiFuture Listen(string address, bool standAlone = false)
-        {
-            ThrowIfNotConnected();
-            return QiApiSession.Listen(this, address, standAlone);
-        }
+        public QiFuture Listen(string address, bool standAlone = false) => QiApiSession.Listen(this, address, standAlone);
 
         /// <summary>
         /// サービスに名前を付けて登録します。

@@ -308,6 +308,7 @@ namespace Baku.LibqiDotNet
         #endregion
 
 
+
         /// <summary>文字列データとしてオブジェクトの階層構造を出力します。</summary>
         /// <returns>文字列でダンプされた出力</returns>
         public string Dump(int indentStep = 2, int indentStart = 0)
@@ -388,6 +389,10 @@ namespace Baku.LibqiDotNet
             //ポインタとかバイナリは適切な表示法が特に無いので種類名だけ表示
             return indent + kind.ToString();
         }
+
+        /// <summary>Qi Frameworkへ登録する関数についての、戻り値が無いことを示す値を取得します。</summary>
+        public static QiValue Void => Create(QiSignatures.TypeVoid);
+
     }
 
 }
