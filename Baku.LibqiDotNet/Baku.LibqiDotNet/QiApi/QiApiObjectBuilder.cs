@@ -33,7 +33,7 @@ namespace Baku.LibqiDotNet.QiApi
 
         #endregion
 
-        internal static QiObjectBuilder CreateBuilder() => new QiObjectBuilder(qi_object_builder_create());
+        internal static QiObjectBuilder Create() => new QiObjectBuilder(qi_object_builder_create());
 
         internal static void DestroyBuilder(QiObjectBuilder objBuilder)
             => qi_object_builder_destroy(objBuilder.Handle);
@@ -41,14 +41,10 @@ namespace Baku.LibqiDotNet.QiApi
         internal static uint AdvertiseMethod(
             QiObjectBuilder objBuilder,
             string completeSignature,
-            QiObjectMethod function,
+            QiApiObjectMethod method,
             IntPtr userdata
             )
-        {
-            //デリゲートの変換が地味に難しい
-            throw new NotImplementedException();
-            //return qi_object_builder_advertise_method(objBuilder.Handle, completeSignature, function, userdata);
-        }
+            => qi_object_builder_advertise_method(objBuilder.Handle, completeSignature, method, userdata);
 
         internal static uint AdvertiseSignal(QiObjectBuilder objBuilder, string name, string signature)
             => qi_object_builder_advertise_signal(objBuilder.Handle, name, signature);
@@ -56,8 +52,10 @@ namespace Baku.LibqiDotNet.QiApi
         internal static uint AdvertiseProperty(QiObjectBuilder objBuilder, string name, string signature)
             => qi_object_builder_advertise_property(objBuilder.Handle, name, signature);
 
-        internal static QiObject GetObject(QiObjectBuilder objBuilder)
+        internal static QiObject BuildObject(QiObjectBuilder objBuilder)
             => new QiObject(qi_object_builder_get_object(objBuilder.Handle));
 
     }
+
+    internal delegate void QiApiObjectMethod(string completeSignature, IntPtr msg, IntPtr ret, IntPtr userdata);
 }

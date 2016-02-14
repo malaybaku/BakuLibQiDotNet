@@ -70,10 +70,8 @@ namespace Baku.LibqiDotNet.QiApi
         internal static QiFuture SetProperty(QiObject obj, string pname, QiValue value)
             => new QiFuture(qi_object_set_property(obj.Handle, pname, value));
 
-   
     }
 
-    internal delegate void QiApiObjectMethod(string completeSignature, IntPtr msg, IntPtr ret, IntPtr userdata);
     internal delegate void QiApiObjectSignalCallback(IntPtr parameters, IntPtr userdata);
 
 }

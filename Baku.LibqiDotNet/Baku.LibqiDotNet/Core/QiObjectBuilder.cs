@@ -1,5 +1,6 @@
 ﻿using System;
 using Baku.LibqiDotNet.QiApi;
+using System.Collections.Generic;
 
 namespace Baku.LibqiDotNet
 {
@@ -24,11 +25,18 @@ namespace Baku.LibqiDotNet
         /// 関数を登録します。
         /// </summary>
         /// <param name="signature">関数のフルシグネチャ</param>
-        /// <param name="function">実際の関数</param>
+        /// <param name="method">実際の関数</param>
         /// <param name="userdata">ユーザデータ(特殊な事情が無い限り<see cref="IntPtr.Zero"/>を用いる)</param>
         /// <returns>メソッドに割り振ったID</returns>
-        public uint AdvertiseMethod(string signature, QiObjectMethod function, IntPtr userdata)
-            => QiApiObjectBuilder.AdvertiseMethod(this, signature, function, userdata);
+        public void AdvertiseMethod(string signature, QiObjectMethod method)
+        {
+            var qiMethod = new QiMethod(method);
+            uint id = QiApiObjectBuilder.AdvertiseMethod(
+                this, signature, qiMethod.UnmanagedMethod, IntPtr.Zero
+                );
+            
+            _advertisedMethods[id] = qiMethod;
+        }
 
         /// <summary>
         /// シグナルを登録します。
@@ -52,13 +60,46 @@ namespace Baku.LibqiDotNet
         /// 登録情報に基づき、オブジェクトを生成します。
         /// </summary>
         /// <returns>生成されたオブジェクト</returns>
-        public QiObject GetObject() => QiApiObjectBuilder.GetObject(this);
+        public QiObject BuildObject() => QiApiObjectBuilder.BuildObject(this);
+
 
         /// <summary>
-        /// インスタンスを生成します。
+        /// 既定の方法でインスタンスを生成します。
         /// </summary>
         /// <returns>生成されたインスタンス</returns>
-        public static QiObjectBuilder Create() => QiApiObjectBuilder.CreateBuilder();
+        public static QiObjectBuilder Create() => QiApiObjectBuilder.Create();
+
+        //GC対策で登録した関数保持するキャッシュ
+        private readonly Dictionary<uint, QiMethod> _advertisedMethods = new Dictionary<uint, QiMethod>();
+
+        /// <summary>マネージドに宣言されたメソッドとアンマネージド版をセットで保持するホルダー</summary>
+        class QiMethod
+        {
+            public QiMethod(QiObjectMethod method)
+            {
+                ManagedMethod = method;
+                UnmanagedMethod = (sig, args, ret, _) =>
+                {
+                    var result = ManagedMethod(sig, new QiValue(args));
+                    var retValue = new QiValue(ret);
+                    //すり替え処理によって計算結果を渡したい
+                    //(というかC言語APIだと他に良い手が無さそうに見える)
+                    QiValue.Swap(retValue, result);
+                };
+            }
+
+            internal QiObjectMethod ManagedMethod { get; }
+            internal QiApiObjectMethod UnmanagedMethod { get; }
+        }
 
     }
+
+    /// <summary>
+    /// サービスに登録される関数を表します。
+    /// </summary>
+    /// <param name="completeSignature">関数の引数名と完全なシグネチャ</param>
+    /// <param name="args">引数</param>
+    /// <returns></returns>
+    public delegate QiValue QiObjectMethod(string completeSignature, QiValue args);
+
 }

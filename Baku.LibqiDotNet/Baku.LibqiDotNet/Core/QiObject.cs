@@ -226,7 +226,4 @@ namespace Baku.LibqiDotNet
 
     }
 
-    public delegate QiValue QiObjectMethod(string completeSignature, QiValue msg, IntPtr userdata);
-
-
 }
