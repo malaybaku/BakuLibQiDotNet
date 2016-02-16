@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
@@ -45,10 +46,22 @@ namespace Baku.LibqiDotNet
         /// サービス名の一覧を取得します。
         /// </summary>
         /// <returns>サービス一覧</returns>
-        public QiFuture GetServices()
+        public QiFuture GetServicesAsync()
         {
             ThrowIfNotConnected();
             return QiApiSession.GetServices(this);
+        }
+
+        /// <summary>
+        /// サービス一覧を文字列の配列として取得します。
+        /// </summary>
+        /// <returns>サービスの一覧</returns>
+        public string[] GetServices()
+        {
+            var sList = GetServicesAsync().GetValue();
+            return Enumerable.Range(0, sList.Count)
+                .Select(i => sList[i].GetString())
+                .ToArray();
         }
 
         /// <summary>
@@ -56,11 +69,19 @@ namespace Baku.LibqiDotNet
         /// </summary>
         /// <param name="name">サービス名</param>
         /// <returns>サービス名に対応した<see cref="QiObject"/>の取得予約</returns>
-        public QiFuture GetService(string name)
+        public QiFuture GetServiceAsync(string name)
         {
             ThrowIfNotConnected();
             return QiApiSession.GetService(this, name);
         }
+
+        /// <summary>
+        /// サービス名を指定してサービスを取得します。この関数は<see cref="GetServiceAsync(string)"/>の待機結果を返します。
+        /// </summary>
+        /// <param name="name">サービス名</param>
+        /// <returns>指定したサービス</returns>
+        public QiObject GetService(string name)
+            => GetServiceAsync(name).GetObject();
 
         /// <summary>
         /// セッションを閉じます。
