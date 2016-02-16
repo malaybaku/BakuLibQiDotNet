@@ -64,8 +64,6 @@ namespace HelloWorld
 
             //HelloWorldの対象とするマシンのアドレスをIPとポート(ポートは通常9559)で指定
             string address = "tcp://127.0.0.1:9559";
-
-            var app = QiApplication.Create();
             var session = QiSession.Create(address);
 
             Console.WriteLine($"Connected? {session.IsConnected}");
@@ -76,14 +74,13 @@ namespace HelloWorld
             }
 
             //最も基本的なモジュールの一つとして合成音声のモジュールを取得
-            var tts = session.GetService("ALTextToSpeech").GetObject();
+            var tts = session.GetService("ALTextToSpeech");
 
             //"say"関数に文字列引数を指定して実行
             tts.Call("say", new QiString("this is test"));
 
             session.Close();
             session.Destroy();
-            app.Destroy();
         }
     }
 
@@ -99,6 +96,7 @@ namespace HelloWorld
         }
     }
 }
+
 ```
 
 
