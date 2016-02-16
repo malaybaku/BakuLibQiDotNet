@@ -18,14 +18,21 @@ namespace Baku.LibqiDotNet
 
         #region 基本処理
 
-
         /// <summary>値の種類を取得します。</summary>
         public QiValueKind ValueKind => QiApiValue.GetKind(this);
 
+        /// <summary>値の種類を取得しますが、動的型については中身の型の種類を取得します。</summary>
+        public QiValueKind ContentValueKind => NonDynamicValue.ValueKind;
+
         /// <summary>値のシグネチャを取得します。</summary>
-        /// <param name="resolveDynamics">シグネチャの解決法(サンプル見た限り既定値の<see cref="0"/>で十分そう)</param>
+        /// <param name="resolveDynamics">シグネチャの解決法フラグ(サンプル見た限り既定値以外を使うように見えない)</param>
         /// <returns>値のシグネチャ</returns>
-        public string GetSignature(int resolveDynamics = 0) => QiApiValue.GetSignature(this, resolveDynamics);
+        public string GetSignature(bool resolveDynamics=false) => QiApiValue.GetSignature(this, Convert.ToInt32(resolveDynamics));
+
+        /// <summary>値のシグネチャを取得しますが、動的型の場合中身のシグネチャを取得します。</summary>
+        /// <param name="resolveDynamics">シグネチャの解決法フラグ(サンプル見た限り既定値以外を使うように見えない)</param>
+        /// <returns>値のシグネチャ</returns>
+        public string GetContentSignature(bool resolveDynamics = false) => NonDynamicValue.GetSignature(resolveDynamics);
 
         /// <summary>
         /// (動作未確認)値を規定値に戻します。
@@ -38,6 +45,10 @@ namespace Baku.LibqiDotNet
         /// </summary>
         /// <returns>インスタンスに対応する型情報</returns>
         public QiType GetQiType() => QiApiValue.GetQiType(this);
+
+        /// <summary>型情報を取得しますが、動的型の場合中身の型情報を取得します。</summary>
+        /// <returns>インスタンスに対応する型情報</returns>
+        public QiType GetContentQiType() => NonDynamicValue.GetQiType();
 
         /// <summary>インスタンスを破棄します。</summary>
         public void Destroy() => QiApiValue.Destroy(this);
@@ -68,7 +79,7 @@ namespace Baku.LibqiDotNet
 
         #endregion
 
-        #region 値のIO関連
+        #region Getter / Setter Functions
 
         /// <summary>
         /// 格納されている値を取得します。コンテナ型の場合自分自身のインスタンスを返します。
@@ -115,48 +126,132 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        #region 関数名によって型を区別したいときの為に。
+        #region Getter functions identified by type name
+ 
+        /// <summary>格納されているはずのbool値を取得します。</summary>
+        /// <returns>格納されたbool値</returns>
         public bool GetBool() => Convert.ToBoolean(GetValue(0L));
-
+        /// <summary>この変数が符号あり1バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public sbyte GetSByte() => Convert.ToSByte(GetValue(0L));
+        /// <summary>この変数が符号あり2バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public short GetInt16() => Convert.ToInt16(GetValue(0L));
+        /// <summary>この変数が符号あり4バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public int GetInt32() => Convert.ToInt32(GetValue(0L));
+        /// <summary>この変数が符号あり8バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public long GetInt64() => Convert.ToInt64(GetValue(0L));
+        /// <summary>この変数が符号なし1バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public byte GetByte() => Convert.ToByte(GetValue(0UL));
+        /// <summary>この変数が符号なし2バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public ushort GetUInt16() => Convert.ToUInt16(GetValue(0UL));
+        /// <summary>この変数が符号なし4バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public uint GetUInt32() => Convert.ToUInt32(GetValue(0UL));
+        /// <summary>この変数が符号なし8バイト整数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public ulong GetUInt64() => Convert.ToUInt64(GetValue(0UL));
 
-        public float GetFloat() => QiApiValue.GetFloatWithDefault(this, 0.0f);
-        public double GetDouble() => QiApiValue.GetDoubleWithDefault(this, 0.0);
+        /// <summary>この変数が単精度小数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public float GetFloat() => QiApiValue.GetFloatWithDefault(NonDynamicValue, 0.0f);
+        /// <summary>この変数が倍精度小数型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public double GetDouble() => QiApiValue.GetDoubleWithDefault(NonDynamicValue, 0.0);
 
-        public string GetString() => QiApiValue.GetString(this);
-        public byte[] GetRaw() => QiApiValue.GetRaw(this);
+        /// <summary>この変数が文字列型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public string GetString() => QiApiValue.GetString(NonDynamicValue);
+        /// <summary>この変数がオブジェクト型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public byte[] GetRaw() => QiApiValue.GetRaw(NonDynamicValue);
+        /// <summary>この変数がオブジェクト型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public QiObject GetObject() => QiApiValue.GetObject(NonDynamicValue);
+
+        /// <summary>この変数がダイナミック型であると想定し、内側に格納している値を取り出します。</summary>
+        /// <returns>動的型の中に格納された値</returns>
         public QiValue GetDynamic() => QiApiValue.GetDynamic(this);
-        public QiObject GetObject() => QiApiValue.GetObject(this);
         #endregion
 
-        public long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(this, defaultValue);
-        public ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(this, defaultValue);
-        public float GetValue(float defaultValue) => QiApiValue.GetFloatWithDefault(this, defaultValue);
-        public double GetValue(double defaultValue) => QiApiValue.GetDoubleWithDefault(this, defaultValue);
+        #region Getter functions with default value
 
-        public bool SetValue(long v) => QiApiValue.SetInt64(this, v);
-        public bool SetValue(ulong v) => QiApiValue.SetUInt64(this, v);
-        public bool SetValue(float v) => QiApiValue.SetFloat(this, v);
-        public bool SetValue(double v) => QiApiValue.SetDouble(this, v);
-        public bool SetValue(string v) => QiApiValue.SetString(this, v);
+        /// <summary>この変数が符号あり整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        public long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(NonDynamicValue, defaultValue);
+        /// <summary>この変数が符号なし整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        public ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(NonDynamicValue, defaultValue);
+        /// <summary>この変数が単精度小数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        public float GetValue(float defaultValue) => QiApiValue.GetFloatWithDefault(NonDynamicValue, defaultValue);
+        /// <summary>この変数が倍精度小数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        public double GetValue(double defaultValue) => QiApiValue.GetDoubleWithDefault(NonDynamicValue, defaultValue);
 
+        #endregion
+
+        #region Setter functions
+
+        /// <summary>この変数が符号あり整数型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(long v) => QiApiValue.SetInt64(NonDynamicValue, v);
+        /// <summary>この変数が符号なし整数型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(ulong v) => QiApiValue.SetUInt64(NonDynamicValue, v);
+        /// <summary>この変数が単精度小数型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(float v) => QiApiValue.SetFloat(NonDynamicValue, v);
+        /// <summary>この変数が倍精度小数型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(double v) => QiApiValue.SetDouble(NonDynamicValue, v);
+        /// <summary>この変数が文字列型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(string v) => QiApiValue.SetString(NonDynamicValue, v);
+
+        /// <summary>この変数が動的型であると想定し、値を設定します。</summary>
+        /// <param name="v">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
         public bool SetValue(QiValue v) => QiApiValue.SetDynamic(this, v);
-        public bool SetValue(QiObject obj) => QiApiValue.SetObject(this, obj);
+        /// <summary>この変数がオブジェクト型であると想定し、値を設定します。</summary>
+        /// <param name="obj">設定する値</param>
+        /// <returns>設定に成功した場合はtrue</returns>
+        public bool SetValue(QiObject obj) => QiApiValue.SetObject(NonDynamicValue, obj);
 
-        /// <summary>
-        /// Rawデータにバイナリを設定します。
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public bool SetValue(byte[] data) => QiApiValue.SetRaw(this, data);
+        /// <summary>Rawデータ型の変数にバイナリを設定します。</summary>
+        /// <param name="data">設定するバイナリデータ</param>
+        /// <returns>設定に成功したかどうか</returns>
+        public bool SetValue(byte[] data) => QiApiValue.SetRaw(NonDynamicValue, data);
+
+        #endregion
+
+        #region Container functions
+
+        /// <summary>リスト、連想配列、タプルの要素数を取得します。それ以外の値の場合0を返します。</summary>
+        public int Count
+        {
+            get
+            {
+                var kind = ContentValueKind;
+                return kind == QiValueKind.QiTuple ? QiApiValue.SizeTuple(NonDynamicValue) :
+                       kind == QiValueKind.QiList ? QiApiValue.SizeList(NonDynamicValue) :
+                       kind == QiValueKind.QiMap ? (int)QiApiValue.SizeMap(NonDynamicValue) :
+                       0;
+            }
+        }
 
         /// <summary>
         /// リストに要素を追加します。
@@ -186,21 +281,6 @@ namespace Baku.LibqiDotNet
         }
 
         /// <summary>
-        /// リスト、連想配列、タプルの要素数を取得します。それ以外の値の場合0を返します。
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                var kind = ValueKind;
-                return kind == QiValueKind.QiTuple ? QiApiValue.SizeTuple(this) :
-                       kind == QiValueKind.QiList ? QiApiValue.SizeList(this) :
-                       kind == QiValueKind.QiMap ? (int)QiApiValue.SizeMap(this) :
-                       0;
-            }
-        }
-
-        /// <summary>
         /// リストまたはタプルにインデクスでアクセスします。境界チェックは行われません。
         /// </summary>
         /// <param name="index"></param>
@@ -213,9 +293,9 @@ namespace Baku.LibqiDotNet
                 switch (ValueKind)
                 {
                     case QiValueKind.QiList:
-                        return QiApiValue.GetList(this, (uint)index);
+                        return QiApiValue.GetList(NonDynamicValue, (uint)index);
                     case QiValueKind.QiTuple:
-                        return QiApiValue.GetTuple(this, (uint)index);
+                        return QiApiValue.GetTuple(NonDynamicValue, (uint)index);
                     default:
                         throw new InvalidOperationException("QiValue is neither list or tuple");
                 }
@@ -225,10 +305,10 @@ namespace Baku.LibqiDotNet
                 switch (ValueKind)
                 {
                     case QiValueKind.QiList:
-                        QiApiValue.SetList(this, (uint)index, value);
+                        QiApiValue.SetList(NonDynamicValue, (uint)index, value);
                         return;
                     case QiValueKind.QiTuple:
-                        QiApiValue.SetTuple(this, (uint)index, value);
+                        QiApiValue.SetTuple(NonDynamicValue, (uint)index, value);
                         return;
                     default:
                         throw new InvalidOperationException("QiValue is neither list or tuple");
@@ -249,7 +329,7 @@ namespace Baku.LibqiDotNet
                 {
                     throw new InvalidOperationException("This QiValue is not QiMap");
                 }
-                return QiApiValue.GetMap(this, key);
+                return QiApiValue.GetMap(NonDynamicValue, key);
             }
             set
             {
@@ -257,7 +337,7 @@ namespace Baku.LibqiDotNet
                 {
                     throw new InvalidOperationException("This QiValue is not QiMap");
                 }
-                QiApiValue.SetMap(this, key, value);
+                QiApiValue.SetMap(NonDynamicValue, key, value);
             }
         }
 
@@ -296,14 +376,22 @@ namespace Baku.LibqiDotNet
                 default:
                     break;
             }
-            //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートしますかね。
 
-
-
+            //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートする？
+            //現状ではめんどくさいので未対応
             throw new ArgumentException("Given type parameter is not supported currently");
 
         }
 
+        /// <summary>
+        /// ダイナミック型を再帰的にアンパックし、ダイナミック型でない実際の内容を取得します。
+        /// この処理はほぼ全ての処理に対して自動で行っているため明示的に呼び出す必要はほとんどありません。
+        /// </summary>
+        public QiValue NonDynamicValue => ValueKind == QiValueKind.QiDynamic ?
+            GetDynamic().NonDynamicValue :
+            this;
+
+        #endregion
 
         #endregion
 

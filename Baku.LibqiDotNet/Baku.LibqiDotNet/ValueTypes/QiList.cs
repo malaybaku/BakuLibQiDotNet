@@ -14,12 +14,18 @@ namespace Baku.LibqiDotNet
             Signature = sig;
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; }
 
+        /// <summary>要素数を取得します。</summary>
         public int Count => QiValue.Count;
 
+        /// <summary>インデクスを指定して要素を取得、設定します。</summary>
+        /// <param name="i">インデックス</param>
+        /// <returns>インデックスで指定した要素</returns>
         public QiValue this[int i]
         {
             get { return this.QiValue[i]; }

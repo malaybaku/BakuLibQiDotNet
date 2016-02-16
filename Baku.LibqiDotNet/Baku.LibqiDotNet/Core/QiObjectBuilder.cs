@@ -21,13 +21,9 @@ namespace Baku.LibqiDotNet
         /// <summary>インスタンスを破棄します。</summary>
         public void Destroy() => QiApiObjectBuilder.DestroyBuilder(this);
 
-        /// <summary>
-        /// 関数を登録します。
-        /// </summary>
+        /// <summary>関数を登録します。</summary>
         /// <param name="signature">関数のフルシグネチャ</param>
         /// <param name="method">実際の関数</param>
-        /// <param name="userdata">ユーザデータ(特殊な事情が無い限り<see cref="IntPtr.Zero"/>を用いる)</param>
-        /// <returns>メソッドに割り振ったID</returns>
         public void AdvertiseMethod(string signature, QiObjectMethod method)
         {
             var qiMethod = new QiMethod(method);
@@ -38,9 +34,7 @@ namespace Baku.LibqiDotNet
             _advertisedMethods[id] = qiMethod;
         }
 
-        /// <summary>
-        /// シグナルを登録します。
-        /// </summary>
+        /// <summary>シグナルを登録します。</summary>
         /// <param name="name">シグナル名</param>
         /// <param name="signature">シグネチャ</param>
         /// <returns>シグナルに割り振ったID</returns>

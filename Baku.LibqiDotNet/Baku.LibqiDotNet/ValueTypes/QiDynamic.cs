@@ -28,9 +28,12 @@ namespace Baku.LibqiDotNet
         public QiDynamic(QiAnyValue v) : this(v.QiValue) { }
 
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeDynamic;
 
+        /// <summary>格納しているデータを取得します。</summary>
         public QiValue Value => QiValue.Value as QiValue;
 
     }

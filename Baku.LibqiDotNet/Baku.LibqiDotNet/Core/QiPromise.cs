@@ -61,6 +61,12 @@ namespace Baku.LibqiDotNet
 
     }
 
+    /// <summary>
+    /// <see cref="QiPromise.Create(bool, QiFutureCancel, IntPtr)"/>によって
+    /// キャンセル処理が生じた場合に用いるコールバック関数を表します。
+    /// </summary>
+    /// <param name="promise">対象となる<see cref="QiPromise"/></param>
+    /// <param name="userdata">ユーザデータ(通常は使用しない)</param>
     public delegate void QiFutureCancel(IntPtr promise, IntPtr userdata);
 
 

@@ -9,23 +9,30 @@ namespace Baku.LibqiDotNet
         where K : QiAnyValue
         where V : QiAnyValue
     {
-        public QiMap(QiValue value, string sig)
+        private QiMap(QiValue value, string sig)
         {
             QiValue = value;
             Signature = sig;
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; }
 
-        //NOTE: 機構上値の型をVにするのがちょっと難しいので妥協
+        /// <summary>キーを指定して対応する値を取得します。</summary>
+        /// <param name="key">キー</param>
+        /// <returns>キーに対応した値</returns>
         public QiValue this[K key]
         {
             get { return QiValue[key.QiValue]; }
             set { QiValue[key.QiValue] = value; }
         }
 
+        /// <summary>キーと値のペアを用いてマップ型変数を生成します。</summary>
+        /// <param name="values">キーと値のペア</param>
+        /// <returns>入力データに対応するマップ型変数</returns>
         public static QiMap<K, V> Create(IEnumerable<KeyValuePair<K, V>> values)
         {
             if (!values.Any())

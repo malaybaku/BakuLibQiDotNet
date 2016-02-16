@@ -15,8 +15,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(Convert.ToInt64(value));
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeBool;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -41,8 +43,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeInt8;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -67,8 +71,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeInt16;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -93,8 +99,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeInt32;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -118,8 +126,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeInt64;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -144,8 +154,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeUInt8;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -170,8 +182,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeUInt16;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -197,8 +211,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeUInt32;
 
         /// <summary>格納される値を取得、設定します。</summary>
@@ -222,8 +238,10 @@ namespace Baku.LibqiDotNet
             QiValue.SetValue(value);
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeUInt64;
 
         /// <summary>格納される値を取得、設定します。</summary>

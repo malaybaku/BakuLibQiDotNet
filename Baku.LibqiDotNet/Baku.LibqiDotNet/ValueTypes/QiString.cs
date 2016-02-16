@@ -15,10 +15,13 @@ namespace Baku.LibqiDotNet
             QiValue = val;
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; } = QiSignatures.TypeString;
 
+        /// <summary>格納したデータを取得、設定します。</summary>
         public string Value
         {
             get { return QiValue.GetString(); }

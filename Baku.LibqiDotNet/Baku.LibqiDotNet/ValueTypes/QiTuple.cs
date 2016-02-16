@@ -11,12 +11,18 @@ namespace Baku.LibqiDotNet
             Signature = sig;
         }
 
+        /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
         public override QiValue QiValue { get; }
 
+        /// <summary>変数型に対応したシグネチャを取得します。</summary>
         public override string Signature { get; }
 
+        /// <summary>要素の個数を取得します。</summary>
         public int Count => QiValue.Count;
 
+        /// <summary>内容として用いる値を指定してタプルを生成します。</summary>
+        /// <param name="values">タプルに含む値</param>
+        /// <returns>指定した値を順に格納したタプル</returns>
         public static QiTuple Create(params QiAnyValue[] values)
         {
             string sig = 

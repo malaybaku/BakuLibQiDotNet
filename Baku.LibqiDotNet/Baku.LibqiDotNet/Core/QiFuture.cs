@@ -121,6 +121,11 @@ namespace Baku.LibqiDotNet
 
     }
 
+    /// <summary>
+    /// <see cref="QiFuture.AddCallback(QiFutureCallback, IntPtr)"/>で用いる、非同期処理の完了時に呼びだすコールバック関数を表します。
+    /// </summary>
+    /// <param name="future">対象となる非同期呼び出し</param>
+    /// <param name="userdata">ユーザデータ(通常は使用しない)</param>
     public delegate void QiFutureCallback(QiFuture future, IntPtr userdata);
 
 
