@@ -273,11 +273,11 @@ namespace Baku.LibqiDotNet
         /// <returns>キー一覧</returns>
         public QiValue GetKeys()
         {
-            if (ValueKind != QiValueKind.QiMap)
+            if (ContentValueKind != QiValueKind.QiMap)
             {
                 throw new InvalidOperationException("This QiValue is not QiMap");
             }
-            return QiApiValue.KeysMap(this);
+            return QiApiValue.KeysMap(NonDynamicValue);
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Baku.LibqiDotNet
             //TODO: Map型でキーが整数だった場合、とかどう思いますかね
             get
             {
-                switch (ValueKind)
+                switch (ContentValueKind)
                 {
                     case QiValueKind.QiList:
                         return QiApiValue.GetList(NonDynamicValue, (uint)index);
@@ -302,7 +302,7 @@ namespace Baku.LibqiDotNet
             }
             set
             {
-                switch (ValueKind)
+                switch (ContentValueKind)
                 {
                     case QiValueKind.QiList:
                         QiApiValue.SetList(NonDynamicValue, (uint)index, value);
@@ -325,7 +325,7 @@ namespace Baku.LibqiDotNet
         {
             get
             {
-                if (ValueKind != QiValueKind.QiMap)
+                if (ContentValueKind != QiValueKind.QiMap)
                 {
                     throw new InvalidOperationException("This QiValue is not QiMap");
                 }
@@ -333,7 +333,7 @@ namespace Baku.LibqiDotNet
             }
             set
             {
-                if (ValueKind != QiValueKind.QiMap)
+                if (ContentValueKind != QiValueKind.QiMap)
                 {
                     throw new InvalidOperationException("This QiValue is not QiMap");
                 }
