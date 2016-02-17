@@ -1,5 +1,5 @@
 ﻿
-namespace Baku.LibqiDotNet.ValueTypes
+namespace Baku.LibqiDotNet
 {
     /// <summary>バイナリデータを表します。</summary>
     public class QiByteData : QiAnyValue
