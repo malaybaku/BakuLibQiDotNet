@@ -1,6 +1,7 @@
 ﻿using System;
-using Baku.LibqiDotNet.QiApi;
 using System.Collections.Generic;
+
+using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
