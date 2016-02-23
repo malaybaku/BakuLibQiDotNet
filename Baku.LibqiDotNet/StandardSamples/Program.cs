@@ -33,9 +33,10 @@ namespace StandardSamples
                     Console.WriteLine("3. Sensor Read");
                     Console.WriteLine("4. Get camera image to local");
                     Console.WriteLine("5. Video Recording");
+                    Console.WriteLine("6. Speech Recognition / Robot Speech Logging");
 
                     input = Console.ReadLine();
-                    if ((new string[] { "1", "2", "3", "4", "5" }).Contains(input))
+                    if ((new string[] { "1", "2", "3", "4", "5", "6" }).Contains(input))
                     {
                         break;
                     }
@@ -62,6 +63,10 @@ namespace StandardSamples
                 else if (input == "5")
                 {
                     VisionVideoRecording.Execute(session);
+                }
+                else if (input == "6")
+                {
+                    DialogLogging.Execute(session);
                 }
 
             }

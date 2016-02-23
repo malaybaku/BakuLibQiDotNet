@@ -122,11 +122,12 @@ namespace Baku.LibqiDotNet
         public QiFuture SetProperty(string pname, QiValue v) => QiApiObject.SetProperty(this, pname, v);
 
         /// <summary>
-        /// 関数を同期的に呼び出します。
+        /// 関数を同期的に呼び出します。戻り値が<see cref="QiObject"/>である場合には代わりに
+        /// <see cref="CallObject(string, QiAnyValue[])"/>関数を使用してください。
         /// </summary>
         /// <param name="methodName">関数名</param>
         /// <param name="args">関数の引数</param>
-        /// <returns>結果に対する予約</returns>
+        /// <returns>呼び出し結果</returns>
         public QiValue Call(string methodName, params QiAnyValue[] args)
         {
             if(!CheckMethodExists(methodName))
@@ -140,6 +141,26 @@ namespace Baku.LibqiDotNet
                 )
                 .Wait()
                 .GetValue();
+        }
+
+        /// <summary>
+        /// <see cref="QiObject"/>が戻り値であるような関数を同期的に呼び出します。
+        /// </summary>
+        /// <param name="methodName">関数名</param>
+        /// <param name="args">関数の引数</param>
+        /// <returns>呼び出し結果</returns>
+        public QiObject CallObject(string methodName, params QiAnyValue[] args)
+        {
+            if (!CheckMethodExists(methodName))
+            {
+                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
+            }
+
+            return CallDirect(
+                GetMethodSignature(methodName, args),
+                QiTuple.CreateDynamic(args).QiValue
+                )
+                .GetObject();
         }
 
         /// <summary>
