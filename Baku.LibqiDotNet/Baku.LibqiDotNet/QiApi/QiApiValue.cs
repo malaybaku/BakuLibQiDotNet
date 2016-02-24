@@ -224,7 +224,19 @@ namespace Baku.LibqiDotNet.QiApi
         }
 
         internal static string GetString(QiValue v)
-            => Marshal.PtrToStringAnsi(qi_value_get_string(v.Handle));
+        {
+            IntPtr utf8nullEndStringPtr = qi_value_get_string(v.Handle);
+            int byteLength = 0;
+            //ヌル終端探し(これ上限無いの地味に怖いなあ)
+            while(Marshal.ReadByte(utf8nullEndStringPtr, byteLength) != (byte)0x00)
+            {
+                byteLength++;
+            }
+
+            var strBytes = new byte[byteLength];
+            Marshal.Copy(utf8nullEndStringPtr, strBytes, 0, byteLength);
+            return Encoding.UTF8.GetString(strBytes);
+        }
 
         #endregion
 

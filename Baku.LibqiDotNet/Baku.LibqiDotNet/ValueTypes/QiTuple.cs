@@ -26,8 +26,8 @@ namespace Baku.LibqiDotNet
         public static QiTuple Create(params QiAnyValue[] values)
         {
             string sig = 
-                QiSignatures.TypeTupleBegin + 
-                string.Concat(values.Select(v => v.Signature)) + 
+                QiSignatures.TypeTupleBegin +
+                string.Join("", values.Select(_ => QiSignatures.TypeDynamic).ToArray()) + 
                 QiSignatures.TypeTupleEnd;
 
             var tuple = QiValue.Create(sig);

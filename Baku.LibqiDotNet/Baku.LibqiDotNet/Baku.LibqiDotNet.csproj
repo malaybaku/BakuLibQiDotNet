@@ -59,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Enums.cs" />
+    <Compile Include="ObjectBuilderHelper\IQiBuildableObject.cs" />
+    <Compile Include="ObjectBuilderHelper\IQiObjectMethod.cs" />
+    <Compile Include="ObjectBuilderHelper\QiObjectBuilderHelper.cs" />
     <Compile Include="Utils\ReadOnlyDictionary.cs" />
     <Compile Include="Utils\ReadOnlyList.cs" />
     <Compile Include="ValueTypes\QiAnyValue.cs" />
