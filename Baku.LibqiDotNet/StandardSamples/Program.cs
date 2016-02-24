@@ -33,9 +33,10 @@ namespace StandardSamples
                     Console.WriteLine("3. Sensor Read");
                     Console.WriteLine("4. Get camera image to local");
                     Console.WriteLine("5. Video Recording");
+                    Console.WriteLine("6. Sound IO");
 
                     input = Console.ReadLine();
-                    if ((new string[] { "1", "2", "3", "4", "5" }).Contains(input))
+                    if ((new string[] { "1", "2", "3", "4", "5", "6" }).Contains(input))
                     {
                         break;
                     }
@@ -43,7 +44,7 @@ namespace StandardSamples
                     Console.WriteLine("could not verify input, please try again.");
                 }
 
-                if(input == "1")
+                if (input == "1")
                 {
                     MotionPosesInit.Execute(session);
                 }
@@ -62,6 +63,10 @@ namespace StandardSamples
                 else if (input == "5")
                 {
                     VisionVideoRecording.Execute(session);
+                }
+                else if (input == "6")
+                {
+                    SoundIO.Execute(session);
                 }
 
             }
