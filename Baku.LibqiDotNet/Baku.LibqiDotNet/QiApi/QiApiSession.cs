@@ -18,7 +18,7 @@ namespace Baku.LibqiDotNet.QiApi
         private static extern IntPtr qi_session_connect(IntPtr session, string address);
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
-        private static extern string qi_session_url(IntPtr session);
+        private static extern IntPtr qi_session_url(IntPtr session);
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
         private static extern int qi_session_set_identity(IntPtr session, string key, string crt);
@@ -60,7 +60,7 @@ namespace Baku.LibqiDotNet.QiApi
             => new QiFuture(qi_session_connect(session.Handle, address));
 
         internal static string GetUrl(QiSession session)
-            => qi_session_url(session.Handle);
+            => Marshal.PtrToStringAnsi(qi_session_url(session.Handle));
 
         internal static int SetIdentity(QiSession session, string key, string crt)
             => qi_session_set_identity(session.Handle, key, crt);
