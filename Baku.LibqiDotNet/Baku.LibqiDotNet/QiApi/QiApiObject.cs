@@ -49,9 +49,7 @@ namespace Baku.LibqiDotNet.QiApi
             => new QiValue(qi_object_get_metaobject(obj.Handle));
 
         internal static QiFuture Call(QiObject obj, string signature, QiValue qiTuple)
-        {
-            return new QiFuture(qi_object_call(obj.Handle, signature, qiTuple.Handle));
-        }
+            => new QiFuture(qi_object_call(obj.Handle, signature, qiTuple.Handle));
 
         internal static int Post(QiObject obj, string signature, QiValue qiTuple)
             => qi_object_post(obj.Handle, signature, qiTuple.Handle);
