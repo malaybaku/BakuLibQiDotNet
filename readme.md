@@ -10,6 +10,8 @@ Baku/獏(ばく)
 - Hello World
 - Contact
 
+This is Japanese documentation, and [English version](https://github.com/malaybaku/BakuLibQiDotNet/blob/master/readme_en.md) is also available.
+
 ## About
 
 Aldebaran社が公開しているメッセージングフレームワーク```libqi```を.NETから使えるようにするためのラッパーライブラリです。Aldebaranのlibqiライブラリ群については下記等を参照ください。
