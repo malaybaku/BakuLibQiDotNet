@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+//名前空間をBaku.LibqiDotNetにすると汚染感が高いので注意
 namespace Baku.LibqiDotNet.Utils
 {
     /// <summary>値の読み取りのみが許可された辞書データを表します。</summary>
     /// <typeparam name="TKey">キーの型</typeparam>
     /// <typeparam name="TValue">値の型</typeparam>
-    public class ReadOnlyDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
+    public sealed class ReadOnlyDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
         /// <summary>データ元となる辞書によってインスタンスを初期化します。</summary>
         /// <param name="source">データ元の辞書</param>

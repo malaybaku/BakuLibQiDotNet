@@ -83,16 +83,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Enums.cs" />
+    <Compile Include="Core\QiMethod.cs" />
+    <Compile Include="Core\QiMethodArgumentInfo.cs" />
+    <Compile Include="Core\QiMethodInfo.cs" />
+    <Compile Include="Core\QiMethods.cs" />
     <Compile Include="Utils\ReadOnlyDictionary.cs" />
     <Compile Include="Utils\ReadOnlyList.cs" />
     <Compile Include="ValueTypes\QiAnyValue.cs" />
     <Compile Include="Core\QiApplication.cs" />
     <Compile Include="Core\QiFuture.cs" />
-    <Compile Include="Core\QiMethodInfo.cs" />
     <Compile Include="Core\QiObject.cs" />
     <Compile Include="Core\QiObjectBuilder.cs" />
     <Compile Include="Core\QiPromise.cs" />
-    <Compile Include="Core\QiServiceInfo.cs" />
     <Compile Include="Core\QiSession.cs" />
     <Compile Include="Core\QiSignatures.cs" />
     <Compile Include="Core\QiType.cs" />

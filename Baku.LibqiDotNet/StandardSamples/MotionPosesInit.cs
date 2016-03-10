@@ -16,9 +16,9 @@ namespace StandardSamples
             var motion = session.GetService("ALMotion");
             var posture = session.GetService("ALRobotPosture");
 
-            motion.Call("wakeUp");
-            posture.Call("goToPosture", new QiString("StandInit"), new QiFloat(0.5f));
-            motion.Call("rest");
+            motion["wakeUp"].Call();
+            posture["goToPosture"].Call("StandInit", 0.5f);
+            motion["rest"].Call();
         }
 
     }

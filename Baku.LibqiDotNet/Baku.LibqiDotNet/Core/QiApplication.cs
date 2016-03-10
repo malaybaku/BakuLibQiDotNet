@@ -4,7 +4,7 @@ using Baku.LibqiDotNet.QiApi;
 namespace Baku.LibqiDotNet
 {
     /// <summary>アプリケーションを表します。初期化処理等を行うために用います</summary>
-    public class QiApplication
+    public sealed class QiApplication
     {
         internal QiApplication(IntPtr handle)
         {

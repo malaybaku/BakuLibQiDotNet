@@ -28,7 +28,8 @@ namespace HelloWorld
             var tts = session.GetService("ALTextToSpeech");
 
             //"say"関数に文字列引数を指定して実行
-            tts.Call("say", new QiString("this is test"));
+            //tts.Call("say", new QiString("this is test"));
+            tts["say"].Call("this is test");
 
             session.Close();
             session.Destroy();

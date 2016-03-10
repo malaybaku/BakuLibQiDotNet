@@ -7,7 +7,7 @@ using Baku.LibqiDotNet.QiApi;
 namespace Baku.LibqiDotNet
 {
     /// <summary>Qiのオブジェクト(基本的にサービスモジュールと同じ)を表します。</summary>
-    public class QiObject
+    public sealed class QiObject
     {
         internal QiObject(IntPtr handle)
         {
@@ -16,34 +16,56 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
-        //ObjectBuilderとGetServiceの戻り値以外でのインスタンス生成は不適切な気がするのでアセンブリ外に対し非公開化
+        //NOTE: ObjectBuilderとGetServiceの戻り値以外でインスタンス生成する必要ないのでそもそも実装要るの？ってレベル
         internal static QiObject Create() => QiApiObject.Create();
-
-        private QiServiceInfo _serviceInfo = null;
-        /// <summary>インスタンスに対応したサービス情報を取得します。</summary>
-        public QiServiceInfo ServiceInfo
-            => _serviceInfo ?? (_serviceInfo = new QiServiceInfo(this));
 
         /// <summary>インスタンスを破棄します。</summary>
         public void Destroy() => QiApiObject.Destroy(this);
 
+        private QiValue _metaObject;
         /// <summary>サービスの内部情報を表すメタオブジェクトを取得します。</summary>
-        /// <returns>サービスを表すメタオブジェクト</returns>
-        public QiValue GetMetaObject() => QiApiObject.GetMetaObject(this);
+        internal QiValue MetaObject => _metaObject ?? (_metaObject = QiApiObject.GetMetaObject(this));
+
+        private string _description = null;
+        /// <summary>サービスの機能に関する説明文を取得します。</summary>
+        public string Description
+        {
+            get
+            {
+                if (_description == null)
+                {
+                    var mObj = MetaObject;
+                    //NOTE: mObj[3]にモジュールのDescription文字列が入るというのは観察から得た知見
+                    _description = (mObj.Count > 3) ?
+                        mObj[3].GetString() :
+                        "";
+                }
+                return _description;
+            }
+        }
+
+        private QiMethods _methods;
+        private QiMethods Methods => _methods ?? (_methods = new QiMethods(this));
+
+        /// <summary>メソッド名を指定してモジュールのメソッドを取得します。</summary>
+        /// <param name="methodName">メソッドの名前</param>
+        /// <returns>対応するメソッド</returns>
+        public QiMethod this[string methodName] => Methods[methodName];
 
         /// <summary>
         /// 自力でシグネチャを正しく定義してタプルを渡し、関数を呼び出します。
-        /// デバッグ目的で公開されており、普通は<see cref="Call"/>を使用してください。
+        /// ラッパーの動作不良に備えて公開されており、通常は<see cref="this[string]"/>で選択したメソッドを用いてください。
         /// </summary>
         /// <param name="signature">関数名と引数タプルの合わさった文字列("ping::()"など)</param>
         /// <param name="argsTuple">引数の入ってるタプル</param>
-        /// <returns>戻り値の取得に使えるfuture型</returns>
+        /// <returns>戻り値の非同期取得に使えるfuture型</returns>
         public QiFuture CallDirect(string signature, QiValue argsTuple)
             => QiApiObject.Call(this, signature, argsTuple);
 
         /// <summary>
         /// 自力でシグネチャを正しく定義してタプルを渡し、関数を非同期で呼び出します。
-        /// デバッグ目的で公開されており、普通は<see cref="Post"/>を使用してください。
+        /// デバッグ目的で公開されており、普通は<see cref="this[string]"/>で選択した<see cref="QiMethod"/>で
+        /// <see cref="QiMethod.Post(QiAnyValue[])"/>を使用してください。
         /// </summary>
         /// <param name="signature">関数名と引数タプルの合わさった文字列("ping::()"など)</param>
         /// <param name="argsTuple">引数の入ってるタプル</param>
@@ -88,11 +110,9 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        /// <summary>
-        /// ハンドラーを指定tしてシグナルへの登録を解除します。
-        /// </summary>
+        /// <summary>ハンドラーを指定してシグナルへの登録を解除します。</summary>
         /// <param name="callback"><see cref="ConnectSignal(string, Action{QiValue})"/>で指定したコールバック関数</param>
-        /// <returns>解除に成功した場合は非nullの戻り値、存在しないIDを指定した場合などはnull</returns>
+        /// <returns>解除に成功した場合は非nullの戻り値、不正な値を指定した場合などはnull</returns>
         public QiFuture DisconnectSignal(Action<QiValue> callback)
         {
             var disconnectTargetPair = _handlers.FirstOrDefault(pair => pair.Value.TargetAction.Equals(callback));
@@ -106,125 +126,17 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        /// <summary>
-        /// (動作未確認)オブジェクトのプロパティ値を取得します。
-        /// </summary>
+        /// <summary>(動作未確認)オブジェクトのプロパティ値を取得します。</summary>
         /// <param name="pname">取得対象となるプロパティの名前</param>
         /// <returns>対応するプロパティ値への予約</returns>
         public QiFuture GetProperty(string pname) => QiApiObject.GetProperty(this, pname);
 
-        /// <summary>
-        /// (動作未確認)オブジェクトのプロパティに値を設定します。
-        /// </summary>
+        /// <summary>(動作未確認)オブジェクトのプロパティに値を設定します。</summary>
         /// <param name="pname">プロパティ名</param>
         /// <param name="v">プロパティへ代入する値</param>
         /// <returns>代入結果への予約</returns>
         public QiFuture SetProperty(string pname, QiValue v) => QiApiObject.SetProperty(this, pname, v);
 
-        /// <summary>
-        /// 関数を同期的に呼び出します。戻り値が<see cref="QiObject"/>である場合には代わりに
-        /// <see cref="CallObject(string, QiAnyValue[])"/>関数を使用してください。
-        /// </summary>
-        /// <param name="methodName">関数名</param>
-        /// <param name="args">関数の引数</param>
-        /// <returns>呼び出し結果</returns>
-        public QiValue Call(string methodName, params QiAnyValue[] args)
-        {
-            if(!CheckMethodExists(methodName))
-            {
-                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
-            }
-
-            return CallDirect(
-                GetMethodSignature(methodName, args),
-                QiTuple.CreateDynamic(args).QiValue
-                )
-                .Wait()
-                .GetValue();
-        }
-
-        /// <summary>
-        /// <see cref="QiObject"/>が戻り値であるような関数を同期的に呼び出します。
-        /// </summary>
-        /// <param name="methodName">関数名</param>
-        /// <param name="args">関数の引数</param>
-        /// <returns>呼び出し結果</returns>
-        public QiObject CallObject(string methodName, params QiAnyValue[] args)
-        {
-            if (!CheckMethodExists(methodName))
-            {
-                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
-            }
-
-            return CallDirect(
-                GetMethodSignature(methodName, args),
-                QiTuple.CreateDynamic(args).QiValue
-                )
-                .GetObject();
-        }
-
-        /// <summary>
-        /// 関数を非同期で呼び出します。
-        /// </summary>
-        /// <param name="methodName">関数名</param>
-        /// <param name="args">関数の引数</param>
-        /// <returns>非同期呼び出しの結果確認に使うID</returns>
-        public int Post(string methodName, params QiAnyValue[] args)
-        {
-            if (!CheckMethodExists(methodName))
-            {
-                throw new InvalidOperationException($"Method {methodName} does not exists in this service");
-            }
-
-            return PostDirect(
-                GetMethodSignature(methodName, args), 
-                QiTuple.CreateDynamic(args).QiValue
-                );
-        }
-
-        /// <summary>
-        /// メソッド名を指定して、そのメソッド名に対応した引数シグネチャの一覧を返します。
-        /// 存在しないメソッドを指定した場合は空の配列を返します。
-        /// </summary>
-        /// <param name="methodName">メソッド名</param>
-        /// <returns>メソッドが取りうるシグネチャ一覧</returns>
-        public string[] GetMethodSignatures(string methodName)
-            => ServiceInfo
-            .MethodInfos
-            .Values
-            .Where(mi => mi.Name == methodName)
-            .Select(mi => mi.ArgumentSignature)
-            .ToArray();
-
-
-        private bool CheckMethodExists(string methodName)
-            => ServiceInfo.MethodInfos.Values.Any(mi => mi.Name == methodName);
-
-        private string GetMethodSignature(string methodName, QiAnyValue[] args)
-        {
-            var targets = ServiceInfo.MethodInfos.Values.Where(mi => mi.Name == methodName);
-            //基本ケース: オーバーロード無い場合はチェック入れない(結果的にシグネチャ間違いあるかもしれないが無視)
-            if (targets.Count() == 1)
-            {
-                return methodName + QiSignatures.MethodNameSuffix + targets.First().ArgumentSignature;
-            }
-
-            //オーバーロードがある場合は引数リストと見比べて適合するのがあるか判定
-            var fittedMethod = targets.FirstOrDefault(t =>
-                QiSignatureValidityChecker.CheckValidity(t.ArgumentSignature, args)
-                );
-
-            if (fittedMethod != null)
-            {
-                return methodName + QiSignatures.MethodNameSuffix + fittedMethod.ArgumentSignature;
-            }
-
-            throw new InvalidOperationException(
-                $"Could not find proper overload for {methodName}, " +
-                $"args: {QiTuple.Create(args).Signature}, " +
-                $"existing method signatures: {string.Join(",", targets.Select(t => t.ArgumentSignature).ToArray())}"
-                );
-        }
 
         //ID、マネージドハンドラ、アンマネージドハンドラをまとめるためのキャッシュ
         //キャッシュを持たないと関数オブジェクトがGCで回収される可能性があるので注意

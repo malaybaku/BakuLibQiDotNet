@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 //参考元: http://doc.aldebaran.com/libqi/api/cpp/type/signature.html
@@ -170,9 +169,7 @@ namespace Baku.LibqiDotNet
                 }
             }
 
-            throw new InvalidOperationException(
-                $"could not found signature token properly: {src}"
-                );
+            throw new InvalidOperationException($"could not found signature token properly: {src}");
 
         }
 

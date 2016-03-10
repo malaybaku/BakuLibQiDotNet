@@ -5,7 +5,7 @@ using System.Linq;
 namespace Baku.LibqiDotNet
 {
     /// <summary>連想配列(辞書)型を表します。</summary>
-    public class QiMap<K, V> : QiAnyValue
+    public sealed class QiMap<K, V> : QiAnyValue
         where K : QiAnyValue
         where V : QiAnyValue
     {

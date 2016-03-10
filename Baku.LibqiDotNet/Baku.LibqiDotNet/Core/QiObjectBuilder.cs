@@ -5,12 +5,11 @@ using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
-
     /// <summary>
     /// <see cref="QiObject"/>のビルダークラスです。
-    /// サービスを作る場合以外使わないハズなので実装は最低限です。
+    /// 自作サービスを作る場合のみ使われるものであるため、実装は最低限です。
     /// </summary>
-    public class QiObjectBuilder
+    public sealed class QiObjectBuilder
     {
         internal QiObjectBuilder(IntPtr handle)
         {

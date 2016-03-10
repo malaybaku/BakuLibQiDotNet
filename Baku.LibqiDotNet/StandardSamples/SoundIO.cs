@@ -22,10 +22,8 @@ namespace StandardSamples
             #region 1/4: ロボットへ音を投げる方の仕込み
             //出力サンプリングレートをデフォルト(48kHz)から16kHzに下げる
             //16000, 22050, 44100, 48000のいずれかしか選択できない点に注意
-            audioDevice.Call("setParameter",
-                new QiString("outputSampleRate"),
-                new QiInt32(16000)
-                );
+            audioDevice["setParameter"].Call("outputSampleRate", 16000);
+
             //下のDataAvailableイベントが発生する頻度、バッファの長さに影響する。
             //バッファ長は16384を超えてはいけない点に注意
             //(詳細は公式ドキュメンテーション参照)
@@ -41,10 +39,7 @@ namespace StandardSamples
                 byte[] bufferToSend = new byte[e.BytesRecorded];
                 Array.Copy(e.Buffer, bufferToSend, e.BytesRecorded);
 
-                int p = audioDevice.Post("sendRemoteBufferToOutput",
-                    new QiInt32(bufferToSend.Length / 4),
-                    new QiByteData(bufferToSend)
-                    );
+                int p = audioDevice["sendRemoteBufferToOutput"].Post(bufferToSend.Length / 4, bufferToSend);
                 Console.WriteLine($"received data, {count}");
                 count++;
             };
@@ -71,7 +66,7 @@ namespace StandardSamples
                     //Console.WriteLine(arg.Dump());
 
                     //データの内容については上記のダンプを行うことである程度確認可能
-                    byte[] raw = arg[3].GetRaw();
+                    byte[] raw = arg[3].ToBytes();
                     wavProvider.AddSamples(raw, 0, raw.Length);
 
                     return QiValue.Void;
@@ -85,19 +80,17 @@ namespace StandardSamples
 
             #region 4/4 設定を調整して実際に入出力を行う
             //マジックナンバーあるけど詳細は右記参照 http://www.baku-dreameater.net/archives/2411 
-            audioDevice.Call("setClientPreferences",
-                new QiString(serviceName), new QiInt32(16000), new QiInt32(3), new QiInt32(0)
-                );
+            audioDevice["setClientPreferences"].Call(serviceName, 16000, 3, 0);
 
             //開始
-            audioDevice.Call("subscribe", new QiString(serviceName));
+            audioDevice["subscribe"].Call(serviceName);
             waveIn.StartRecording();
             #endregion
 
             Console.WriteLine("Press ENTER to quit..");
             Console.ReadLine();
 
-            audioDevice.Call("unsubscribe", new QiString(serviceName));
+            audioDevice["unsubscribe"].Call(serviceName);
             session.UnregisterService((uint)registeredId);
             wavPlayer.Stop();
             wavPlayer.Dispose();

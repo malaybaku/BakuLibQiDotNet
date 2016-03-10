@@ -5,7 +5,7 @@ using Baku.LibqiDotNet.QiApi;
 namespace Baku.LibqiDotNet
 {
     /// <summary>通信セッションを表します。</summary>
-    public class QiSession
+    public sealed class QiSession
     {
         internal QiSession(IntPtr handle)
         {
@@ -106,17 +106,13 @@ namespace Baku.LibqiDotNet
         /// <returns></returns>
         public int SetIdentity(string key, string crt) => QiApiSession.SetIdentity(this, key, crt);
 
-        /// <summary>
-        /// (動作未確認)セッションをリスンします。
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="standAlone"></param>
-        /// <returns></returns>
+        /// <summary>セッションをリスンします。</summary>
+        /// <param name="address">リスン先アドレスです。例えばアクセスを制限しない場合は"tcp://0.0.0.0:0"を指定します。</param>
+        /// <param name="standAlone">アプリケーションがスタンドアロンである場合はtrueにします。通常は設定する必要はありません。</param>
+        /// <returns>リスン結果への予約</returns>
         public QiFuture Listen(string address, bool standAlone = false) => QiApiSession.Listen(this, address, standAlone);
 
-        /// <summary>
-        /// サービスに名前を付けて登録します。
-        /// </summary>
+        /// <summary>サービスに名前を付けて登録します。</summary>
         /// <param name="name">サービス名</param>
         /// <param name="obj">サービスの実体</param>
         /// <returns>未確認(たぶんサービスのID)</returns>

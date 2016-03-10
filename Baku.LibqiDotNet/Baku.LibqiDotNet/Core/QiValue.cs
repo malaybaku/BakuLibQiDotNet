@@ -7,7 +7,7 @@ using Baku.LibqiDotNet.QiApi;
 namespace Baku.LibqiDotNet
 {
     /// <summary>Qiの一般的な値を表します。</summary>
-    public class QiValue
+    public sealed class QiValue
     {
         internal QiValue(IntPtr handle)
         {
@@ -88,29 +88,25 @@ namespace Baku.LibqiDotNet
         {
             get
             {
-                //TODO: signatureを見るとFloatとかIntの曖昧性が消せるのかもしれないので要調査
+                //TODO: signatureをきちんと見たらFloatとかIntの曖昧性が消せるのかもしれないので要調査
                 var vk = ValueKind;
                 switch (vk)
                 {
                     case QiValueKind.QiInt:
-                        long result_long = 0;
-                        if (QiApiValue.GetInt64(this, ref result_long))
+                        long resultLong = 0;
+                        if (QiApiValue.GetInt64(this, ref resultLong))
                         {
-                            return result_long;
+                            return resultLong;
                         }
-                        ulong result_ulong = 0;
-                        QiApiValue.GetUInt64(this, ref result_ulong);
-                        return result_ulong;
+                        return ToUInt64();
 
                     case QiValueKind.QiFloat:
-                        double result_double = 0.0;
-                        if (QiApiValue.GetDouble(this, ref result_double))
+                        double resultDouble = 0.0;
+                        if (QiApiValue.GetDouble(this, ref resultDouble))
                         {
-                            return result_double;
+                            return resultDouble;
                         }
-                        float result_float = 0.0f;
-                        QiApiValue.GetFloat(this, ref result_float);
-                        return result_float;
+                        return ToFloat();
 
                     case QiValueKind.QiRaw: return QiApiValue.GetRaw(this);
                     case QiValueKind.QiString: return QiApiValue.GetString(this);
@@ -122,7 +118,6 @@ namespace Baku.LibqiDotNet
                     default:
                         return this;
                 }
-                throw new NotImplementedException();
             }
         }
 
@@ -130,45 +125,46 @@ namespace Baku.LibqiDotNet
  
         /// <summary>格納されているはずのbool値を取得します。</summary>
         /// <returns>格納されたbool値</returns>
-        public bool GetBool() => Convert.ToBoolean(GetValue(0L));
+        public bool ToBool() => Convert.ToBoolean(GetValue(0L));
         /// <summary>この変数が符号あり1バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public sbyte GetSByte() => Convert.ToSByte(GetValue(0L));
+        public sbyte ToSByte() => (sbyte)GetValue(0L);
         /// <summary>この変数が符号あり2バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public short GetInt16() => Convert.ToInt16(GetValue(0L));
+        public short ToInt16() => (short)GetValue(0L);
         /// <summary>この変数が符号あり4バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public int GetInt32() => Convert.ToInt32(GetValue(0L));
+        public int ToInt32() => (int)GetValue(0L);
         /// <summary>この変数が符号あり8バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public long GetInt64() => Convert.ToInt64(GetValue(0L));
+        public long ToInt64() => GetValue(0L);
         /// <summary>この変数が符号なし1バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public byte GetByte() => Convert.ToByte(GetValue(0UL));
+        public byte ToByte() => (byte)GetValue(0UL);
         /// <summary>この変数が符号なし2バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public ushort GetUInt16() => Convert.ToUInt16(GetValue(0UL));
+        public ushort ToUInt16() => (ushort)GetValue(0UL);
         /// <summary>この変数が符号なし4バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public uint GetUInt32() => Convert.ToUInt32(GetValue(0UL));
+        public uint ToUInt32() => (uint)GetValue(0UL);
         /// <summary>この変数が符号なし8バイト整数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public ulong GetUInt64() => Convert.ToUInt64(GetValue(0UL));
+        public ulong ToUInt64() => GetValue(0UL);
 
         /// <summary>この変数が単精度小数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public float GetFloat() => QiApiValue.GetFloatWithDefault(NonDynamicValue, 0.0f);
+        public float ToFloat() => QiApiValue.GetFloatWithDefault(NonDynamicValue, 0.0f);
         /// <summary>この変数が倍精度小数型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
-        public double GetDouble() => QiApiValue.GetDoubleWithDefault(NonDynamicValue, 0.0);
+        public double ToDouble() => QiApiValue.GetDoubleWithDefault(NonDynamicValue, 0.0);
 
+        /// <summary>この変数がバイナリデータ型であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public byte[] ToBytes() => QiApiValue.GetRaw(NonDynamicValue);
         /// <summary>この変数が文字列型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
+
         public string GetString() => QiApiValue.GetString(NonDynamicValue);
-        /// <summary>この変数がオブジェクト型であると想定して値を取得します。</summary>
-        /// <returns>格納された値</returns>
-        public byte[] GetRaw() => QiApiValue.GetRaw(NonDynamicValue);
         /// <summary>この変数がオブジェクト型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
         public QiObject GetObject() => QiApiValue.GetObject(NonDynamicValue);
@@ -179,23 +175,6 @@ namespace Baku.LibqiDotNet
         #endregion
 
         #region Getter functions with default value
-
-        /// <summary>この変数が符号あり整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
-        /// <param name="defaultValue">取得に失敗した場合返される値</param>
-        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
-        public long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(NonDynamicValue, defaultValue);
-        /// <summary>この変数が符号なし整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
-        /// <param name="defaultValue">取得に失敗した場合返される値</param>
-        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
-        public ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(NonDynamicValue, defaultValue);
-        /// <summary>この変数が単精度小数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
-        /// <param name="defaultValue">取得に失敗した場合返される値</param>
-        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
-        public float GetValue(float defaultValue) => QiApiValue.GetFloatWithDefault(NonDynamicValue, defaultValue);
-        /// <summary>この変数が倍精度小数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
-        /// <param name="defaultValue">取得に失敗した場合返される値</param>
-        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
-        public double GetValue(double defaultValue) => QiApiValue.GetDoubleWithDefault(NonDynamicValue, defaultValue);
 
         #endregion
 
@@ -351,31 +330,27 @@ namespace Baku.LibqiDotNet
         public T TryGet<T>()
         {
             var t = typeof(T);
-            switch(Type.GetTypeCode(t))
+            if (t == typeof(QiValue)) return (T)Convert.ChangeType(this, t);
+            else if (t == typeof(QiObject)) return (T)Convert.ChangeType(GetObject(), t);
+
+            switch (Type.GetTypeCode(t))
             {
-                case TypeCode.Boolean:
-                    return (T)Convert.ChangeType(GetBool(), t);
-                case TypeCode.SByte:
-                    return (T)Convert.ChangeType(GetSByte(), t);
-                case TypeCode.Int16:
-                    return (T)Convert.ChangeType(GetInt16(), t);
-                case TypeCode.Int32:
-                    return (T)Convert.ChangeType(GetInt32(), t);
-                case TypeCode.Int64:
-                    return (T)Convert.ChangeType(GetInt64(), t);
-                case TypeCode.Byte:
-                    return (T)Convert.ChangeType(GetByte(), t);
-                case TypeCode.UInt16:
-                    return (T)Convert.ChangeType(GetUInt16(), t);
-                case TypeCode.UInt32:
-                    return (T)Convert.ChangeType(GetUInt32(), t);
-                case TypeCode.UInt64:
-                    return (T)Convert.ChangeType(GetUInt64(), t);
-                case TypeCode.String:
-                    return (T)Convert.ChangeType(GetString(), t);
+                case TypeCode.Boolean: return (T)Convert.ChangeType(ToBool(), t);
+                case TypeCode.SByte: return (T)Convert.ChangeType(ToSByte(), t);
+                case TypeCode.Int16: return (T)Convert.ChangeType(ToInt16(), t);
+                case TypeCode.Int32: return (T)Convert.ChangeType(ToInt32(), t);
+                case TypeCode.Int64: return (T)Convert.ChangeType(ToInt64(), t);
+                case TypeCode.Byte: return (T)Convert.ChangeType(ToByte(), t);
+                case TypeCode.UInt16: return (T)Convert.ChangeType(ToUInt16(), t);
+                case TypeCode.UInt32: return (T)Convert.ChangeType(ToUInt32(), t);
+                case TypeCode.UInt64: return (T)Convert.ChangeType(ToUInt64(), t);
+                case TypeCode.Single: return (T)Convert.ChangeType(ToFloat(), t);
+                case TypeCode.Double: return (T)Convert.ChangeType(ToDouble(), t);
+                case TypeCode.String: return (T)Convert.ChangeType(GetString(), t);
                 default:
                     break;
             }
+
 
             //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートする？
             //現状ではめんどくさいので未対応
@@ -396,6 +371,15 @@ namespace Baku.LibqiDotNet
         #endregion
 
 
+        /// <summary>この変数が符号あり整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        private long GetValue(long defaultValue) => QiApiValue.GetInt64WithDefault(NonDynamicValue, defaultValue);
+        /// <summary>この変数が符号なし整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
+        /// <param name="defaultValue">取得に失敗した場合返される値</param>
+        /// <returns>成功した場合は実際の値、失敗した場合は指定したデフォルト値</returns>
+        private ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(NonDynamicValue, defaultValue);
+
 
         /// <summary>文字列データとしてオブジェクトの階層構造を出力します。</summary>
         /// <returns>文字列でダンプされた出力</returns>
@@ -414,12 +398,12 @@ namespace Baku.LibqiDotNet
             //コンテナ型
             if (kind == QiValueKind.QiDynamic)
             {
-                return indent + "Dynamic\n" + (Value as QiValue).Dump(indentStep, indentStart + indentStep);
+                return indent + "Dynamic\n" + GetDynamic().Dump(indentStep, indentStart + indentStep);
             }
 
             if (kind == QiValueKind.QiObject)
             {
-                return indent + "Object\n" + (Value as QiObject).GetMetaObject().Dump(indentStep, indentStart + indentStep);
+                return indent + "Object\n" + GetObject().MetaObject.Dump(indentStep, indentStart + indentStep);
             }
 
             if (kind == QiValueKind.QiList || kind == QiValueKind.QiTuple)
@@ -479,7 +463,7 @@ namespace Baku.LibqiDotNet
         }
 
         /// <summary>Qi Frameworkへ登録する関数についての、戻り値が無いことを示す値を取得します。</summary>
-        public static QiValue Void => Create(QiSignatures.TypeVoid);
+        public static QiValue Void { get; } = Create(QiSignatures.TypeVoid);
 
     }
 
