@@ -4,8 +4,8 @@ using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary><see cref="QiValue"/>に対応した型情報を表します。</summary>
-    public class QiType
+    /// <summary><see cref="QiValue"/>のインスタンスに対応する型情報を表します。</summary>
+    public sealed class QiType
     {
         internal QiType(IntPtr handle)
         {

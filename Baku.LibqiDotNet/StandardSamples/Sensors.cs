@@ -28,7 +28,7 @@ namespace StandardSamples
 
                 { "TorsoAngleX", "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value" },
                 { "TorsoAngleY", "Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value" }
-            }.Select(p => $"key={p.Key}, value={mem.Call("getData", new QiString(p.Value)).Dump()}");
+            }.Select(p => $"key={p.Key}, value={mem["getData"].Call(p.Value).Dump()}");
 
             foreach (var r in results)
             {
@@ -37,17 +37,17 @@ namespace StandardSamples
             }
 
             Console.WriteLine("Second: read sonar values\n");
-            sonar.Call("subscribe", new QiString("MySampleApplication"));
+            sonar["subscribe"].Call("MySampleApplication");
             Console.WriteLine(
                 "Left: {0}",
-                mem.Call("getData", new QiString("Device/SubDeviceList/US/Left/Sensor/Value")).Dump()
+                mem["getData"].Call("Device/SubDeviceList/US/Left/Sensor/Value").Dump()
                 );
             Console.WriteLine(
                 "Right: {0}",
-                mem.Call("getData", new QiString("Device/SubDeviceList/US/Right/Sensor/Value")).Dump()
+                mem["getData"].Call("Device/SubDeviceList/US/Right/Sensor/Value").Dump()
                 );
 
-            sonar.Call("unsubscribe", new QiString("MySampleApplication"));
+            sonar["unsubscribe"].Call("MySampleApplication");
         }
     }
 }

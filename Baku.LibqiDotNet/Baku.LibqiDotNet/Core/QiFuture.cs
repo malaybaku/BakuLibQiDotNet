@@ -4,7 +4,7 @@ using Baku.LibqiDotNet.QiApi;
 namespace Baku.LibqiDotNet
 {
     /// <summary>非同期的にリクエストの戻り値を受け取るコンテナを表します。</summary>
-    public class QiFuture
+    public sealed class QiFuture
     {
         internal QiFuture(IntPtr handle)
         {
@@ -102,31 +102,31 @@ namespace Baku.LibqiDotNet
         /// <returns>呼び出し結果</returns>
         public QiObject GetObject() => QiApiFuture.GetObject(this);
 
-        /// <summary>
-        /// (動作未確認)動作完了時のコールバック関数を登録します。
-        /// </summary>
+
+        //NOTE: これさ、アンマネージに渡したapiCallbackがGCされて死ぬよくあるパターンでは？
+        /// <summary>(動作未確認)動作完了時のコールバック関数を登録します。</summary>
         /// <param name="cb">コールバック関数</param>
         /// <param name="userData">ユーザーデータ</param>
-        public void AddCallback(QiFutureCallback cb, IntPtr userData)
+        public void AddCallback(Action<QiFuture, IntPtr> cb, IntPtr userData)
         {
             var apiCallback = new QiApiFutureCallback((fut, udata) => cb(new QiFuture(fut), udata));
             QiApiFuture.AddCallback(this, apiCallback, userData);
         }
 
+        /// <summary>(動作未確認)動作完了時のコールバック関数を登録します。</summary>
+        /// <param name="cb">コールバック関数</param>
+        public void AddCallback(Action<QiFuture> cb)
+        {
+            var apiCallback = new QiApiFutureCallback((fut, udata) => cb(new QiFuture(fut)));
+            QiApiFuture.AddCallback(this, apiCallback);
+        }
 
-        /// <summary>(詳細未確認)待機を行わないことを表します。</summary>
-        public static readonly int NoneTimeout = 0;
+
+        /// <summary>待機を行わないことを表します。</summary>
+        public static int NoneTimeout { get; } = 0;
         /// <summary>無期限の待機を表します。</summary>
-        public static readonly int InfiniteTimeout = 0x7fffffff;
+        public static int InfiniteTimeout { get; } = 0x7fffffff;
 
     }
-
-    /// <summary>
-    /// <see cref="QiFuture.AddCallback(QiFutureCallback, IntPtr)"/>で用いる、非同期処理の完了時に呼びだすコールバック関数を表します。
-    /// </summary>
-    /// <param name="future">対象となる非同期呼び出し</param>
-    /// <param name="userdata">ユーザデータ(通常は使用しない)</param>
-    public delegate void QiFutureCallback(QiFuture future, IntPtr userdata);
-
 
 }

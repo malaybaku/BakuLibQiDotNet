@@ -2,7 +2,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>文字列型を表します。</summary>
-    public class QiString : QiAnyValue
+    public sealed class QiString : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。

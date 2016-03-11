@@ -10,7 +10,8 @@ namespace StandardSamples
             var mem = session.GetService("ALMemory");
 
             //人の会話
-            var subscriberHumanSpeech = mem.CallObject("subscriber", new QiString("Dialog/LastInput"));
+            //var subscriberHumanSpeech = mem.CallObject("subscriber", new QiString("Dialog/LastInput"));
+            var subscriberHumanSpeech = mem["subscriber"].Call<QiObject>("Dialog/LastInput");
             ulong idHumanSpeech = subscriberHumanSpeech.ConnectSignal("signal", qv =>
             {
                 if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)
@@ -25,7 +26,7 @@ namespace StandardSamples
             });
 
             //ロボットの発話
-            var subscriberRobotSpeech = mem.CallObject("subscriber", new QiString("ALTextToSpeech/CurrentSentence"));
+            var subscriberRobotSpeech = mem["subscriber"].Call<QiObject>("ALTextToSpeech/CurrentSentence");
             ulong idRobotSpeech = subscriberRobotSpeech.ConnectSignal("signal", qv =>
             {
                 if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)

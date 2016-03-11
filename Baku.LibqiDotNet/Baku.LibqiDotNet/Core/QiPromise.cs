@@ -8,7 +8,7 @@ namespace Baku.LibqiDotNet
     /// <see cref="QiFuture"/>の対となる値の返却処理を表します(多分)。
     /// サービスの自作をしない限り必要なさそうなため実装は最低限になっています。
     /// </summary>
-    public class QiPromise
+    public sealed class QiPromise
     {
 
         internal QiPromise(IntPtr handle)

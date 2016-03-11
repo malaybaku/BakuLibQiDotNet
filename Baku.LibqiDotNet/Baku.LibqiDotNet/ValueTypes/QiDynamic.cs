@@ -2,7 +2,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>動的に型付けが行われる値を表します。</summary>
-    public class QiDynamic : QiAnyValue
+    public sealed class QiDynamic : QiAnyValue
     {
         /// <summary>
         /// 渡された<see cref="QiSignatures.TypeDynamic"/>シグネチャを持った変数をそのまま格納するか、
@@ -34,7 +34,7 @@ namespace Baku.LibqiDotNet
         public override string Signature { get; } = QiSignatures.TypeDynamic;
 
         /// <summary>格納しているデータを取得します。</summary>
-        public QiValue Value => QiValue.Value as QiValue;
+        public QiValue Value => QiValue.GetDynamic();
 
     }
 
