@@ -91,7 +91,6 @@
   <ItemGroup>
     <Compile Include="MotionPosesInit.cs" />
     <Compile Include="MotionStiffnessOn.cs" />
-    <Compile Include="PathModifier.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensors.cs" />

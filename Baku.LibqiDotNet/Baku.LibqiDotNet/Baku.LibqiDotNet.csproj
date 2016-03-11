@@ -83,10 +83,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Enums.cs" />
-    <Compile Include="Core\QiMethod.cs" />
-    <Compile Include="Core\QiMethodArgumentInfo.cs" />
-    <Compile Include="Core\QiMethodInfo.cs" />
-    <Compile Include="Core\QiMethods.cs" />
+    <Compile Include="Core\QiMethod\QiMethod.cs" />
+    <Compile Include="Core\QiMethod\QiMethodArgumentInfo.cs" />
+    <Compile Include="Core\QiMethod\QiMethodInfo.cs" />
+    <Compile Include="Core\QiMethod\QiMethods.cs" />
+    <Compile Include="Utils\PathModifier.cs" />
     <Compile Include="Utils\ReadOnlyDictionary.cs" />
     <Compile Include="Utils\ReadOnlyList.cs" />
     <Compile Include="ValueTypes\QiAnyValue.cs" />

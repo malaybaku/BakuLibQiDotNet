@@ -463,7 +463,7 @@ namespace Baku.LibqiDotNet
         }
 
         /// <summary>Qi Frameworkへ登録する関数についての、戻り値が無いことを示す値を取得します。</summary>
-        public static QiValue Void { get; } = Create(QiSignatures.TypeVoid);
+        public static QiValue Void => Create(QiSignatures.TypeVoid);
 
     }
 

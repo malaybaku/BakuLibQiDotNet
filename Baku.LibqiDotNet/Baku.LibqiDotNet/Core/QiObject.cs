@@ -154,7 +154,7 @@ namespace Baku.LibqiDotNet
             /// <summary>ユーザが指定したイベントハンドラ</summary>
             internal Action<QiValue> TargetAction { get; }
             /// <summary><see cref="TargetAction"/>をAPIに通す形に変形して得たハンドラ</summary>
-            internal QiApiObjectSignalCallback ApiCallback { get; }
+            internal Action<IntPtr, IntPtr> ApiCallback { get; }
         }
 
     }

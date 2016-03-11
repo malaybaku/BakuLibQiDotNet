@@ -80,8 +80,7 @@ namespace Baku.LibqiDotNet
         /// </summary>
         /// <param name="name">サービス名</param>
         /// <returns>指定したサービス</returns>
-        public QiObject GetService(string name)
-            => GetServiceAsync(name).GetObject();
+        public QiObject GetService(string name) => GetServiceAsync(name).GetObject();
 
         /// <summary>
         /// セッションを閉じます。

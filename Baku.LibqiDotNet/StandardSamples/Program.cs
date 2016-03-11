@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Baku.LibqiDotNet;
+using Baku.LibqiDotNet.Path;
 
 namespace StandardSamples
 {
@@ -9,8 +10,7 @@ namespace StandardSamples
     {
         static void Main(string[] args)
         {
-            string expectedDllPath = System.IO.Path.Combine(Environment.CurrentDirectory, "dlls");
-            PathModifier.AddEnvironmentPaths(expectedDllPath);
+            PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
             string input = "";
 
