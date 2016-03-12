@@ -78,7 +78,7 @@ namespace StandardSamples
             catch(DllNotFoundException)
             {
                 //アンマネージドのDLLを実行ファイルの"dll"に置くのを忘れていたケース
-                Console.WriteLine($"Failed to load dll file. Unmanaged libraries are required to put at {expectedDllPath}");
+                Console.WriteLine($"Failed to load dll file. Unmanaged libraries are required to put at 'dlls' folder");
                 Console.WriteLine("Ends program...");
             }
 

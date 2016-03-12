@@ -24,7 +24,7 @@ namespace Baku.LibqiDotNet
         /// <summary>格納したデータを取得、設定します。</summary>
         public string Value
         {
-            get { return QiValue.GetString(); }
+            get { return QiValue.ToString(); }
             set { QiValue.SetValue(value); }
         }
 

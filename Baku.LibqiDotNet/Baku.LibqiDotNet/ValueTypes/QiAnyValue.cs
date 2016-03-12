@@ -1,4 +1,6 @@
 ﻿
+using System.Linq;
+
 namespace Baku.LibqiDotNet
 {
     /// <summary>Qiの値型の基底</summary>
@@ -60,6 +62,18 @@ namespace Baku.LibqiDotNet
         /// <summary>バイト配列を適切な<see cref="QiAnyValue"/>の派生型インスタンスに変換します。</summary>
         /// <param name="x">入力元のバイト配列</param>
         public static implicit operator QiAnyValue(byte[] x) => new QiByteData(x);
+
+        /// <summary>整数の配列を適切な<see cref="QiAnyValue"/>の派生型インスタンスに変換します。</summary>
+        /// <param name="x">入力元の整数配列</param>
+        public static implicit operator QiAnyValue(int[] x) => x.Select(v => new QiInt32(v)).ToQiList();
+
+        /// <summary>小数の配列を適切な<see cref="QiAnyValue"/>の派生型インスタンスに変換します。</summary>
+        /// <param name="x">入力元の小数配列</param>
+        public static implicit operator QiAnyValue(double[] x) => x.Select(v => new QiDouble(v)).ToQiList();
+
+        /// <summary>文字列の配列を適切な<see cref="QiAnyValue"/>の派生型インスタンスに変換します。</summary>
+        /// <param name="x">入力元の文字列配列</param>
+        public static implicit operator QiAnyValue(string[] x) => x.Select(v => new QiString(v)).ToQiList();
 
         #endregion
     }

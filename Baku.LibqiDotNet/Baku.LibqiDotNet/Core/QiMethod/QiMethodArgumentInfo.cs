@@ -5,8 +5,8 @@
     {
         internal QiMethodArgumentInfo(QiValue argInfo)
         {
-            Name = argInfo[0].GetString();
-            Description = argInfo[1].GetString();
+            Name = argInfo[0].ToString();
+            Description = argInfo[1].ToString();
         }
 
         /// <summary>引数の名前を取得します。</summary>

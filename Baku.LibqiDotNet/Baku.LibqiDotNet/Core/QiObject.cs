@@ -37,7 +37,7 @@ namespace Baku.LibqiDotNet
                     var mObj = MetaObject;
                     //NOTE: mObj[3]にモジュールのDescription文字列が入るというのは観察から得た知見
                     _description = (mObj.Count > 3) ?
-                        mObj[3].GetString() :
+                        mObj[3].ToString() :
                         "";
                 }
                 return _description;
@@ -154,7 +154,7 @@ namespace Baku.LibqiDotNet
             /// <summary>ユーザが指定したイベントハンドラ</summary>
             internal Action<QiValue> TargetAction { get; }
             /// <summary><see cref="TargetAction"/>をAPIに通す形に変形して得たハンドラ</summary>
-            internal Action<IntPtr, IntPtr> ApiCallback { get; }
+            internal ApiSignalCallback ApiCallback { get; }
         }
 
     }

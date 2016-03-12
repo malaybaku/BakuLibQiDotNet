@@ -11,12 +11,12 @@ namespace StandardSamples
 
             //人の会話
             //var subscriberHumanSpeech = mem.CallObject("subscriber", new QiString("Dialog/LastInput"));
-            var subscriberHumanSpeech = mem["subscriber"].Call<QiObject>("Dialog/LastInput");
+            var subscriberHumanSpeech = mem["subscriber"].CallObject("Dialog/LastInput");
             ulong idHumanSpeech = subscriberHumanSpeech.ConnectSignal("signal", qv =>
             {
                 if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)
                 {
-                    Console.WriteLine($"Human: {qv[0].GetString()}");
+                    Console.WriteLine($"Human: {qv[0].ToString()}");
                 }
                 else
                 {
@@ -26,12 +26,12 @@ namespace StandardSamples
             });
 
             //ロボットの発話
-            var subscriberRobotSpeech = mem["subscriber"].Call<QiObject>("ALTextToSpeech/CurrentSentence");
+            var subscriberRobotSpeech = mem["subscriber"].CallObject("ALTextToSpeech/CurrentSentence");
             ulong idRobotSpeech = subscriberRobotSpeech.ConnectSignal("signal", qv =>
             {
                 if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)
                 {
-                    string sentence = qv[0].GetString();
+                    string sentence = qv[0].ToString();
                     if(!string.IsNullOrWhiteSpace(sentence))
                     {
                         Console.WriteLine($"Robot: {sentence}");

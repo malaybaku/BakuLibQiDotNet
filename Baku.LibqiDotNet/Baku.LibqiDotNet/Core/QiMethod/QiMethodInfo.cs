@@ -10,17 +10,17 @@ namespace Baku.LibqiDotNet
         internal QiMethodInfo(QiValue mInfo)
         {
             UID = mInfo[0].ToInt64();
-            ReturnValueSignature = mInfo[1].GetString();
-            Name = mInfo[2].GetString();
-            ArgumentSignature = mInfo[3].GetString();
-            Description = mInfo[4].GetString();
+            ReturnValueSignature = mInfo[1].ToString();
+            Name = mInfo[2].ToString();
+            ArgumentSignature = mInfo[3].ToString();
+            Description = mInfo[4].ToString();
 
             ArgumentsInfo = new ReadOnlyList<QiMethodArgumentInfo>(
                 Enumerable.Range(0, mInfo[5].Count)
                 .Select(i => new QiMethodArgumentInfo(mInfo[5][i]))
                 .ToList());
 
-            ReturnValueDescription = mInfo[6].GetString();
+            ReturnValueDescription = mInfo[6].ToString();
         }
 
         /// <summary>メソッドに割り当てられたIDを取得します。</summary>

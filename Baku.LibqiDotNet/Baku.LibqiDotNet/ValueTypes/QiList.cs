@@ -116,7 +116,7 @@ namespace Baku.LibqiDotNet
             throw new InvalidOperationException($"Given type is not supported, {type}");
         }
 
-        #region ひじょーにモッサリしてるが組み込み型からの
+        #region ひじょーにモッサリしてるが組み込み型からの配列生成をサポートしとく
 
         /// <summary>値の一覧からQi Frameworkで利用可能な配列を生成します。</summary>
         /// <param name="values">入力値の一覧</param>
@@ -154,6 +154,22 @@ namespace Baku.LibqiDotNet
         /// <param name="values">入力値の一覧</param>
         /// <returns>入力と等価な配列</returns>
         public static QiList<QiInt64> Create(IEnumerable<long> values) => Create(values.Select(v => new QiInt64(v)));
+
+        /// <summary>値の一覧からQi Frameworkで利用可能な配列を生成します。</summary>
+        /// <param name="values">入力値の一覧</param>
+        /// <returns>入力と等価な配列</returns>
+        public static QiList<QiFloat> Create(IEnumerable<float> values) => Create(values.Select(v => new QiFloat(v)));
+
+        /// <summary>値の一覧からQi Frameworkで利用可能な配列を生成します。</summary>
+        /// <param name="values">入力値の一覧</param>
+        /// <returns>入力と等価な配列</returns>
+        public static QiList<QiDouble> Create(IEnumerable<double> values) => Create(values.Select(v => new QiDouble(v)));
+
+        /// <summary>値の一覧からQi Frameworkで利用可能な配列を生成します。</summary>
+        /// <param name="values">入力値の一覧</param>
+        /// <returns>入力と等価な配列</returns>
+        public static QiList<QiString> Create(IEnumerable<string> values) => Create(values.Select(v => new QiString(v)));
+
 
         #endregion
     }

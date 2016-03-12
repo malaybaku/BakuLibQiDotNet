@@ -3,11 +3,12 @@ using System.Linq;
 using System.Text;
 
 using Baku.LibqiDotNet.QiApi;
+using System.Collections.Generic;
 
 namespace Baku.LibqiDotNet
 {
     /// <summary>Qiの一般的な値を表します。</summary>
-    public sealed class QiValue
+    public sealed partial class QiValue
     {
         internal QiValue(IntPtr handle)
         {
@@ -161,10 +162,13 @@ namespace Baku.LibqiDotNet
         /// <summary>この変数がバイナリデータ型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
         public byte[] ToBytes() => QiApiValue.GetRaw(NonDynamicValue);
-        /// <summary>この変数が文字列型であると想定して値を取得します。</summary>
-        /// <returns>格納された値</returns>
 
-        public string GetString() => QiApiValue.GetString(NonDynamicValue);
+        /// <summary>この変数が文字列型である場合はその値、そうでない場合は保持している値の型を表す文字列を取得します。</summary>
+        /// <returns>格納された値</returns>
+        public override string ToString() => (ContentValueKind == QiValueKind.QiString) ?
+            QiApiValue.GetString(NonDynamicValue) :
+            ContentValueKind.ToString();
+
         /// <summary>この変数がオブジェクト型であると想定して値を取得します。</summary>
         /// <returns>格納された値</returns>
         public QiObject GetObject() => QiApiValue.GetObject(NonDynamicValue);
@@ -320,43 +324,67 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        /// <summary>
-        /// 指定された型のデータの取得を試みます。
-        /// 失敗した場合は<see cref="ArgumentException"/>が送出されます。
-        /// </summary>
-        /// <typeparam name="T">取り出したい値の型</typeparam>
-        /// <returns>成功した場合その値の型</returns>
-        /// <exception cref="ArgumentException"/>
-        public T TryGet<T>()
-        {
-            var t = typeof(T);
-            if (t == typeof(QiValue)) return (T)Convert.ChangeType(this, t);
-            else if (t == typeof(QiObject)) return (T)Convert.ChangeType(GetObject(), t);
+        ///// <summary>
+        ///// 指定された型のデータの取得を試みます。
+        ///// 失敗した場合は<see cref="ArgumentException"/>が送出されます。
+        ///// </summary>
+        ///// <typeparam name="T">取り出したい値の型</typeparam>
+        ///// <returns>成功した場合その値の型</returns>
+        ///// <exception cref="ArgumentException"/>
+        //public T TryGet<T>()
+        //{
+        //    var t = typeof(T);
+        //    if (t == typeof(QiValue)) return (T)Convert.ChangeType(this, t);
+        //    else if (t == typeof(QiObject)) return (T)Convert.ChangeType(GetObject(), t);
 
-            switch (Type.GetTypeCode(t))
-            {
-                case TypeCode.Boolean: return (T)Convert.ChangeType(ToBool(), t);
-                case TypeCode.SByte: return (T)Convert.ChangeType(ToSByte(), t);
-                case TypeCode.Int16: return (T)Convert.ChangeType(ToInt16(), t);
-                case TypeCode.Int32: return (T)Convert.ChangeType(ToInt32(), t);
-                case TypeCode.Int64: return (T)Convert.ChangeType(ToInt64(), t);
-                case TypeCode.Byte: return (T)Convert.ChangeType(ToByte(), t);
-                case TypeCode.UInt16: return (T)Convert.ChangeType(ToUInt16(), t);
-                case TypeCode.UInt32: return (T)Convert.ChangeType(ToUInt32(), t);
-                case TypeCode.UInt64: return (T)Convert.ChangeType(ToUInt64(), t);
-                case TypeCode.Single: return (T)Convert.ChangeType(ToFloat(), t);
-                case TypeCode.Double: return (T)Convert.ChangeType(ToDouble(), t);
-                case TypeCode.String: return (T)Convert.ChangeType(GetString(), t);
-                default:
-                    break;
-            }
+        //    switch (Type.GetTypeCode(t))
+        //    {
+        //        case TypeCode.Boolean: return (T)Convert.ChangeType(ToBool(), t);
+        //        case TypeCode.SByte: return (T)Convert.ChangeType(ToSByte(), t);
+        //        case TypeCode.Int16: return (T)Convert.ChangeType(ToInt16(), t);
+        //        case TypeCode.Int32: return (T)Convert.ChangeType(ToInt32(), t);
+        //        case TypeCode.Int64: return (T)Convert.ChangeType(ToInt64(), t);
+        //        case TypeCode.Byte: return (T)Convert.ChangeType(ToByte(), t);
+        //        case TypeCode.UInt16: return (T)Convert.ChangeType(ToUInt16(), t);
+        //        case TypeCode.UInt32: return (T)Convert.ChangeType(ToUInt32(), t);
+        //        case TypeCode.UInt64: return (T)Convert.ChangeType(ToUInt64(), t);
+        //        case TypeCode.Single: return (T)Convert.ChangeType(ToFloat(), t);
+        //        case TypeCode.Double: return (T)Convert.ChangeType(ToDouble(), t);
+        //        case TypeCode.String: return (T)Convert.ChangeType(ToString(), t);
+        //        default:
+        //            break;
+        //    }
+
+        //    if (t == typeof(int[]))
+        //    {
+        //        var result = Enumerable.Range(0, Count)
+        //            .Select(i => this[i].ToInt32())
+        //            .ToArray();
+        //        return (T)Convert.ChangeType(result, t);
+        //    }
+
+        //    if (t == typeof(double[]))
+        //    {
+        //        var result = Enumerable.Range(0, Count)
+        //            .Select(i => this[i].ToDouble())
+        //            .ToArray();
+        //        return (T)Convert.ChangeType(result, t);
+        //    }
+
+        //    if (t == typeof(IEnumerable<string>))
+        //    {
+        //        var result = Enumerable.Range(0, Count)
+        //            .Select(i => this[i].ToString())
+        //            .ToArray();
+        //        return (T)Convert.ChangeType(result, t);
+        //    }
 
 
-            //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートする？
-            //現状ではめんどくさいので未対応
-            throw new ArgumentException("Given type parameter is not supported currently");
+        //    //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートする？
+        //    //現状ではめんどくさいので未対応
+        //    throw new ArgumentException("Given type parameter is not supported currently");
 
-        }
+        //}
 
         /// <summary>
         /// ダイナミック型を再帰的にアンパックし、ダイナミック型でない実際の内容を取得します。

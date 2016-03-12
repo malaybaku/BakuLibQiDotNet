@@ -87,6 +87,7 @@
     <Compile Include="Core\QiMethod\QiMethodArgumentInfo.cs" />
     <Compile Include="Core\QiMethod\QiMethodInfo.cs" />
     <Compile Include="Core\QiMethod\QiMethods.cs" />
+    <Compile Include="Core\QiValueCast.cs" />
     <Compile Include="Utils\PathModifier.cs" />
     <Compile Include="Utils\ReadOnlyDictionary.cs" />
     <Compile Include="Utils\ReadOnlyList.cs" />

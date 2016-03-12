@@ -60,7 +60,7 @@ namespace Baku.LibqiDotNet
         {
             var sList = GetServicesAsync().GetValue();
             return Enumerable.Range(0, sList.Count)
-                .Select(i => sList[i].GetString())
+                .Select(i => sList[i].ToString())
                 .ToArray();
         }
 

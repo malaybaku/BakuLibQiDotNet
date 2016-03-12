@@ -19,7 +19,7 @@ namespace StandardSamples
             var motion = session.GetService("ALMotion");
             motion["stiffnessInterpolation"].Call("Body", 1.0f, 1.0f);
 
-            Console.WriteLine(motion["getSummary"].Call<string>());
+            Console.WriteLine((string)motion["getSummary"].Call());
 
             //なぜか知らないが状態が落ち着くまで待つらしい?
             Task.Delay(2000).Wait();

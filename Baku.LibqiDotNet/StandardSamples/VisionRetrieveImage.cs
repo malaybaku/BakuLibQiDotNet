@@ -38,7 +38,7 @@ namespace StandardSamples
             //忌々しいマジックナンバーを使っているが、パラメタについては
             //ALVideoDevice::subscribeのドキュメンテーションに載っているので参照されたく。
             //http://doc.aldebaran.com/2-1/naoqi/vision/alvideodevice-api.html?highlight=alvideodevice#ALVideoDeviceProxy::subscribeCamera__ssCR.iCR.iCR.iCR.iCR
-            string idName = vd["subscribeCamera"].Call<string>("mytestimage",
+            string idName = (string)vd["subscribeCamera"].Call("mytestimage",
                 //カメラ種類 0:正面, 1:下方, 2:深度
                 0,
                 //解像度 1:320x240

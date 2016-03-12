@@ -26,7 +26,7 @@ namespace Baku.LibqiDotNet.QiApi
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr qi_object_signal_connect(
-            IntPtr qiObj, string signature, Action<IntPtr, IntPtr> cb, IntPtr userdata
+            IntPtr qiObj, string signature, ApiSignalCallback cb, IntPtr userdata
             );
 
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
@@ -54,7 +54,7 @@ namespace Baku.LibqiDotNet.QiApi
         internal static int Post(QiObject obj, string signature, QiValue qiTuple)
             => qi_object_post(obj.Handle, signature, qiTuple.Handle);
 
-        internal static QiFuture SignalConnect(QiObject obj, string signature, Action<IntPtr, IntPtr> callback, IntPtr userdata)
+        internal static QiFuture SignalConnect(QiObject obj, string signature, ApiSignalCallback callback, IntPtr userdata)
             => new QiFuture(qi_object_signal_connect(obj.Handle, signature, callback, userdata));
 
         internal static QiFuture SignalDisconnect(QiObject obj, ulong id)
@@ -67,5 +67,7 @@ namespace Baku.LibqiDotNet.QiApi
             => new QiFuture(qi_object_set_property(obj.Handle, pname, value));
 
     }
+
+    internal delegate void ApiSignalCallback(IntPtr qiValue, IntPtr userData);
 
 }

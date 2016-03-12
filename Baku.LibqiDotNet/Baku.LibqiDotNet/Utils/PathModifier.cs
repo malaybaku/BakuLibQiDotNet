@@ -17,14 +17,14 @@ namespace Baku.LibqiDotNet.Path
         {
             string baseDir =
                 (modifyMode == PathModifyMode.RelativeToEntryAssembly) ?
-                    Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) :
+                    System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) :
                 (modifyMode == PathModifyMode.RelativeToExecutingAssembly) ?
-                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) :
+                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) :
                     Environment.CurrentDirectory;
 
-            string absDir = Path.Combine(baseDir, path);
-            if (Directory.Exists(absDir)) throw new DirectoryNotFoundException(
-                $"Directory to search was not found, this program expects the directory {absDir} to exits"
+            string absDir = System.IO.Path.Combine(baseDir, path);
+            if (!Directory.Exists(absDir)) throw new DirectoryNotFoundException(
+                $"Directory to search was not found, this program expects the directory {absDir} to exists"
                 );
 
             AddEnvironmentPath(absDir);
@@ -33,7 +33,7 @@ namespace Baku.LibqiDotNet.Path
         private static void AddEnvironmentPath(string addedPath)
         {
             string currentPath = Environment.GetEnvironmentVariable("PATH") ?? "";
-            string newPath = currentPath + Path.PathSeparator.ToString() + addedPath;
+            string newPath = currentPath + System.IO.Path.PathSeparator.ToString() + addedPath;
 
             Environment.SetEnvironmentVariable("PATH", newPath);
         }

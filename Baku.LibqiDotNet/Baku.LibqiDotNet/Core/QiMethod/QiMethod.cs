@@ -21,19 +21,26 @@ namespace Baku.LibqiDotNet
         /// <summary>メソッド名を取得します。</summary>
         public string Name { get; }
 
-        /// <summary>戻り値の型を指定して関数を同期的に呼び出し、結果を取得します。</summary>
-        /// <typeparam name="T">戻り値の型(<see cref="decimal"/>以外の組み込み型、<see cref="byte"/>配列、<see cref="QiValue"/>のいずれか)</typeparam>
-        /// <param name="args">関数の引数</param>
-        /// <returns>関数の呼び出し結果</returns>
-        public T Call<T>(params QiAnyValue[] args)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>関数を同期的に呼び出し、結果を取得します。</summary>
         /// <param name="args">関数の引数</param>
         /// <returns>結果</returns>
-        public QiValue Call(params QiAnyValue[] args) => Call<QiValue>(args);
+        public QiValue Call(params QiAnyValue[] args)
+        {
+            return _obj
+                .CallDirect(GetMethodSignature(args), QiTuple.CreateDynamic(args).QiValue)
+                .Wait()
+                .GetValue();
+        }
+
+        /// <summary>関数を同期的に呼び出し、結果となる<see cref="QiObject"/>型変数を取得します。</summary>
+        /// <param name="args">関数の引数</param>
+        /// <returns>結果</returns>
+        public QiObject CallObject(params QiAnyValue[] args)
+        {
+            return _obj
+                .CallDirect(GetMethodSignature(args), QiTuple.CreateDynamic(args).QiValue)
+                .GetObject();
+        }
 
         /// <summary>関数を非同期で呼び出し、進行状態の確認に利用可能なIDを発行します。</summary>
         /// <param name="args">関数の引数</param>
