@@ -28,5 +28,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定した文字列を、その文字列を保持する<see cref="QiString"/>に変換します。</summary>
+        /// <param name="v">実際のデータとなる文字列</param>
+        public static implicit operator QiString(string v) => new QiString(v);
+
     }
 }

@@ -61,4 +61,33 @@ namespace Baku.LibqiDotNet
         }
 
     }
+
+    /// <summary>ジェネリック型である<see cref="QiMap{K, V}"/>のインスタンスを生成するファクトリメソッドを提供します。</summary>
+    public static class QiMap
+    {
+        /// <summary>指定されたキー、値ペアの一覧を用いて辞書型データを生成します。</summary>
+        /// <typeparam name="K">キーの型</typeparam>
+        /// <typeparam name="V">値の型</typeparam>
+        /// <param name="items">データの内容となる値の一覧</param>
+        /// <returns>指定したデータを保持する辞書型データ</returns>
+        public static QiMap<K, V> ToQiMap<K, V>(this IEnumerable<KeyValuePair<K, V>> items)
+            where K : QiAnyValue
+            where V : QiAnyValue
+        {
+            return QiMap<K, V>.Create(items);
+        }
+
+        /// <summary>指定されたキー、値ペアの一覧を用いて辞書型データを生成します。</summary>
+        /// <typeparam name="K">キーの型</typeparam>
+        /// <typeparam name="V">値の型</typeparam>
+        /// <param name="items">データの内容となる値の一覧</param>
+        /// <returns>指定したデータを保持する辞書型データ</returns>
+        public static QiMap<K, V> Create<K, V>(params KeyValuePair<K, V>[] items)
+            where K : QiAnyValue
+            where V : QiAnyValue
+        {
+            return items.ToQiMap();
+        }
+
+    }
 }
