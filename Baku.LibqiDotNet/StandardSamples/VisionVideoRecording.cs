@@ -14,14 +14,14 @@ namespace StandardSamples
             string savePath = "/home/nao/recordings/cameras";
 
             //Motion JPEGのaviにするパターン
-            recorder.Call("setResolution", new QiInt32(1));
-            recorder.Call("setFramerate", new QiInt32(10));
-            recorder.Call("setVideoFormat", new QiString("MJPG"));
-            recorder.Call("startRecording", new QiString(savePath), new QiString("myvideo"));
+            recorder["setResolution"].Call(1);
+            recorder["setFramerate"].Call(10);
+            recorder["setVideoFormat"].Call("MJPG");
+            recorder["startRecording"].Call(savePath, "myvideo");
 
             Task.Delay(5000).Wait();
 
-            recorder.Call("stopRecording");
+            recorder["stopRecording"].Call();
 
             Console.WriteLine($"If test succeeded, video was saved in {savePath} on the robot");
 

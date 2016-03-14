@@ -1,36 +1,36 @@
-﻿using Baku.LibqiDotNet.Utils;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
+using Baku.LibqiDotNet.Utils;
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary>Qiで受け渡されるメソッド情報を表します。</summary>
-    public class QiMethodInfo
+    /// <summary>メソッドの名称以外の補助情報を表します。</summary>
+    public sealed class QiMethodInfo
     {
         internal QiMethodInfo(QiValue mInfo)
         {
-            UID = (long)mInfo[0].Value;
-            ReturnValueSignature = (string)mInfo[1].Value;
-            Name = (string)mInfo[2].Value;
-            ArgumentSignature = (string)mInfo[3].Value;
-            Description = (string)mInfo[4].Value;
+            UID = mInfo[0].ToInt64();
+            ReturnValueSignature = mInfo[1].ToString();
+            Name = mInfo[2].ToString();
+            ArgumentSignature = mInfo[3].ToString();
+            Description = mInfo[4].ToString();
 
             ArgumentsInfo = new ReadOnlyList<QiMethodArgumentInfo>(
                 Enumerable.Range(0, mInfo[5].Count)
                 .Select(i => new QiMethodArgumentInfo(mInfo[5][i]))
                 .ToList());
 
-            ReturnValueDescription = (string)mInfo[6].Value;
+            ReturnValueDescription = mInfo[6].ToString();
         }
 
         /// <summary>メソッドに割り当てられたIDを取得します。</summary>
         public long UID { get; }
 
-        /// <summary>戻り値の型に対応するシグネチャ文字列を取得します。</summary>
-        public string ReturnValueSignature { get; }
-        
         /// <summary>メソッド名を取得します。</summary>
         public string Name { get; }
+
+        /// <summary>戻り値の型に対応するシグネチャ文字列を取得します。</summary>
+        public string ReturnValueSignature { get; }
 
         /// <summary>引数の型に対応するシグネチャ文字列を取得します。引数はタプルで一括りになっています。</summary>
         public string ArgumentSignature { get; }
@@ -44,21 +44,4 @@ namespace Baku.LibqiDotNet
         /// <summary>引数のインフォメーション一覧(ロジック的には割とどうでもいい)</summary>
         public ReadOnlyList<QiMethodArgumentInfo> ArgumentsInfo { get; }
     }
-
-    /// <summary>Qiの関数引数に関する情報を表します。</summary>
-    public class QiMethodArgumentInfo
-    {
-        internal QiMethodArgumentInfo(QiValue argInfo)
-        {
-            Name = (string)argInfo[0].Value;
-            Description = (string)argInfo[1].Value;
-        }
-
-        /// <summary>引数の名前を取得します。</summary>
-        public string Name { get; }
-        /// <summary>引数の意味について要約文を取得します。</summary>
-        public string Description { get; }
-    }
-
-
 }

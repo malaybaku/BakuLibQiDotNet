@@ -2,7 +2,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>文字列型を表します。</summary>
-    public class QiString : QiAnyValue
+    public sealed class QiString : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -24,9 +24,13 @@ namespace Baku.LibqiDotNet
         /// <summary>格納したデータを取得、設定します。</summary>
         public string Value
         {
-            get { return QiValue.GetString(); }
+            get { return QiValue.ToString(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定した文字列を、その文字列を保持する<see cref="QiString"/>に変換します。</summary>
+        /// <param name="v">実際のデータとなる文字列</param>
+        public static implicit operator QiString(string v) => new QiString(v);
 
     }
 }

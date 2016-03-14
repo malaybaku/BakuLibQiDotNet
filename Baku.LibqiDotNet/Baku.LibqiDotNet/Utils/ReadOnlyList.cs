@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 //名前空間をBaku.LibqiDotNetにすると汚染感が高いので注意
 namespace Baku.LibqiDotNet.Utils
 {
     /// <summary>値の読み取りのみが許可されているリストを表します。</summary>
     /// <typeparam name="T">要素の型</typeparam>
-    public class ReadOnlyList<T> : IEnumerable<T>
+    public sealed class ReadOnlyList<T> : IEnumerable<T>
     {
         /// <summary>データ元となるリストによりインスタンスを初期化します。</summary>
         /// <param name="source">データ元のリスト</param>

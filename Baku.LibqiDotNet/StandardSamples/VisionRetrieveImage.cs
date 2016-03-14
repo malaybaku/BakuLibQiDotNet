@@ -38,30 +38,27 @@ namespace StandardSamples
             //忌々しいマジックナンバーを使っているが、パラメタについては
             //ALVideoDevice::subscribeのドキュメンテーションに載っているので参照されたく。
             //http://doc.aldebaran.com/2-1/naoqi/vision/alvideodevice-api.html?highlight=alvideodevice#ALVideoDeviceProxy::subscribeCamera__ssCR.iCR.iCR.iCR.iCR
-            string idName = vd.Call(
-                "subscribeCamera",
-                new QiString("mytestimage"),
+            string idName = (string)vd["subscribeCamera"].Call("mytestimage",
                 //カメラ種類 0:正面, 1:下方, 2:深度
-                new QiInt32(0),
+                0,
                 //解像度 1:320x240
-                new QiInt32(1),
+                1,
                 //色空間 11が24bit RGBなので基本コレでいいがYUVの方が速度速そうみたいな話もあるので注意
-                new QiInt32(11),
+                11,
                 //FPS: 1から30くらいまで
-                new QiInt32(5)
-                )
-                .GetString();
+                5
+                );
 
             //画像がデータバッファに溜まるのを確実に待機
             Task.Delay(500).Wait();
 
             try
             {
-                return vd.Call("getImageRemote", new QiString(idName))[6].GetRaw();
+                return vd["getImageRemote"].Call(idName)[6].ToBytes();
             }
             finally
             {
-                vd.Call("unsubscribe", new QiString(idName));
+                vd["unsubscribe"].Call(idName);
             }
 
         }

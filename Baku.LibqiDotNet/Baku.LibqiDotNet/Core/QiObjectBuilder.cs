@@ -5,12 +5,11 @@ using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
-
     /// <summary>
     /// <see cref="QiObject"/>のビルダークラスです。
-    /// サービスを作る場合以外使わないハズなので実装は最低限です。
+    /// 自作サービスを作る場合のみ使われるものであるため、実装は最低限です。
     /// </summary>
-    public class QiObjectBuilder
+    public sealed class QiObjectBuilder
     {
         internal QiObjectBuilder(IntPtr handle)
         {
@@ -34,6 +33,27 @@ namespace Baku.LibqiDotNet
             
             _advertisedMethods[id] = qiMethod;
         }
+
+        /// <summary>関数を登録します。</summary>
+        /// <param name="methodName">関数の名前</param>
+        /// <param name="returns">返却する値の型</param>
+        /// <param name="args">引数の型一覧</param>
+        /// <param name="method">メソッドの実装</param>
+        public void AdvertiseMethod(
+            string methodName,
+            QiMethodSignature returns,
+            IEnumerable<QiMethodSignature> args,
+            QiObjectMethod method
+            )
+        {
+            string signature = methodName +
+                QiSignatures.MethodNameSuffix +
+                returns.Signature +
+                QiMethodSignature.TupleOf(args).Signature;
+
+            AdvertiseMethod(signature, method);
+        }
+
 
         /// <summary>シグナルを登録します。</summary>
         /// <param name="name">シグナル名</param>

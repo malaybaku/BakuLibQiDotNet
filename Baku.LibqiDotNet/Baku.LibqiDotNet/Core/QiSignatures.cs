@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 //参考元: http://doc.aldebaran.com/libqi/api/cpp/type/signature.html
@@ -94,7 +93,6 @@ namespace Baku.LibqiDotNet
             if (methodSignature == argsSignature) return true;
 
             //シンプルに先頭から調べる
-            if (methodSignature == "" && argsSignature == "") return true;
             if (methodSignature == "" && argsSignature != "") return false;
             if (methodSignature != "" && argsSignature == "") return false;
 
@@ -106,6 +104,7 @@ namespace Baku.LibqiDotNet
             string asig = GetHeadToken(argsSignature, out success);
             if (!success) return false;
 
+            //引数側がDynamicなので無条件に引数を割り当ててしまってOK
             if (msig == QiSignatures.TypeDynamic)
             {
                 return CheckValiditySubroutine(methodSignature.Substring(1), argsSignature.Substring(asig.Length));
@@ -120,8 +119,10 @@ namespace Baku.LibqiDotNet
             }
             else
             {
-                //リストの場合, 外側ひっぺがして内側を比較したあとで次に進む
+                //リスト,辞書,タプルの場合, 外側ひっぺがして内側を比較したあとで次に進む
                 return (
+                    msig[0] == asig[0] &&
+                    msig.Last() == asig.Last() && 
                     msig.Length > 1 &&
                     asig.Length > 1 &&
                     CheckValiditySubroutine(msig.Substring(1, msig.Length - 2), asig.Substring(1, asig.Length - 2))
@@ -142,37 +143,61 @@ namespace Baku.LibqiDotNet
                 return s;
             }
 
+
             if (s == QiSignatures.TypeListBegin)
             {
-                int x = 1;
-                int index = -1;
-                for (int i = 1; i < src.Length; i++)
+                int index = GetContainerTokenEndIndex(src, QiSignatures.TypeListBegin, QiSignatures.TypeListEnd, out success);
+                if (index > 0)
                 {
-                    x += src[i] == QiSignatures.TypeListEnd[0] ? -1 :
-                         src[i] == QiSignatures.TypeListBegin[0] ? 1 :
-                         0;
-                    if (x == 0)
-                    {
-                        index = i;
-                        break;
-                    }
+                    return src.Substring(0, index + 1);
                 }
-                //シグネチャ側の書き間違い等でリストシグネチャが閉じてない場合
-                if (index == -1)
+            }
+            if (s == QiSignatures.TypeMapBegin)
+            {
+                int index = GetContainerTokenEndIndex(src, QiSignatures.TypeMapBegin, QiSignatures.TypeMapEnd, out success);
+                if (index > 0)
                 {
-                    success = false;
-                    return "";
+                    return src.Substring(0, index + 1);
                 }
-                else
+            }
+            if (s == QiSignatures.TypeTupleBegin)
+            {
+                int index = GetContainerTokenEndIndex(src, QiSignatures.TypeTupleBegin, QiSignatures.TypeTupleEnd, out success);
+                if (index > 0)
                 {
-                    success = true;
                     return src.Substring(0, index + 1);
                 }
             }
 
-            throw new InvalidOperationException(
-                $"could not found signature token properly: {src}"
-                );
+            throw new InvalidOperationException($"could not found signature token properly: {src}");
+
+        }
+
+        private static int GetContainerTokenEndIndex(string src, string begins, string ends, out bool success)
+        {
+            if (!src.StartsWith(begins))
+            {
+                success = false;
+                return -1;
+            }
+
+            int x = 1;
+            int index = -1;
+            for (int i = 1; i < src.Length; i++)
+            {
+                x += src[i] == ends[0] ? -1 :
+                     src[i] == begins[0] ? 1 :
+                     0;
+                if (x == 0)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            //index == -1で終わるのはシグネチャを書き間違えてるケース等
+            success = (index != -1);
+            return index;
 
         }
 

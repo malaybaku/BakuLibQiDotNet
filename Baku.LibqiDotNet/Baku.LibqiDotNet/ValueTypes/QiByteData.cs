@@ -2,7 +2,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>バイナリデータを表します。</summary>
-    public class QiByteData : QiAnyValue
+    public sealed class QiByteData : QiAnyValue
     {
         /// <summary>格納する値を指定してインスタンスを初期化します。</summary>
         /// <param name="data">格納する値</param>
@@ -21,7 +21,7 @@ namespace Baku.LibqiDotNet
         /// <summary>格納しているデータを取得、設定します。</summary>
         public byte[] Value
         {
-            get { return QiValue.GetRaw(); }
+            get { return QiValue.ToBytes(); }
             set { QiValue.SetValue(value); }
         }
 

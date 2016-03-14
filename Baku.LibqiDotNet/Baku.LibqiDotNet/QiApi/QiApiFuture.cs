@@ -14,7 +14,6 @@ namespace Baku.LibqiDotNet.QiApi
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr qi_future_clone(IntPtr future);
 
-        //TODO: 関数ポインタのマーシャリング忘れたので後で調べて書いて
         [DllImport(DllImportSettings.DllName, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qi_future_add_callback(IntPtr future, QiApiFutureCallback cb, IntPtr userdata);
 
@@ -66,6 +65,9 @@ namespace Baku.LibqiDotNet.QiApi
 
         internal static void AddCallback(QiFuture future, QiApiFutureCallback cb, IntPtr userData)
             => qi_future_add_callback(future.Handle, cb, userData);
+
+        internal static void AddCallback(QiFuture future, QiApiFutureCallback cb)
+            => qi_future_add_callback(future.Handle, cb, IntPtr.Zero);
 
         internal static void Wait(QiFuture future, int timeout)
             => qi_future_wait(future.Handle, timeout);

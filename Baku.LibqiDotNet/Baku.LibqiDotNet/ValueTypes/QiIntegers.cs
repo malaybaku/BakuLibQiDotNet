@@ -3,7 +3,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>ブール型を表します。</summary>
-    public class QiBool : QiAnyValue
+    public sealed class QiBool : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -24,14 +24,17 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public bool Value
         {
-            get { return (bool)QiValue.Value; }
+            get { return QiValue.ToBool(); }
             set { QiValue.SetValue(Convert.ToByte(value)); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiBool(bool v) => new QiBool(v);
     }
 
     /// <summary>符号あり1バイト整数を表します。</summary>
-    public class QiInt8 : QiAnyValue
+    public sealed class QiInt8 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -52,14 +55,17 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public sbyte Value
         {
-            get { return (sbyte)QiValue.Value; }
+            get { return QiValue.ToSByte(); }
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt8(sbyte v) => new QiInt8(v);
     }
 
     /// <summary>符号あり2バイト整数を表します。</summary>
-    public class QiInt16 : QiAnyValue
+    public sealed class QiInt16 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -80,14 +86,17 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public short Value
         {
-            get { return (short)QiValue.Value; }
+            get { return QiValue.ToInt16(); }
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt16(short v) => new QiInt16(v);
     }
 
     /// <summary>符号あり4バイト整数を表します。</summary>
-    public class QiInt32 : QiAnyValue
+    public sealed class QiInt32 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -108,13 +117,18 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public int Value
         {
-            get { return (int)QiValue.Value; }
+            get { return QiValue.ToInt32(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt32(int v) => new QiInt32(v);
+
     }
 
     /// <summary>符号あり8バイト整数を表します。</summary>
-    public class QiInt64 : QiAnyValue
+    public sealed class QiInt64 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -135,14 +149,18 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public long Value
         {
-            get { return (long)QiValue.Value; }
+            get { return QiValue.ToInt64(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt64(long v) => new QiInt64(v);
 
     }
 
     /// <summary>符号なし1バイト整数を表します。</summary>
-    public class QiUInt8 : QiAnyValue
+    public sealed class QiUInt8 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -163,14 +181,18 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public byte Value
         {
-            get { return (byte)QiValue.Value; }
+            get { return QiValue.ToByte(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt8(byte v) => new QiUInt8(v);
 
     }
 
     /// <summary>符号なし2バイト整数を表します。</summary>
-    public class QiUInt16 : QiAnyValue
+    public sealed class QiUInt16 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -191,15 +213,18 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public ushort Value
         {
-            get { return (ushort)QiValue.Value; }
+            get { return QiValue.ToUInt16(); }
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt16(ushort v) => new QiUInt16(v);
 
     }
 
     /// <summary>符号なし4バイト整数を表します。</summary>
-    public class QiUInt32 : QiAnyValue
+    public sealed class QiUInt32 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -220,13 +245,18 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public uint Value
         {
-            get { return (uint)QiValue.Value; }
+            get { return QiValue.ToUInt32(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt32(uint v) => new QiUInt32(v);
+
     }
 
     /// <summary>符号なし8バイト整数を表します。</summary>
-    public class QiUInt64 : QiAnyValue
+    public sealed class QiUInt64 : QiAnyValue
     {
         /// <summary>
         /// 格納する値を指定してインスタンスを初期化します。
@@ -247,9 +277,13 @@ namespace Baku.LibqiDotNet
         /// <summary>格納される値を取得、設定します。</summary>
         public ulong Value
         {
-            get { return (ulong)QiValue.Value; }
+            get { return QiValue.ToUInt64(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt64(ulong v) => new QiUInt64(v);
 
     }
 

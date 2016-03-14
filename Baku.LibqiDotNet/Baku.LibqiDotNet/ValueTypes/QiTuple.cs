@@ -3,7 +3,7 @@
 namespace Baku.LibqiDotNet
 {
     /// <summary>複数の要素を一括りにして扱うタプル型を表します。</summary>
-    public class QiTuple : QiAnyValue
+    public sealed class QiTuple : QiAnyValue
     {
         private QiTuple(QiValue value, string sig)
         {
@@ -49,7 +49,7 @@ namespace Baku.LibqiDotNet
 
         /// <summary>
         /// 全ての要素が<see cref="QiDynamic"/>であるようなタプルを生成します。
-        /// このようなタプルは<see cref="QiObject.Call"/>の引数として渡す処理に適しています。
+        /// このようなタプルは<see cref="QiMethod.Call"/>の引数として渡す処理に適しています。
         /// </summary>
         /// <param name="values">タプルの要素</param>
         /// <returns>生成されたタプル</returns>
