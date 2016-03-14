@@ -2,7 +2,7 @@
 
 Baku/獏(ばく)
 
-2016/March/2
+2016/March/15
 
 - About
 - Environment
@@ -19,7 +19,6 @@ This project is .NET wrapper library for the messaging framework "qi Framework (
 - [libqi](https://github.com/aldebaran/libqi)
 - [libqi-capi](https://github.com/aldebaran/libqi-capi)
 
-
 ## Environment
 
 Developed by Windows 10/Visual Studio 2015 Community. Expected environment is:
@@ -28,7 +27,7 @@ Developed by Windows 10/Visual Studio 2015 Community. Expected environment is:
 - .NET 3.5 or later
 - **32bit**
 
-As targetted for .NET 3.5, This library also runs on UnityEngine.
+As targetted for .NET 3.5, this library also runs on UnityEngine.
 
 
 ## Library Files Preparation
@@ -63,14 +62,15 @@ Baku.LibqiDotNet allows you to use the qi Framework in a natural way almost same
 
 - Create and connect session (by static method ```QiSession.Create```)
 - Get service from session (by ```QiSession.GetService```). The service is expressed as ```QiObject``` instance.
-- Call a method with args (by ```QiObject.Call```)
+- Call a method with args (by ```QiObject["methodName"].Call(params[] args)```)
+
+Baku.LibqiDotNet has special type expressions like `QiBool, QiInt32`. By using implicit cast operations, you can use primitive value literals instead of those class' instances.
 
 ```
 using System;
-using System.IO;
-using System.Linq;
 
 using Baku.LibqiDotNet;
+using Baku.LibqiDotNet.Path;
 
 namespace HelloWorld
 {
@@ -78,10 +78,10 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            //By call this, ```dlls``` folder becomes visible when search unmanaged library
-            PathModifier.AddEnvironmentPaths(Path.Combine(Environment.CurrentDirectory, "dlls"));
+            //Add `dlls` directory to candidates to search unmanaged library files
+            PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
-            //Address = "tcp://" + IP + ":" + port (port number is usually 9559)
+            //Connect by IP and Port(port number has default value 9559)
             string address = "tcp://127.0.0.1:9559";
             var session = QiSession.Create(address);
 
@@ -92,30 +92,17 @@ namespace HelloWorld
                 return;
             }
 
-            //Use most basic service: Text to speech
+            //Text to speech module, one of the most popular service in Aldebaran's robots.
             var tts = session.GetService("ALTextToSpeech");
 
-            //Call "say" method in ALTextToSpeech, with a String argument.
-            tts.Call("say", new QiString("this is test"));
+            //Call "say" function with string arg (note: string argument will be translated to QiString)
+            tts["say"].Call("this is test");
 
             session.Close();
             session.Destroy();
         }
     }
-
-    static class PathModifier
-    {
-        public static void AddEnvironmentPaths(params string[] paths)
-        {
-            var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? "" };
-
-            string newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(paths));
-
-            Environment.SetEnvironmentVariable("PATH", newPath);
-        }
-    }
 }
-
 ```
 
 ## Use Baku.LibqiDotNet in UnityEngine

@@ -2,7 +2,7 @@
 
 Baku/獏(ばく)
 
-2016/March/2
+2016/March/15
 
 - About
 - Environment
@@ -29,13 +29,14 @@ Aldebaran社が公開しているメッセージングフレームワーク```li
 - .NET 3.5以降
 - **32bit**
 
-.NET 3.5がターゲットなのでビルド設定によってUnityEngine向けにもビルド可能です。Unityでの利用方法については[ブログに書いた](http://www.baku-dreameater.net/archives/10791)のでご確認下さい。
+**32bit**をターゲットとしているのはWindowsでの`libqi`のラップ元であるアンマネージライブラリが32bitにしか対応していないためです。
 
-Monoランタイムを活用すればMac/Linux環境でもほぼそのまま使える見込みが高いですが、現状では確認していません。
+.NET 3.5がターゲットなのでビルド設定によってUnityEngine向けにもビルド可能です。Unityでの利用方法については[ブログの記事](http://www.baku-dreameater.net/archives/10791)をご覧ください。UnityEngineでの利用に関してはMacのUnityEditor(64bit)でも動作するのを確認しています。
+
 
 ## Library Files Preparation
 
-本プロジェクトはあくまでラッパーでありラップ元のライブラリ("qic.dll"を含むライブラリ群)は同梱していません。次のいずれかの手順を踏んでライブラリを手に入れて下さい。
+本プロジェクトはあくまでラッパーでありラップ元のライブラリ("qic.dll"を含むライブラリ群)は同梱していません。次のいずれかの手順を踏んでライブラリを手に入れて下さい。なお、[NuGetパッケージ版](https://www.nuget.org/packages/Baku.LibqiDotNet/)ではパッケージにライブラリが同梱されています。パッケージの準備手順が分からない場合、NuGetパッケージが行う配置処理を一つの参考にしてもらえると分かりやすいかもしれません。
 
 #### 推奨する方法
 
@@ -63,10 +64,9 @@ C++/Python/Java等とだいたい同じやり方で使えます。セッショ�
 
 ```
 using System;
-using System.IO;
-using System.Linq;
 
 using Baku.LibqiDotNet;
+using Baku.LibqiDotNet.Path;
 
 namespace HelloWorld
 {
@@ -75,7 +75,7 @@ namespace HelloWorld
         static void Main(string[] args)
         {
             //作業ディレクトリだけでなく"dlls"というフォルダのライブラリも実行中に参照できるよう設定を変更
-            PathModifier.AddEnvironmentPaths(Path.Combine(Environment.CurrentDirectory, "dlls"));
+            PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
             //HelloWorldの対象とするマシンのアドレスをIPとポート(ポートは通常9559)で指定
             string address = "tcp://127.0.0.1:9559";
@@ -92,27 +92,17 @@ namespace HelloWorld
             var tts = session.GetService("ALTextToSpeech");
 
             //"say"関数に文字列引数を指定して実行
-            tts.Call("say", new QiString("this is test"));
+            tts["say"].Call("this is test");
 
             session.Close();
             session.Destroy();
         }
     }
-
-    static class PathModifier
-    {
-        public static void AddEnvironmentPaths(params string[] paths)
-        {
-            var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? "" };
-
-            string newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(paths));
-
-            Environment.SetEnvironmentVariable("PATH", newPath);
-        }
-    }
 }
-
 ```
+
+ライブラリ本来の挙動に対してあまり本質的ではない注意になりますが、`PathModifier`を用いることで、exeファイルのディレクトリに配置された`dlls`フォルダの中に入っているアンマネージライブラリを参照可能にしている点に注意してください。この処理を省きたい場合、`dlls`フォルダに含まれるアンマネージライブラリをあらかじめexeファイルの含まれるディレクトリにコピーしておいてください。
+
 
 
 ## Contact
