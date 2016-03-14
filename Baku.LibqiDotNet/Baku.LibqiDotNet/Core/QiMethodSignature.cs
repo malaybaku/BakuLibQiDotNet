@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary><see cref="QiObjectBuilder.AdvertiseMethod"/>関数で用いるための、変数の型情報を表します。</summary>
+    /// <summary>
+    /// <see cref="QiObjectBuilder.AdvertiseMethod(string, QiMethodSignature, IEnumerable{QiMethodSignature}, QiObjectMethod)"/>
+    /// 関数で用いるための、変数の型情報を表します。
+    /// </summary>
     public class QiMethodSignature
     {
         internal QiMethodSignature(string sig)
         {　
             Signature = sig;
         }
+
         /// <summary>型情報と等価な文字列を取得します。</summary>
         public string Signature { get; }
 

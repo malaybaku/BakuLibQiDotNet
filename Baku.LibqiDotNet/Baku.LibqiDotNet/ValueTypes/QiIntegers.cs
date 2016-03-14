@@ -28,6 +28,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(Convert.ToByte(value)); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiBool(bool v) => new QiBool(v);
     }
 
     /// <summary>符号あり1バイト整数を表します。</summary>
@@ -56,6 +59,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt8(sbyte v) => new QiInt8(v);
     }
 
     /// <summary>符号あり2バイト整数を表します。</summary>
@@ -84,6 +90,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt16(short v) => new QiInt16(v);
     }
 
     /// <summary>符号あり4バイト整数を表します。</summary>
@@ -111,6 +120,11 @@ namespace Baku.LibqiDotNet
             get { return QiValue.ToInt32(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt32(int v) => new QiInt32(v);
+
     }
 
     /// <summary>符号あり8バイト整数を表します。</summary>
@@ -138,6 +152,10 @@ namespace Baku.LibqiDotNet
             get { return QiValue.ToInt64(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiInt64(long v) => new QiInt64(v);
 
     }
 
@@ -167,6 +185,10 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt8(byte v) => new QiUInt8(v);
+
     }
 
     /// <summary>符号なし2バイト整数を表します。</summary>
@@ -195,6 +217,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt16(ushort v) => new QiUInt16(v);
 
     }
 
@@ -223,6 +248,11 @@ namespace Baku.LibqiDotNet
             get { return QiValue.ToUInt32(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt32(uint v) => new QiUInt32(v);
+
     }
 
     /// <summary>符号なし8バイト整数を表します。</summary>
@@ -250,6 +280,10 @@ namespace Baku.LibqiDotNet
             get { return QiValue.ToUInt64(); }
             set { QiValue.SetValue(value); }
         }
+
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiUInt64(ulong v) => new QiUInt64(v);
 
     }
 

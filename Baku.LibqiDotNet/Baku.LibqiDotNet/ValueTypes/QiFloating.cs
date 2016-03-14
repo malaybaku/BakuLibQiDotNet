@@ -27,6 +27,9 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiFloat(float v) => new QiFloat(v);
     }
 
     /// <summary>8バイトデータからなる倍精度浮動小数点数を表します。</summary>
@@ -55,5 +58,8 @@ namespace Baku.LibqiDotNet
             set { QiValue.SetValue(value); }
         }
 
+        /// <summary>指定したデータを保持するQi Frameworkの値を生成します。</summary>
+        /// <param name="v">保持させるデータ</param>
+        public static implicit operator QiDouble(double v) => new QiDouble(v);
     }
 }

@@ -49,7 +49,7 @@ namespace Baku.LibqiDotNet
             string signature = methodName +
                 QiSignatures.MethodNameSuffix +
                 returns.Signature +
-                QiMethodSignature.TupleOf(args);
+                QiMethodSignature.TupleOf(args).Signature;
 
             AdvertiseMethod(signature, method);
         }
