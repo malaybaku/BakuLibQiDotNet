@@ -13,7 +13,7 @@ namespace HelloWorld
             PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
             //HelloWorldの対象とするマシンのアドレスをIPとポート(ポートは通常9559)で指定
-            string address = "tcp://192.168.1.4:9559";
+            string address = "tcp://127.0.0.1:9559";
             var session = QiSession.Create(address);
 
             Console.WriteLine($"Connected? {session.IsConnected}");
