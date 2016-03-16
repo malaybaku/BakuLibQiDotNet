@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Baku.LibqiDotNet.Utils;
-
 namespace Baku.LibqiDotNet
 {
     /// <summary>Qi Frameworkのモジュールに定義された関数の一覧を表します。</summary>

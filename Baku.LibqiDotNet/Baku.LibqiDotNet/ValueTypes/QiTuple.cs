@@ -27,7 +27,7 @@ namespace Baku.LibqiDotNet
         {
             string sig = 
                 QiSignatures.TypeTupleBegin +
-                string.Join("", values.Select(_ => QiSignatures.TypeDynamic).ToArray()) + 
+                string.Join("", values.Select(v => v.Signature).ToArray()) + 
                 QiSignatures.TypeTupleEnd;
 
             var tuple = QiValue.Create(sig);
