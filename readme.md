@@ -19,6 +19,12 @@ Aldebaran社が公開しているメッセージングフレームワーク```li
 - [libqi](https://github.com/aldebaran/libqi)
 - [libqi-capi](https://github.com/aldebaran/libqi-capi)
 
+ドキュメンテーションのレポジトリも別途用意しています。ドキュメンテーションは基本的にNuGetパッケージ(とUnityパッケージ)の最新版向けに公開しており、こちらの`master`ブランチの最新内容とは一部食い違っている事があるので気を付けて下さい。
+
+- [チュートリアル](http://malaybaku.github.io/BakuLibqiDotNetTutorial/)
+- [クラス構造のリファレンス](http://malaybaku.github.io/BakuLibqiDotNetDoc/)
+
+
 
 ## Environment
 
@@ -106,7 +112,7 @@ namespace HelloWorld
 
 
 ## Contact
-バグ報告だけでなく機能追加の要望も受け付けています。issueじゃない方法でコンタクトしたい場合は下記等からご連絡下さい。
+バグ報告だけでなく機能追加の要望も受け付けています。たぶんtwitterでコンタクトを取っていただくと一番レスポンスが速いです。
 
 - [Blog](https://www.baku-dreameater.net)
 - [Twitter](https://twitter.com/baku_dreameater)
