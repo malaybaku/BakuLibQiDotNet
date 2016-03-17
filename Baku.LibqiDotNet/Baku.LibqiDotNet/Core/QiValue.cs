@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 
 using Baku.LibqiDotNet.QiApi;
-using System.Collections.Generic;
 
 namespace Baku.LibqiDotNet
 {
@@ -122,7 +122,7 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        #region Getter functions identified by type name
+        #region Getter
  
         /// <summary>格納されているはずのbool値を取得します。</summary>
         /// <returns>格納されたbool値</returns>
@@ -176,13 +176,10 @@ namespace Baku.LibqiDotNet
         /// <summary>この変数がダイナミック型であると想定し、内側に格納している値を取り出します。</summary>
         /// <returns>動的型の中に格納された値</returns>
         public QiValue GetDynamic() => QiApiValue.GetDynamic(this);
-        #endregion
-
-        #region Getter functions with default value
 
         #endregion
 
-        #region Setter functions
+        #region Setter
 
         /// <summary>この変数が符号あり整数型であると想定し、値を設定します。</summary>
         /// <param name="v">設定する値</param>
@@ -324,67 +321,30 @@ namespace Baku.LibqiDotNet
             }
         }
 
-        ///// <summary>
-        ///// 指定された型のデータの取得を試みます。
-        ///// 失敗した場合は<see cref="ArgumentException"/>が送出されます。
-        ///// </summary>
-        ///// <typeparam name="T">取り出したい値の型</typeparam>
-        ///// <returns>成功した場合その値の型</returns>
-        ///// <exception cref="ArgumentException"/>
-        //public T TryGet<T>()
-        //{
-        //    var t = typeof(T);
-        //    if (t == typeof(QiValue)) return (T)Convert.ChangeType(this, t);
-        //    else if (t == typeof(QiObject)) return (T)Convert.ChangeType(GetObject(), t);
+        /// <summary>保持しているデータが連想配列である場合、キー/値ペアのうちキーの一覧を取得します。</summary>
+        public IEnumerable<QiValue> MapKeys
+        {
+            get
+            {
+                if (ContentValueKind != QiValueKind.QiMap)
+                {
+                    return new QiValue[0];
+                }
 
-        //    switch (Type.GetTypeCode(t))
-        //    {
-        //        case TypeCode.Boolean: return (T)Convert.ChangeType(ToBool(), t);
-        //        case TypeCode.SByte: return (T)Convert.ChangeType(ToSByte(), t);
-        //        case TypeCode.Int16: return (T)Convert.ChangeType(ToInt16(), t);
-        //        case TypeCode.Int32: return (T)Convert.ChangeType(ToInt32(), t);
-        //        case TypeCode.Int64: return (T)Convert.ChangeType(ToInt64(), t);
-        //        case TypeCode.Byte: return (T)Convert.ChangeType(ToByte(), t);
-        //        case TypeCode.UInt16: return (T)Convert.ChangeType(ToUInt16(), t);
-        //        case TypeCode.UInt32: return (T)Convert.ChangeType(ToUInt32(), t);
-        //        case TypeCode.UInt64: return (T)Convert.ChangeType(ToUInt64(), t);
-        //        case TypeCode.Single: return (T)Convert.ChangeType(ToFloat(), t);
-        //        case TypeCode.Double: return (T)Convert.ChangeType(ToDouble(), t);
-        //        case TypeCode.String: return (T)Convert.ChangeType(ToString(), t);
-        //        default:
-        //            break;
-        //    }
+                var keys = GetKeys();
+                return Enumerable
+                    .Range(0, Count)
+                    .Select(i => keys[i]);
+            }
+        }
 
-        //    if (t == typeof(int[]))
-        //    {
-        //        var result = Enumerable.Range(0, Count)
-        //            .Select(i => this[i].ToInt32())
-        //            .ToArray();
-        //        return (T)Convert.ChangeType(result, t);
-        //    }
+        /// <summary>保持しているデータが連想配列である場合、キー/値ペアのうち値の一覧を取得します。</summary>
+        public IEnumerable<QiValue> MapValues　=> MapKeys.Select(k => this[k]);
 
-        //    if (t == typeof(double[]))
-        //    {
-        //        var result = Enumerable.Range(0, Count)
-        //            .Select(i => this[i].ToDouble())
-        //            .ToArray();
-        //        return (T)Convert.ChangeType(result, t);
-        //    }
+        /// <summary>保持しているデータが連想配列である場合、キー/値ペアの一覧を取得します。</summary>
+        public IEnumerable<KeyValuePair<QiValue, QiValue>> MapItems
+            => MapKeys.Select(k => new KeyValuePair<QiValue, QiValue>(k, this[k]));
 
-        //    if (t == typeof(IEnumerable<string>))
-        //    {
-        //        var result = Enumerable.Range(0, Count)
-        //            .Select(i => this[i].ToString())
-        //            .ToArray();
-        //        return (T)Convert.ChangeType(result, t);
-        //    }
-
-
-        //    //組み込み型以外のケース: とりあえず標準ケースとしてIEnumerable<組み込み>だけサポートする？
-        //    //現状ではめんどくさいので未対応
-        //    throw new ArgumentException("Given type parameter is not supported currently");
-
-        //}
 
         /// <summary>
         /// ダイナミック型を再帰的にアンパックし、ダイナミック型でない実際の内容を取得します。
@@ -398,6 +358,76 @@ namespace Baku.LibqiDotNet
 
         #endregion
 
+        /// <summary>文字列データとしてオブジェクトの階層構造を出力します。</summary>
+        /// <returns>文字列でダンプされた出力</returns>
+        public string Dump(int indentStep = 2, int indentStart = 0)
+        {
+            var kind = ValueKind;
+            string indent = new string(' ', indentStart);
+            string largeIndent = new string(' ', indentStart + indentStep);
+
+            //組み込み型
+            if (new QiValueKind[] { QiValueKind.QiInt, QiValueKind.QiFloat, QiValueKind.QiString }.Contains(kind))
+            {
+                return indent + kind.ToString() + ":" + Value.ToString();
+            }
+
+            if (kind == QiValueKind.QiDynamic)
+            {
+                return indent + "Dynamic\n" + GetDynamic().Dump(indentStep, indentStart + indentStep);
+            }
+
+            //メタオブジェクトを吐く(通常使われない)
+            if (kind == QiValueKind.QiObject)
+            {
+                return indent + "Object\n" + GetObject().MetaObject.Dump(indentStep, indentStart + indentStep);
+            }
+
+            //リスト/タプルは要素別に表示するので作業が一部似てる
+            if (kind == QiValueKind.QiList || kind == QiValueKind.QiTuple)
+            {
+                int c = Count;
+
+                var result = new StringBuilder(indent);
+                string typeinfo = (kind == QiValueKind.QiList) ?
+                    $"List[{c}]:\n" :
+                    $"Tuple[{c}]:\n";
+                result.Append(typeinfo);
+
+                for (int i = 0; i < c; i++)
+                {
+                    result.Append(this[i].Dump(indentStep, indentStart + indentStep) + "\n");
+                }
+
+                return result.ToString();
+            }
+
+            if (kind == QiValueKind.QiMap)
+            {
+                var pairs = MapItems.ToArray();
+
+                var result = new StringBuilder();
+                result.Append(
+                    indent +
+                    $"Map<key:{GetQiType().GetMapKeyType().TypeKind}, " +
+                    $"value:{GetQiType().GetMapValueType().TypeKind}>[{pairs.Length}]\n"
+                    );
+
+                foreach(var p in pairs)
+                {
+                    result.Append(largeIndent + "Key:\n" + p.Key.Dump(indentStep, indentStart + indentStep * 2) + "\n");
+                    result.Append(largeIndent + "Value:\n" + p.Value.Dump(indentStep, indentStart + indentStep * 2) + "\n");
+                }
+                return result.ToString();
+            }
+
+            //ポインタとかバイナリは適切な表示法が特に無いので種類名だけ表示
+            return indent + kind.ToString();
+        }
+
+        /// <summary>Qi Frameworkへ登録する関数についての、戻り値が無いことを示す値を取得します。</summary>
+        public static QiValue Void => Create(QiSignatures.TypeVoid);
+
 
         /// <summary>この変数が符号あり整数型であると想定し、失敗時のデフォルト値を指定して値を取得します。</summary>
         /// <param name="defaultValue">取得に失敗した場合返される値</param>
@@ -409,89 +439,6 @@ namespace Baku.LibqiDotNet
         private ulong GetValue(ulong defaultValue) => QiApiValue.GetUInt64WithDefault(NonDynamicValue, defaultValue);
 
 
-        /// <summary>文字列データとしてオブジェクトの階層構造を出力します。</summary>
-        /// <returns>文字列でダンプされた出力</returns>
-        public string Dump(int indentStep = 2, int indentStart = 0)
-        {
-            var kind = ValueKind;
-            string indent = new string(Enumerable.Repeat(' ', indentStart).ToArray());
-            string largeIndent = new string(Enumerable.Repeat(' ', indentStart + indentStep).ToArray());
-
-            //組み込み型は単に値出せばOK
-            if (new QiValueKind[] { QiValueKind.QiInt, QiValueKind.QiFloat, QiValueKind.QiString }.Contains(kind))
-            {
-                return indent + kind.ToString() + ":" + Value.ToString();
-            }
-
-            //コンテナ型
-            if (kind == QiValueKind.QiDynamic)
-            {
-                return indent + "Dynamic\n" + GetDynamic().Dump(indentStep, indentStart + indentStep);
-            }
-
-            if (kind == QiValueKind.QiObject)
-            {
-                return indent + "Object\n" + GetObject().MetaObject.Dump(indentStep, indentStart + indentStep);
-            }
-
-            if (kind == QiValueKind.QiList || kind == QiValueKind.QiTuple)
-            {
-                int c = Count;
-
-                var result = new StringBuilder();
-                result.Append(indent);
-                if (kind == QiValueKind.QiList)
-                {
-                    result.Append("List");
-                    if(Count > 0)
-                    {
-                        result.Append($"<{this[0].GetQiType().TypeKind}>");
-                    }
-                    else
-                    {
-                        result.Append("<Empty>");
-                    }
-                    result.Append($"[{c}]\n");
-                }
-                else
-                {
-                    result.Append($"Tuple[{c}]:\n");
-                }
-
-                for (int i = 0; i < Count; i++)
-                {
-                    result.Append(this[i].Dump(indentStep, indentStart + indentStep) + "\n");
-                }
-                return result.ToString();
-            }
-
-            if (kind == QiValueKind.QiMap)
-            {
-                //keysはリスト固定っぽいね
-                var keys = GetKeys();
-                int c = keys.Count;
-
-                var result = new StringBuilder();
-                result.Append(
-                    indent + 
-                    $"Map<key:{GetQiType().GetMapKeyType().TypeKind}, value:{GetQiType().GetMapValueType().TypeKind}>[{c}]\n"
-                    );
-
-                for (int i = 0; i < c; i++)
-                {
-                    var key = keys[i];
-                    result.Append(largeIndent + "Key:\n" + key.Dump(indentStep, indentStart + indentStep * 2) + "\n");
-                    result.Append(largeIndent + "Value:\n" + this[key].Dump(indentStep, indentStart + indentStep * 2) + "\n");
-                }
-                return result.ToString();
-            }
-
-            //ポインタとかバイナリは適切な表示法が特に無いので種類名だけ表示
-            return indent + kind.ToString();
-        }
-
-        /// <summary>Qi Frameworkへ登録する関数についての、戻り値が無いことを示す値を取得します。</summary>
-        public static QiValue Void => Create(QiSignatures.TypeVoid);
 
     }
 

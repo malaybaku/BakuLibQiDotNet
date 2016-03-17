@@ -23,8 +23,14 @@ namespace Baku.LibqiDotNet
         public void Destroy() => QiApiObject.Destroy(this);
 
         private QiValue _metaObject;
-        /// <summary>サービスの内部情報を表すメタオブジェクトを取得します。</summary>
         internal QiValue MetaObject => _metaObject ?? (_metaObject = QiApiObject.GetMetaObject(this));
+
+        /// <summary>サービスの内部情報を表すメタオブジェクトを取得します。</summary>
+        /// <returns>
+        /// サービスの内部情報を表すメタオブジェクト。
+        /// とりあえず内容一覧を見たい場合などは<see cref="QiValue.Dump(int, int)"/>を用いる
+        /// </returns>
+        public QiValue GetMetaObject() => QiApiObject.GetMetaObject(this);
 
         private string _description = null;
         /// <summary>サービスの機能に関する説明文を取得します。</summary>
