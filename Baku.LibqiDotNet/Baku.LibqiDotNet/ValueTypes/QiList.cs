@@ -171,12 +171,22 @@ namespace Baku.LibqiDotNet
         /// <summary>
         /// IEnumerableを対応する<see cref="QiList"/>に変換します。
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public static QiList<T> ToQiList<T>(this IEnumerable<T> values) 
+        /// <typeparam name="T">要素の型</typeparam>
+        /// <param name="values">実際の要素の列挙</param>
+        /// <returns>指定したデータを保持する配列</returns>
+        public static QiList<T> ToQiList<T>(this IEnumerable<T> values)
             where T : QiAnyValue
             => QiList<T>.Create(values);
+
+        /// <summary>
+        /// 動的型(<see cref="QiDynamic"/>)でパックした配列への変換を行います。
+        /// </summary>
+        /// <param name="values">何かしらの値の列挙</param>
+        /// <returns>指定した値を保持する動的型のリスト</returns>
+        public static QiList<QiDynamic> ToQiDynamicList<T>(this IEnumerable<T> values)
+            where T : QiAnyValue
+            => QiList.CreateDynamic(values.Cast<QiAnyValue>());
+
 
     }
 
