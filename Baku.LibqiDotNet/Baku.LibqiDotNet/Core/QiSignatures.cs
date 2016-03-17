@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 //参考元: http://doc.aldebaran.com/libqi/api/cpp/type/signature.html
@@ -73,7 +74,8 @@ namespace Baku.LibqiDotNet
 
     }
 
-    internal static class QiSignatureValidityChecker
+    /// <summary>関数のシグネチャの有効性を検証するための処理を提供します。</summary>
+    public static class QiSignatureValidityChecker
     {
         /// <summary>
         /// メソッドの引数リストと実際に渡す予定の引数を比較し、妥当な対応が取れているかを確認します。
@@ -86,6 +88,30 @@ namespace Baku.LibqiDotNet
                 signature.Substring(1, signature.Length - 2),
                 string.Join("", args.Select(a => a.Signature).ToArray())
                 );
+
+        /// <summary>タプルのシグネチャを要素別に分解します。</summary>
+        /// <param name="signatures">タプルのシグネチャ(例: "(ib[s])"</param>
+        /// <returns>分解された要素別のシグネチャ(例:入力が"(ib[s])"なら{ "i", "b", "[s]" })</returns>
+        public static string[] SplitTupleSignatures(string signatures)
+        {
+            string temp = signatures.Substring(1, signatures.Length - 2);
+
+            var result = new List<string>();
+            bool success = false;
+            while(temp != "")
+            {
+                string head = GetHeadToken(temp, out success);
+                if (string.IsNullOrEmpty(head) || !success)
+                {
+                    throw new InvalidOperationException($"failed to parse tuple {signatures}, when parsing {temp}");
+                }
+
+                temp = temp.Substring(head.Length);
+                result.Add(head);
+            }
+
+            return result.ToArray();
+        }
 
         private static bool CheckValiditySubroutine(string methodSignature, string argsSignature)
         {
