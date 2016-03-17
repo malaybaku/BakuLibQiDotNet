@@ -7,6 +7,9 @@ namespace Baku.LibqiDotNet
     /// <summary>通信セッションを表します。</summary>
     public sealed class QiSession
     {
+        //GetServicesの仕様で一つのサービスは6要素タプルからなり、第0要素にサービス名が入っている
+        const int ServiceNameIndexInServicesObject = 0;
+
         internal QiSession(IntPtr handle)
         {
             Handle = handle;
@@ -59,8 +62,9 @@ namespace Baku.LibqiDotNet
         public string[] GetServices()
         {
             var sList = GetServicesAsync().GetValue();
-            return Enumerable.Range(0, sList.Count)
-                .Select(i => sList[i].ToString())
+            return Enumerable
+                .Range(0, sList.Count)
+                .Select(i => sList[i][ServiceNameIndexInServicesObject].ToString())
                 .ToArray();
         }
 
