@@ -62,6 +62,29 @@ namespace Baku.LibqiDotNet
             return new QiList<T>(list, sig);
         }
 
+        /// <summary>
+        /// 列挙された<see cref="QiAnyValue"/>派生型を要素として含む、動的型の内容からなるリストを生成します。
+        /// </summary>
+        /// <param name="values">何かしらの値の列挙</param>
+        /// <returns>指定した値を保持する動的型のリスト</returns>
+        public static QiList<QiDynamic> CreateDynamic(IEnumerable<QiAnyValue> values)
+        {
+            if (!values.Any())
+            {
+                throw new InvalidOperationException("values length must be greater than 0");
+            }
+
+            string sig = QiSignatures.TypeListBegin + QiSignatures.TypeDynamic + QiSignatures.TypeListEnd;
+
+            var list = QiValue.Create(sig);
+            foreach (var v in values)
+            {
+                list.AddElement(v.QiValue);
+            }
+
+            return new QiList<QiDynamic>(list, sig);
+        }
+
     }
 
     /// <summary><see cref="QiList{T}"/>のファクトリメソッドを定義します。</summary>
@@ -75,6 +98,14 @@ namespace Baku.LibqiDotNet
         public static QiList<T> Create<T>(IEnumerable<T> values) 
             where T : QiAnyValue
             => QiList<T>.Create(values);
+
+        /// <summary>
+        /// 列挙された<see cref="QiAnyValue"/>派生型を要素として含む、動的型の内容からなるリストを生成します。
+        /// </summary>
+        /// <param name="values">何かしらの値の列挙</param>
+        /// <returns>指定した値を保持する動的型のリスト</returns>
+        public static QiList<QiDynamic> CreateDynamic(IEnumerable<QiAnyValue> values)
+            => QiList<QiAnyValue>.CreateDynamic(values);
 
         #region ひじょーにモッサリしてるが組み込み型からの配列生成をサポートしとく
 
