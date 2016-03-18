@@ -72,6 +72,11 @@ namespace Baku.LibqiDotNet
         /// <summary>メソッド名と引数、戻り値シグネチャを区切る文字列</summary>
         public static readonly string MethodNameSuffix = "::";
 
+        /// <summary>シグネチャ内でマップ型やタプル型の要素のエイリアス的な呼称を記述する際の開始文字</summary>
+        public static readonly string TypeNameNotationBegin = "<";
+
+        /// <summary>シグネチャ内でマップ型やタプル型の要素のエイリアス的な呼称を記述する際の終了文字</summary>
+        public static readonly string TypeNameNotationEnd = ">";
     }
 
     /// <summary>関数のシグネチャの有効性を検証するための処理を提供します。</summary>
@@ -94,14 +99,25 @@ namespace Baku.LibqiDotNet
         /// <returns>分解された要素別のシグネチャ(例:入力が"(ib[s])"なら{ "i", "b", "[s]" })</returns>
         public static string[] SplitTupleSignatures(string signatures)
         {
+            return SplitTupleSignatures(signatures, false);
+        }
+
+        /// <summary>タプルのシグネチャを要素別に分解します。</summary>
+        /// <param name="signatures">タプルのシグネチャ(例: "(ib[s])"</param>
+        /// <param name="ignoreError">パースに失敗したシグネチャを自動で<see cref="QiAnyValue"/>とみなすかどうかを設定します。</param>
+        /// <returns>分解された要素別のシグネチャ(例:入力が"(ib[s])"なら{ "i", "b", "[s]" })</returns>
+        public static string[] SplitTupleSignatures(string signatures, bool ignoreError)
+        {
             string temp = signatures.Substring(1, signatures.Length - 2);
 
             var result = new List<string>();
             bool success = false;
-            while(temp != "")
+            while (temp != "")
             {
-                string head = GetHeadToken(temp, out success);
-                if (string.IsNullOrEmpty(head) || !success)
+                string head = TryGetHeadToken(temp, out success);
+                //文字が減らない->無限ループなのでダメ
+                //例外strictな設定の場合->想定通りに失敗で例外停止
+                if (string.IsNullOrEmpty(head) || (!ignoreError && !success))
                 {
                     throw new InvalidOperationException($"failed to parse tuple {signatures}, when parsing {temp}");
                 }
@@ -124,10 +140,10 @@ namespace Baku.LibqiDotNet
 
 
             bool success;
-            string msig = GetHeadToken(methodSignature, out success);
+            string msig = TryGetHeadToken(methodSignature, out success);
             if (!success) return false;
 
-            string asig = GetHeadToken(argsSignature, out success);
+            string asig = TryGetHeadToken(argsSignature, out success);
             if (!success) return false;
 
             //引数側がDynamicなので無条件に引数を割り当ててしまってOK
@@ -160,7 +176,7 @@ namespace Baku.LibqiDotNet
 
         //シグネチャ文字列の先頭からトークン(普通の変数or配列シグネチャ)を得る
         //TODO: 再帰正規表現を使うともっとキレイに書けるはず(だが今回あまり長い文字列を扱わないので速度差は無さそう)
-        private static string GetHeadToken(string src, out bool success)
+        private static string TryGetHeadToken(string src, out bool success)
         {
             string s = src[0].ToString();
             if (s == QiSignatures.TypeDynamic || EmbeddedTypeQiSignatures.Contains(s))
@@ -195,8 +211,9 @@ namespace Baku.LibqiDotNet
                 }
             }
 
-            throw new InvalidOperationException($"could not found signature token properly: {src}");
-
+            //ヘンな無限ループを防止するため、失敗時でも必ず1文字引き抜くようにする(これにより"o"や"X"などのシグネチャも「失敗しつつ」読み取る)
+            success = false;
+            return src[0].ToString();
         }
 
         private static int GetContainerTokenEndIndex(string src, string begins, string ends, out bool success)
