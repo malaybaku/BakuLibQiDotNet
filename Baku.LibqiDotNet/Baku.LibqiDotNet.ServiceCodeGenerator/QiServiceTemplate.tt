@@ -1,0 +1,48 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Baku.LibqiDotNet;
+
+namespace Baku.LibqiDotNet.Service
+{
+    /// <summary><#=ServiceDescription#></summary>
+    public class <#=ServiceName#>
+    {
+        /// <summary>サービスの取得元セッションを指定してサービスを初期化します。</summary>
+        /// <param name="session">サービスの取得元となるセッション</param>
+        public <#=ServiceName#>(QiSession session)
+        {
+            SourceService = session.GetService("<#=ServiceName#>");
+        }
+
+        /// <summary>コード生成によってラップされる前のサービスオブジェクトを取得します。</summary>
+        public QiObject SourceService { get; }
+
+
+<#
+	foreach (var mInfo in MethodInfos)
+    {
+#>
+        /// <summary><#=mInfo.Description#></summary>
+<# 
+		for (int i = 0;i < mInfo.ArgumentCount; i++)
+        {
+#>
+		<#=GetArgumentXmlDocumentComment(mInfo.ArgumentNames[i], mInfo.ArgumentDescriptions[i])#>
+<#
+		}
+#>
+		/// <returns><#=mInfo.ReturnDescription#></returns>
+        public <#=mInfo.ReturnValueSignature#> <#=mInfo.MethodName#>(<#=mInfo.ArgumentDeclaration#>)
+        {
+            <#=mInfo.ReturnExpression#>SourceService["<#=mInfo.MethodName#>"].Call(<#=mInfo.ArgumentUsage#>);
+        }
+
+<#
+    }
+#>
+    }
+}
