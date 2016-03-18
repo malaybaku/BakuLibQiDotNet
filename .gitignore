@@ -234,3 +234,10 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+
+
+# User-define additional ignore setting
+# Ignore generated source files created by ServiceCodeGenerator
+GeneratedSources/*
+
