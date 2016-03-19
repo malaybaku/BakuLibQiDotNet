@@ -71,7 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QiServiceTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="QiServiceCode.cs" />
+    <Compile Include="QiServiceTemplateCode.cs" />
     <Compile Include="QiSig2CSharpSig.cs" />
   </ItemGroup>
   <ItemGroup>
