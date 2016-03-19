@@ -19,8 +19,11 @@ namespace Baku.LibqiDotNet
         //NOTE: ObjectBuilderとGetServiceの戻り値以外でインスタンス生成する必要ないのでそもそも実装要るの？ってレベル
         internal static QiObject Create() => QiApiObject.Create();
 
-        /// <summary>インスタンスを破棄します。</summary>
-        public void Destroy() => QiApiObject.Destroy(this);
+        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
+        ~QiObject()
+        {
+            QiApiObject.Destroy(this);
+        }
 
         private QiValue _metaObject;
         internal QiValue MetaObject => _metaObject ?? (_metaObject = QiApiObject.GetMetaObject(this));

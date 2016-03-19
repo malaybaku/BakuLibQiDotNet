@@ -13,6 +13,12 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
+        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
+        ~QiFuture()
+        {
+            QiApiFuture.Destroy(this);
+        }
+
         /// <summary>
         /// 指定した時間まで待機します。
         /// </summary>
@@ -58,9 +64,6 @@ namespace Baku.LibqiDotNet
 
         /// <summary>結果取得をキャンセルします。</summary>
         public void Cancel() => QiApiFuture.Cancel(this);
-
-        /// <summary>インスタンスを破棄します。</summary>
-        public void Destroy() => QiApiFuture.Destroy(this);
 
         /// <summary>処理が実行中であるかを取得します。</summary>
         public bool IsRunning => QiApiFuture.IsRunning(this);

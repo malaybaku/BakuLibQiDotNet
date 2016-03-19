@@ -30,7 +30,6 @@ namespace HelloWorld
             tts["say"].Call("this is test");
 
             session.Close();
-            session.Destroy();
         }
     }
 

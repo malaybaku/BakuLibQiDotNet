@@ -3,8 +3,8 @@ using Baku.LibqiDotNet.QiApi;
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary>アプリケーションを表します。初期化処理等を行うために用います</summary>
-    public sealed class QiApplication
+	/// <summary>アプリケーションを表します。初期化処理等を行うために用います</summary>
+	public sealed class QiApplication
     {
         internal QiApplication(IntPtr handle)
         {
@@ -13,8 +13,11 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
-        /// <summary>アプリケーションを破棄します。</summary>
-        public void Destroy() => QiApiApplication.Destroy(this);
+        /// <summary>このクラスが保持しているアンマネージリソースのハンドルを解放します。</summary>
+        ~QiApplication()
+        {
+            QiApiApplication.Destroy(this);
+        }
 
         /// <summary>サーバとしてアプリケーションを実行します。クライアントでは呼び出しは必要ありません。</summary>
         public void Run() => QiApiApplication.Run(this);

@@ -17,6 +17,12 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
+        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
+        ~QiSession()
+        {
+            QiApiSession.Destroy(this);
+        }
+    
         /// <summary>セッションが接続済みであるかを取得します。</summary>
         public bool IsConnected => QiApiSession.IsConnected(this);
 
@@ -91,9 +97,6 @@ namespace Baku.LibqiDotNet
         /// </summary>
         /// <returns>未確認</returns>
         public QiFuture Close() => QiApiSession.Close(this);
-
-        /// <summary>セッションを破棄します。</summary>
-        public void Destroy() => QiApiSession.Destroy(this);
 
         /// <summary>
         /// (動作未確認)セッションに対応したURLを取得します。

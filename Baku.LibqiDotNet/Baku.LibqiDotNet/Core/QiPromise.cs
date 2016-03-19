@@ -18,8 +18,11 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
-        /// <summary>インスタンスを破棄します。</summary>
-        public void Destroy() => QiApiPromise.Destroy(this);
+        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
+        ~QiPromise()
+        {
+            QiApiPromise.Destroy(this);
+        }
 
         /// <summary>
         /// 値を設定します。

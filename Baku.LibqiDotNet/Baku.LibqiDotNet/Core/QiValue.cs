@@ -17,6 +17,12 @@ namespace Baku.LibqiDotNet
 
         internal IntPtr Handle { get; }
 
+        /// <summary>この変数が保持しているアンマネージリソースのポインタを解放します。</summary>
+        ~QiValue()
+        {
+            QiApiValue.Destroy(this);
+        }
+
         #region 基本処理
 
         /// <summary>値の種類を取得します。</summary>
@@ -51,8 +57,6 @@ namespace Baku.LibqiDotNet
         /// <returns>インスタンスに対応する型情報</returns>
         public QiType GetContentQiType() => NonDynamicValue.GetQiType();
 
-        /// <summary>インスタンスを破棄します。</summary>
-        public void Destroy() => QiApiValue.Destroy(this);
         /// <summary>
         /// 値をコピーします。
         /// </summary>
