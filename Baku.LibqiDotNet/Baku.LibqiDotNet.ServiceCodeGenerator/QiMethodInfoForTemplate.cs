@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Baku.LibqiDotNet.ServiceCodeGenerator
 {
@@ -15,9 +11,10 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             ReturnValueSignature = QiSig2CSharpSig
                 .GetReturnSignature(methodInfo[1].ToString());
 
-            MethodName = methodInfo[2].ToString();
+            OriginalMethodName = methodInfo[2].ToString();
+            MethodName = GetModifiedMethodName(methodInfo[2].ToString());
 
-            Description = RemoveNewLine(methodInfo[4].ToString());
+            Description = XmlCommentize(methodInfo[4].ToString());
 
             ArgumentCount = QiSig2CSharpSig.GetArgCount(methodInfo[3].ToString());
 
@@ -34,7 +31,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
                     $"arg{i}";
 
 
-                argDescs[i] = (argInfo.Count > i) ? RemoveNewLine(argInfo[i][1].ToString()) : $"";
+                argDescs[i] = (argInfo.Count > i) ? XmlCommentize(argInfo[i][1].ToString()) : $"";
             }
             ArgumentNames = argNames;
             ArgumentDescriptions = argDescs;
@@ -51,11 +48,12 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
             ReturnExpression = QiSig2CSharpSig.GetReturnWordAndCast(ReturnValueSignature);
 
-            ReturnDescription = RemoveNewLine(methodInfo[6].ToString());
+            ReturnDescription = XmlCommentize(methodInfo[6].ToString());
         }
 
         public long Id { get; }
 
+        public string OriginalMethodName { get; }
         public string MethodName { get; }
         public IReadOnlyList<string> ArgumentNames { get; }
 
@@ -75,8 +73,19 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public int ArgumentCount { get; }
 
+        //メソッド名をパスカル記法に直す。これはC#流にするためでもあるが
+        //予約語と衝突する("event"とか)関数名の定義を回避するためでもある。まあ大文字でも問題になる時はなるんだけどね。
+        private string GetModifiedMethodName(string originalName)
+        {
+            return originalName[0].ToString().ToUpper() + originalName.Substring(1);
+        }
 
-        private string RemoveNewLine(string s) => s.Replace("\n", "").Replace("\r", "");
+        //XMLドキュメントコメントに不適切な文字を消す
+        public static string XmlCommentize(string s) 
+            => s.Replace("\n", "")
+            .Replace("\r", "")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;");
 
     }
 

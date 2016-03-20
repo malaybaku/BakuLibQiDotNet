@@ -20,10 +20,10 @@ namespace Baku.LibqiDotNet
         internal static QiObject Create() => QiApiObject.Create();
 
         /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        ~QiObject()
-        {
-            QiApiObject.Destroy(this);
-        }
+        //~QiObject()
+        //{
+        //    QiApiObject.Destroy(this);
+        //}
 
         private QiValue _metaObject;
         internal QiValue MetaObject => _metaObject ?? (_metaObject = QiApiObject.GetMetaObject(this));

@@ -6,6 +6,8 @@ using System.Reflection;
 using Baku.LibqiDotNet;
 using Baku.LibqiDotNet.Path;
 using Baku.LibqiDotNet.ServiceCodeGenerator;
+using System.Threading;
+using System.Xml.Serialization;
 
 namespace ServiceCodeGenerator
 {
@@ -38,16 +40,49 @@ namespace ServiceCodeGenerator
             string[] services = session.GetServices()
                 .Where(sname => !ignoreUnderscoreStartedService || !sname.StartsWith("_"))
                 .ToArray();
+            //コードを生成する場合
+            //int successCount = 0;
+            //foreach (var serviceName in services)
+            //{
+            //    bool succeed = TryGenerateAndSaveCode(session, serviceName, dirName);
+            //    if(succeed)
+            //    {
+            //        successCount++;
+            //    }
+            //    Thread.Sleep(100);
+            //}
+            //Console.WriteLine(
+            //    $"Service:{services.Length}, Succeed: {successCount}, Failed: {services.Length - successCount}");
+
+            //Xmlを取得する場合
             int successCount = 0;
             foreach (var serviceName in services)
             {
-                bool succeed = TryGenerateAndSaveCode(session, serviceName, dirName);
-                if(succeed)
+                //bool succeed = TryGenerateAndSaveCode(session, serviceName, dirName);
+                string xmlDirName = "XmlFiles";
+                Directory.CreateDirectory(xmlDirName);
+                string filename = Path.Combine(xmlDirName, $"{serviceName}.xml");
+
+                try
                 {
+                    var service = session.GetService(serviceName);
+                    var mo = service.GetMetaObject();
+                    var xmlMo = XmlMetaObjectParser.CreateMetaObject(mo);
+                    var serializer = new XmlSerializer(xmlMo.GetType());
+                    using (var sw = new StreamWriter(filename))
+                    {
+                        serializer.Serialize(sw, xmlMo);
+                    }
+                    Console.WriteLine($"{serviceName}: succeed to save");
                     successCount++;
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{serviceName}: Failed, {ex.GetType().Name}: {ex.Message}");
+                    File.Delete(filename);
+                }
+                Thread.Sleep(100);
             }
-
             Console.WriteLine(
                 $"Service:{services.Length}, Succeed: {successCount}, Failed: {services.Length - successCount}");
 

@@ -14,10 +14,10 @@ namespace Baku.LibqiDotNet
         internal IntPtr Handle { get; }
 
         /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        ~QiFuture()
-        {
-            QiApiFuture.Destroy(this);
-        }
+        //~QiFuture()
+        //{
+        //    QiApiFuture.Destroy(this);
+        //}
 
         /// <summary>
         /// 指定した時間まで待機します。

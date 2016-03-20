@@ -18,10 +18,10 @@ namespace Baku.LibqiDotNet
         internal IntPtr Handle { get; }
 
         /// <summary>この変数が保持しているアンマネージリソースのポインタを解放します。</summary>
-        ~QiValue()
-        {
-            QiApiValue.Destroy(this);
-        }
+        //~QiValue()
+        //{
+        //    QiApiValue.Destroy(this);
+        //}
 
         #region 基本処理
 

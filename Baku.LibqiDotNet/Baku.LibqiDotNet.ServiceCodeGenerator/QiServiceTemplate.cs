@@ -15,7 +15,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+    #line 1 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class QiServiceTemplate : QiServiceTemplateBase
     {
@@ -28,14 +28,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             this.Write("using System;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\n\r\nusing Bak" +
                     "u.LibqiDotNet;\r\n\r\nnamespace Baku.LibqiDotNet.Service\r\n{\r\n    /// <summary>");
             
-            #line 11 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 11 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ServiceDescription));
             
             #line default
             #line hidden
             this.Write("</summary>\r\n    public class ");
             
-            #line 12 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 12 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ServiceName));
             
             #line default
@@ -43,14 +43,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             this.Write("\r\n    {\r\n        /// <summary>サービスの取得元セッションを指定してサービスを初期化します。</summary>\r\n        /" +
                     "// <param name=\"session\">サービスの取得元となるセッション</param>\r\n        public ");
             
-            #line 16 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 16 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ServiceName));
             
             #line default
             #line hidden
             this.Write("(QiSession session)\r\n        {\r\n            SourceService = session.GetService(\"");
             
-            #line 18 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 18 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ServiceName));
             
             #line default
@@ -58,7 +58,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             this.Write("\");\r\n        }\r\n\r\n        /// <summary>コード生成によってラップされる前のサービスオブジェクトを取得します。</summar" +
                     "y>\r\n        public QiObject SourceService { get; }\r\n\r\n\r\n");
             
-            #line 25 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 25 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
 
 	foreach (var mInfo in MethodInfos)
     {
@@ -68,14 +68,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             #line hidden
             this.Write("        /// <summary>");
             
-            #line 29 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 29 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.Description));
             
             #line default
             #line hidden
             this.Write("</summary>\r\n");
             
-            #line 30 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 30 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
  
 		for (int i = 0;i < mInfo.ArgumentCount; i++)
         {
@@ -85,14 +85,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             #line hidden
             this.Write("\t\t");
             
-            #line 34 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 34 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(GetArgumentXmlDocumentComment(mInfo.ArgumentNames[i], mInfo.ArgumentDescriptions[i])));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 35 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 35 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
 
 		}
 
@@ -101,56 +101,56 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             #line hidden
             this.Write("\t\t/// <returns>");
             
-            #line 38 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 38 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ReturnDescription));
             
             #line default
             #line hidden
             this.Write("</returns>\r\n        public ");
             
-            #line 39 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 39 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ReturnValueSignature));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 39 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 39 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.MethodName));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 39 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 39 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ArgumentDeclaration));
             
             #line default
             #line hidden
             this.Write(")\r\n        {\r\n            ");
             
-            #line 41 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 41 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ReturnExpression));
             
             #line default
             #line hidden
             this.Write("SourceService[\"");
             
-            #line 41 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.MethodName));
+            #line 41 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.OriginalMethodName));
             
             #line default
             #line hidden
             this.Write("\"].Call(");
             
-            #line 41 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 41 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ArgumentUsage));
             
             #line default
             #line hidden
             this.Write(");\r\n        }\r\n\r\n");
             
-            #line 44 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            #line 44 "C:\Users\ALICE\Documents\Git\GitHub_malaybaku\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
 
     }
 

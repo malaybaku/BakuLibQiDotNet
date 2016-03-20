@@ -10,7 +10,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             QiMetaObject = metaObject;
 
             ServiceName = serviceName;
-            ServiceDescription = metaObject[3].ToString().Replace("\n", "").Replace("\r", "");
+            ServiceDescription = QiMethodInfoForTemplate.XmlCommentize(metaObject[3].ToString());
 
             MethodInfos = QiMetaObject[0].MapValues
                 .Select(mi => new QiMethodInfoForTemplate(mi))

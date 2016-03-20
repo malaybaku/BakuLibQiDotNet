@@ -18,10 +18,10 @@ namespace Baku.LibqiDotNet
         internal IntPtr Handle { get; }
 
         /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        ~QiSession()
-        {
-            QiApiSession.Destroy(this);
-        }
+        //~QiSession()
+        //{
+        //    QiApiSession.Destroy(this);
+        //}
     
         /// <summary>セッションが接続済みであるかを取得します。</summary>
         public bool IsConnected => QiApiSession.IsConnected(this);

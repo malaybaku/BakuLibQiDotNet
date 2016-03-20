@@ -38,7 +38,7 @@ namespace Baku.LibqiDotNet.Service
 		/// <returns><#=mInfo.ReturnDescription#></returns>
         public <#=mInfo.ReturnValueSignature#> <#=mInfo.MethodName#>(<#=mInfo.ArgumentDeclaration#>)
         {
-            <#=mInfo.ReturnExpression#>SourceService["<#=mInfo.MethodName#>"].Call(<#=mInfo.ArgumentUsage#>);
+            <#=mInfo.ReturnExpression#>SourceService["<#=mInfo.OriginalMethodName#>"].Call(<#=mInfo.ArgumentUsage#>);
         }
 
 <#

@@ -14,10 +14,10 @@ namespace Baku.LibqiDotNet
         internal IntPtr Handle { get; }
 
         /// <summary>このクラスが保持しているアンマネージリソースのハンドルを解放します。</summary>
-        ~QiApplication()
-        {
-            QiApiApplication.Destroy(this);
-        }
+        //~QiApplication()
+        //{
+        //    QiApiApplication.Destroy(this);
+        //}
 
         /// <summary>サーバとしてアプリケーションを実行します。クライアントでは呼び出しは必要ありません。</summary>
         public void Run() => QiApiApplication.Run(this);
