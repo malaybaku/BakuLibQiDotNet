@@ -2,56 +2,58 @@
 
 namespace Baku.LibqiDotNet.ServiceCodeGenerator
 {
-    public class QiMethodInfoForTemplate
+    /// <summary><see cref="MetaMethod"/>を整形してC#ソースに乗る形に直す</summary>
+    public class MetaMethodTemplate
     {
-        public QiMethodInfoForTemplate(QiValue methodInfo)
+        public MetaMethodTemplate(MetaMethod methodInfo)
         {
-            Id = methodInfo[0].ToInt64();
+            _src = methodInfo;
 
             ReturnValueSignature = QiSig2CSharpSig
-                .GetReturnSignature(methodInfo[1].ToString());
+                .GetReturnSignature(_src.returnSignature);
 
-            OriginalMethodName = methodInfo[2].ToString();
-            MethodName = GetModifiedMethodName(methodInfo[2].ToString());
+            OriginalMethodName = _src.name;;
+            MethodName = GetModifiedMethodName(_src.name);
 
-            Description = XmlCommentize(methodInfo[4].ToString());
+            Description = XmlCommentize(methodInfo.description);
 
-            ArgumentCount = QiSig2CSharpSig.GetArgCount(methodInfo[3].ToString());
+            ArgumentCount = QiSig2CSharpSig.GetArgCount(methodInfo.parametersSignature);
 
 
-            var argInfo = methodInfo[5];
+            var argInfo = methodInfo.parameters ?? new List<MetaMethodParameter>();
             var argNames = new string[ArgumentCount];
             var argDescs = new string[ArgumentCount];
             for (int i = 0; i < ArgumentCount; i++)
             {
-                //アンダースコアを前置するのは予約語とうっかり競合するのを防止するため
+                //前置文字は予約語との競合防止
                 argNames[i] =
-                    (argInfo.Count > i && !string.IsNullOrWhiteSpace(argInfo[i][0].ToString())) ?
-                    $"arg{i}_" + argInfo[i][0].ToString().Replace(" ", "") :
+                    (argInfo.Count > i && !string.IsNullOrWhiteSpace(argInfo[i].name)) ?
+                    $"arg{i}_" + argInfo[i].name.Replace(" ", "") :
                     $"arg{i}";
 
-
-                argDescs[i] = (argInfo.Count > i) ? XmlCommentize(argInfo[i][1].ToString()) : $"";
+                argDescs[i] = (argInfo.Count > i) ? XmlCommentize(argInfo[i].description) : $"";
             }
             ArgumentNames = argNames;
             ArgumentDescriptions = argDescs;
 
             ArgumentDeclaration = QiSig2CSharpSig.GetExpandedArgDeclaration(
-                methodInfo[3].ToString(),
+                methodInfo.parametersSignature,
                 ArgumentNames
                 );
             ArgumentUsage = QiSig2CSharpSig.GetExpandedArgUsage(
-                methodInfo[3].ToString(),
+                methodInfo.parametersSignature,
                 ArgumentNames
                 );
 
 
             ReturnExpression = QiSig2CSharpSig.GetReturnWordAndCast(ReturnValueSignature);
 
-            ReturnDescription = XmlCommentize(methodInfo[6].ToString());
+            ReturnDescription = XmlCommentize(methodInfo.returnDescription);
         }
 
-        public long Id { get; }
+        private readonly MetaMethod _src;
+
+        public uint Id => _src.uid;
 
         public string OriginalMethodName { get; }
         public string MethodName { get; }
@@ -81,12 +83,12 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         }
 
         //XMLドキュメントコメントに不適切な文字を消す
-        public static string XmlCommentize(string s) 
+        public static string XmlCommentize(string s)
             => s.Replace("\n", "")
             .Replace("\r", "")
+            .Replace("&", "&amp;")
+            .Replace("\"", "&quot;")
             .Replace("<", "&lt;")
             .Replace(">", "&gt;");
-
     }
-
 }

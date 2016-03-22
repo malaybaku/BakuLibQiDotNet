@@ -1,120 +1,94 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
+using System.Threading;
 using System.Reflection;
 
+using Newtonsoft.Json;
 using Baku.LibqiDotNet;
 using Baku.LibqiDotNet.Path;
 using Baku.LibqiDotNet.ServiceCodeGenerator;
-using System.Threading;
-using System.Xml.Serialization;
 
 namespace ServiceCodeGenerator
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            PathModifier.AddEnvironmentPath("dlls",  PathModifyMode.RelativeToEntryAssembly);
-
-            Console.WriteLine("Please input connect target IP address(i.e. 192.168.xxx.xxx, robot.local");
-            string address = Console.ReadLine();
-
-            var session = QiSession.Create(address);
-            if (!session.IsConnected)
-            {
-                Console.WriteLine($"Failed to connect to {address}. Ends program...");
-                return;
-            }
-
-            bool ignoreUnderscoreStartedService 
-                = ChooseYesOrNo("Ignore services with underscore-started name (like '_SomeService')? ");
-
-            Console.WriteLine($"Setting was set to {ignoreUnderscoreStartedService}");
-
-
-
-            string dirName = GetTargetDirectory();
-            Directory.CreateDirectory(dirName);
-
-            string[] services = session.GetServices()
-                .Where(sname => !ignoreUnderscoreStartedService || !sname.StartsWith("_"))
-                .ToArray();
-            //コードを生成する場合
-            //int successCount = 0;
-            //foreach (var serviceName in services)
-            //{
-            //    bool succeed = TryGenerateAndSaveCode(session, serviceName, dirName);
-            //    if(succeed)
-            //    {
-            //        successCount++;
-            //    }
-            //    Thread.Sleep(100);
-            //}
-            //Console.WriteLine(
-            //    $"Service:{services.Length}, Succeed: {successCount}, Failed: {services.Length - successCount}");
-
-            //Xmlを取得する場合
-            int successCount = 0;
-            foreach (var serviceName in services)
-            {
-                //bool succeed = TryGenerateAndSaveCode(session, serviceName, dirName);
-                string xmlDirName = "XmlFiles";
-                Directory.CreateDirectory(xmlDirName);
-                string filename = Path.Combine(xmlDirName, $"{serviceName}.xml");
-
-                try
-                {
-                    var service = session.GetService(serviceName);
-                    var mo = service.GetMetaObject();
-                    var xmlMo = XmlMetaObjectParser.CreateMetaObject(mo);
-                    var serializer = new XmlSerializer(xmlMo.GetType());
-                    using (var sw = new StreamWriter(filename))
-                    {
-                        serializer.Serialize(sw, xmlMo);
-                    }
-                    Console.WriteLine($"{serviceName}: succeed to save");
-                    successCount++;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"{serviceName}: Failed, {ex.GetType().Name}: {ex.Message}");
-                    File.Delete(filename);
-                }
-                Thread.Sleep(100);
-            }
-            Console.WriteLine(
-                $"Service:{services.Length}, Succeed: {successCount}, Failed: {services.Length - successCount}");
-
-            Console.WriteLine("Press ENTER to exit...");
-            Console.ReadLine();
-        }
-
-        static bool ChooseYesOrNo(string question)
-        {
-            bool? result = null;
-            while (!result.HasValue)
-            {
-                Console.WriteLine(question + " (Y/n)");
-                string input = Console.ReadLine();
-
-                if (input == "Y" || input == "y")
-                {
-                    result = true;
-                }
-                else if (input == "N" || input == "n")
-                {
-                    result = false;
-                }
-            }
-
-            return result.GetValueOrDefault();
-        }
-
         private static readonly string SolutionFileName = "Baku.LibqiDotNet.sln";
         private static readonly string TargetProjectDirectory = "Baku.LibqiDotNet.Services";
         private static readonly string TargetCodeDirectory = "GeneratedSources";
 
+
+        static void Main(string[] args)
+        {
+            PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
+
+            string jsonDirName = "Jsons";
+
+            //JSONの保存(まだ取得してない場合)
+            Console.WriteLine("Create New Json Files? ('yes' to connect and create json, or just RETURN to continue)");
+            if(Console.ReadLine() == "yes")
+            {
+                Console.WriteLine("Please input connect target IP address(i.e. 192.168.xxx.xxx, robot.local");
+                string address = Console.ReadLine();
+
+                var session = QiSession.Create(address);
+                if (!session.IsConnected)
+                {
+                    Console.WriteLine($"Failed to connect to {address}. Ends program...");
+                    return;
+                }
+
+                LoadServicesAndSaveJsons(session, jsonDirName);
+            }
+
+            //JSONからC#への変換
+            Console.WriteLine("Create C# Files? ('yes' to connect and create json, or just RETURN to continue)");
+            if (Console.ReadLine() == "yes")
+            {
+                ConvertJsonFilesToCSharpFiles(jsonDirName, GetTargetDirectory());
+            }
+
+            Console.WriteLine("Program ended. Press RETURN to exit...");
+            Console.ReadLine();
+        }
+
+        static void LoadServicesAndSaveJsons(QiSession session, string saveDir)
+        {
+            Directory.CreateDirectory(saveDir);
+            foreach (string serviceName in session.GetServices())
+            {
+                string fileName = Path.Combine(saveDir, $"{serviceName}.json");
+
+                var metaObjectQiValue = session.GetService(serviceName).GetMetaObject();
+                var metaObject = MetaObject.Create(metaObjectQiValue);
+                string jsonText = JsonConvert.SerializeObject(metaObject, Formatting.Indented);
+
+                File.WriteAllText(fileName, jsonText);
+                Console.WriteLine($"{serviceName}: succeed to save");
+                Thread.Sleep(100);
+            }
+        }
+
+        static void ConvertJsonFilesToCSharpFiles(string srcDir, string destDir)
+        {
+            Directory.CreateDirectory(destDir);
+            Console.WriteLine($"Source Directory: {srcDir}");
+            Console.WriteLine($"Destination Directory: {destDir}");
+
+            foreach (var srcFile in Directory.GetFiles(srcDir))
+            {
+                string serviceName = Path.GetFileNameWithoutExtension(srcFile);
+                string filename = Path.Combine(destDir, $"{serviceName}.cs");
+
+                var metaObject = JsonConvert.DeserializeObject<MetaObject>(File.ReadAllText(srcFile));
+                var templateSource = new QiServiceTemplate(serviceName, metaObject);
+
+                string codeOutput = templateSource.TransformText();
+                File.WriteAllText(filename, codeOutput);
+                Console.WriteLine($"success: {Path.GetFileName(srcFile)} to {Path.GetFileName(filename)}");
+            }
+        }
+
+        //C#コードを保存するディレクトリ(Baku.LibqiDotNet.Servicesプロジェクトの下)のパスを取得
         static string GetTargetDirectory()
         {
             string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -131,28 +105,5 @@ namespace ServiceCodeGenerator
             return Path.Combine(dir, TargetProjectDirectory, TargetCodeDirectory);
         }
 
-        static bool TryGenerateAndSaveCode(QiSession session, string serviceName, string saveDir)
-        {
-            string filename = Path.Combine(saveDir, $"{serviceName}.cs");
-            try
-            {
-                var qs = new QiServiceTemplate(
-                    serviceName, session.GetService(serviceName).GetMetaObject()
-                    );
-
-                string output = qs.TransformText();
-                File.WriteAllText(filename, output);
-
-                Console.WriteLine($"{serviceName}: succeed to save");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                File.Delete(filename);
-
-                Console.WriteLine($"{serviceName}: Failed, {ex.GetType().Name}: {ex.Message}");
-                return false;
-            }
-        }
     }
 }

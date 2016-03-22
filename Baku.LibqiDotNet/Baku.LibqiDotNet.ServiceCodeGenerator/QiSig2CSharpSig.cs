@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Baku.LibqiDotNet;
 
 namespace Baku.LibqiDotNet.ServiceCodeGenerator
 {

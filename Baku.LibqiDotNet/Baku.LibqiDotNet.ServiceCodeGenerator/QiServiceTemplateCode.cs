@@ -5,15 +5,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
     //テンプレートコードで使うデータを生成するコードビハインド的な実装
     public partial class QiServiceTemplate
     {
-        public QiServiceTemplate(string serviceName, QiValue metaObject)
+        public QiServiceTemplate(string serviceName, MetaObject metaObject)
         {
-            QiMetaObject = metaObject;
-
             ServiceName = serviceName;
-            ServiceDescription = QiMethodInfoForTemplate.XmlCommentize(metaObject[3].ToString());
+            ServiceDescription = MetaMethodTemplate.XmlCommentize(metaObject.description);
 
-            MethodInfos = QiMetaObject[0].MapValues
-                .Select(mi => new QiMethodInfoForTemplate(mi))
+            MethodInfos = metaObject
+                .methods
+                .Select(mi => new MetaMethodTemplate(mi))
                 .ToArray();
         }
 
@@ -21,10 +20,8 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public string ServiceDescription { get; }
 
-        public QiValue QiMetaObject { get; }
-
         /// <summary>メソッド情報の一覧</summary>
-        public QiMethodInfoForTemplate[] MethodInfos { get; }
+        public MetaMethodTemplate[] MethodInfos { get; }
 
         public string GetArgumentXmlDocumentComment(string argName, string argDesc)
             => $"/// <param name=\"{argName}\">{argDesc}</param>";
