@@ -239,5 +239,5 @@ _Pvt_Extensions
 
 # User-define additional ignore setting
 # Ignore generated source files created by ServiceCodeGenerator
-GeneratedSources/*
+**/GeneratedSources/*
 
