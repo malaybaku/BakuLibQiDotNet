@@ -8,9 +8,16 @@ namespace Baku.LibqiDotNet
     public sealed class QiList<T> : QiAnyValue 
         where T : QiAnyValue
     {
-        private QiList(QiValue value, string sig)
+        private QiList(IEnumerable<T> values, string sig)//QiValue value, string sig)
         {
-            QiValue = value;
+            var list = QiValue.Create(sig);
+            foreach (var v in values)
+            {
+                list.AddElement(v.QiValue);
+            }
+            QiValue = list;
+            Values = values.Select(v => v);
+
             Signature = sig;
         }
 
@@ -31,6 +38,9 @@ namespace Baku.LibqiDotNet
             get { return this.QiValue[i]; }
             set { this.QiValue[i] = value; }
         }
+
+        /// <summary>インスタンスの生成時に用いたデータを取得します。</summary>
+        public IEnumerable<T> Values { get; }
 
         /// <summary>
         /// 列挙された<see cref="QiAnyValue"/>派生型から、それに対応したリストを生成します。
@@ -53,13 +63,7 @@ namespace Baku.LibqiDotNet
 
             string sig = QiSignatures.TypeListBegin + elemSig + QiSignatures.TypeListEnd;
 
-            var list = QiValue.Create(sig);
-            foreach (var v in values)
-            {
-                list.AddElement(v.QiValue);
-            }
-
-            return new QiList<T>(list, sig);
+            return new QiList<T>(values, sig);
         }
 
         /// <summary>
@@ -76,13 +80,7 @@ namespace Baku.LibqiDotNet
 
             string sig = QiSignatures.TypeListBegin + QiSignatures.TypeDynamic + QiSignatures.TypeListEnd;
 
-            var list = QiValue.Create(sig);
-            foreach (var v in values)
-            {
-                list.AddElement(v.QiValue);
-            }
-
-            return new QiList<QiDynamic>(list, sig);
+            return new QiList<QiDynamic>(values.Select(v => v.ToDynamic()), sig);
         }
 
     }

@@ -9,10 +9,17 @@ namespace Baku.LibqiDotNet
         where K : QiAnyValue
         where V : QiAnyValue
     {
-        private QiMap(QiValue value, string sig)
+        private QiMap(IEnumerable<KeyValuePair<K, V>> pairs, string sig) //QiValue value, string sig)
         {
-            QiValue = value;
+            var map = QiValue.Create(sig);
+            foreach (var pair in pairs)
+            {
+                map[pair.Key.QiValue] = pair.Value.QiValue;
+            }
+            QiValue = map;
             Signature = sig;
+
+            Pairs = pairs.Select(p => p);
         }
 
         /// <summary>ラップしている<see cref="QiValue"/>型の値を取得します。</summary>
@@ -29,6 +36,15 @@ namespace Baku.LibqiDotNet
             get { return QiValue[key.QiValue]; }
             set { QiValue[key.QiValue] = value; }
         }
+
+        /// <summary>キーとなる値の一覧を取得します。</summary>
+        public IEnumerable<K> Keys => Pairs.Select(p => p.Key);
+
+        /// <summary>値の一覧を取得します。</summary>
+        public IEnumerable<V> Values => Pairs.Select(p => p.Value);
+
+        /// <summary>インスタンスの初期化時に使用したデータを取得します。</summary>
+        public IEnumerable<KeyValuePair<K, V>> Pairs { get; }
 
         /// <summary>キーと値のペアを用いてマップ型変数を生成します。</summary>
         /// <param name="values">キーと値のペア</param>
@@ -52,12 +68,7 @@ namespace Baku.LibqiDotNet
 
             string sig = QiSignatures.TypeMapBegin + ksig + vsig + QiSignatures.TypeMapEnd;
 
-            var map = QiValue.Create(sig);
-            foreach (var pair in values)
-            {
-                map[pair.Key.QiValue] = pair.Value.QiValue;
-            }
-            return new QiMap<K, V>(map, sig);
+            return new QiMap<K, V>(values, sig);
         }
 
     }
@@ -87,6 +98,25 @@ namespace Baku.LibqiDotNet
             where V : QiAnyValue
         {
             return items.ToQiMap();
+        }
+
+        public static QiMap<K, V> Create<K, V>(IEnumerable<K> keys, IEnumerable<V> values)
+            where K : QiAnyValue
+            where V : QiAnyValue
+        {
+            var kArray = keys.ToArray();
+            var vArray = values.ToArray();
+            if(kArray.Length != vArray.Length)
+            {
+                throw new InvalidOperationException("Number of keys is not same as number of values");
+            }
+            var pairs = new List<KeyValuePair<K, V>>();
+            for(int i = 0; i < kArray.Length;i++)
+            {
+                pairs.Add(new KeyValuePair<K, V>(kArray[i], vArray[i]));
+            }
+
+            return QiMap<K, V>.Create(pairs);
         }
 
     }
