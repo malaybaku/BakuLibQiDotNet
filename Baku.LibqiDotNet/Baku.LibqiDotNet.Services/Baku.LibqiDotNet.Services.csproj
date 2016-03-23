@@ -141,6 +141,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NonStandardServices\ALFrameManager.cs" />
+    <Compile Include="NonStandardServices\ALPythonBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StandardServices\Audio\ALAnimatedSpeech.cs" />
     <Compile Include="StandardServices\Audio\ALAudioDevice.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="StandardServices\Core\ALExpressionWatcher.cs" />
     <Compile Include="StandardServices\Core\ALKnowledge.cs" />
     <Compile Include="StandardServices\Core\ALMemory.cs" />
+    <Compile Include="StandardServices\Core\ALMood.cs" />
     <Compile Include="StandardServices\Core\ALNotificationManager.cs" />
     <Compile Include="StandardServices\Core\ALPreferenceManager.cs" />
     <Compile Include="StandardServices\Core\ALResourceManager.cs" />
@@ -221,7 +224,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GeneratedSources\" />
-    <Folder Include="NonStandardServices\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
