@@ -12,6 +12,10 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             ReturnValueSignature = QiSig2CSharpSig
                 .GetReturnSignature(_src.returnSignature);
 
+            CallObjectSuffixOrEmpty =
+                QiSig2CSharpSig.JudgeObjectTypeReturned(methodInfo.returnSignature) ?
+                "Object" : "";
+
             OriginalMethodName = _src.name;;
             MethodName = GetModifiedMethodName(_src.name);
 
@@ -74,6 +78,9 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         public string ArgumentUsage { get; }
 
         public int ArgumentCount { get; }
+
+        public string CallObjectSuffixOrEmpty { get; }
+
 
         //メソッド名をパスカル記法に直す。これはC#流にするためでもあるが
         //予約語と衝突する("event"とか)関数名の定義を回避するためでもある。まあ大文字でも問題になる時はなるんだけどね。

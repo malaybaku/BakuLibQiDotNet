@@ -11,9 +11,15 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         /// <param name="src">Qi Framework方式の表現による文字列</param>
         /// <returns>.NETの対応する型の文字列</returns>
         public static string GetReturnSignature(string src)
-            => _returnSigs.ContainsKey(src) ?
-            _returnSigs[src] :
+            => _returnSigs.ContainsKey(src) ? _returnSigs[src] :
+            JudgeObjectTypeReturned(src) ? nameof(QiObject) :
             nameof(QiValue);
+
+        /// <summary>関数の戻り値が<see cref="QiObject"/>型であるかどうかを判定します。</summary>
+        /// <param name="src">戻り値のシグネチャ</param>
+        /// <returns>戻り値が<see cref="QiObject"/>かどうか</returns>
+        public static bool JudgeObjectTypeReturned(string src)
+            => src == QiSignatures.TypeObject;
 
         /// <summary>
         /// 戻り値の型文字列に応じてreturnキーワードを入れたり明示キャストを使ったりする処理を文字列ベースで設定
@@ -22,7 +28,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         /// <returns>型に応じたreturn部分の適切な文頭表現</returns>
         public static string GetReturnWordAndCast(string returnSig)
             => (returnSig == "void") ? "" :
-            (returnSig == nameof(QiValue)) ? "return " :
+            (returnSig == nameof(QiValue) || returnSig == nameof(QiObject)) ? "return " :
             $"return ({returnSig})";
 
         /// <summary>

@@ -141,7 +141,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             
             #line default
             #line hidden
-            this.Write("\"].Call(");
+            this.Write("\"].Call");
+            
+            #line 39 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.CallObjectSuffixOrEmpty));
+            
+            #line default
+            #line hidden
+            this.Write("(");
             
             #line 39 "C:\Users\style\Documents\GitHub\BakuLibQiDotNet\Baku.LibqiDotNet\Baku.LibqiDotNet.ServiceCodeGenerator\QiServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mInfo.ArgumentUsage));
