@@ -17,7 +17,7 @@ namespace StandardSamplesWithServices
         public static void Execute(QiSession session)
         {
 
-            var motion = new ALMotion(session);
+            var motion = ALMotion.CreateService(session);
             motion.StiffnessInterpolation("Body", 1.0f, 1.0f);
 
             Console.WriteLine(motion.GetSummary());

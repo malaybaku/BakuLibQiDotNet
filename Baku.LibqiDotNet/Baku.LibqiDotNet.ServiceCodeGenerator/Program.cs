@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Baku.LibqiDotNet;
 using Baku.LibqiDotNet.Path;
 using Baku.LibqiDotNet.ServiceCodeGenerator;
+using Baku.LibqiDotNet.Libqi;
 
 namespace ServiceCodeGenerator
 {
@@ -30,7 +31,7 @@ namespace ServiceCodeGenerator
                 Console.WriteLine("Please input connect target IP address(i.e. 192.168.xxx.xxx, robot.local");
                 string address = Console.ReadLine();
 
-                var session = QiSession.Create(address);
+                QiSession session = QiSession.Create(address) as QiSession;
                 if (!session.IsConnected)
                 {
                     Console.WriteLine($"Failed to connect to {address}. Ends program...");
@@ -41,7 +42,7 @@ namespace ServiceCodeGenerator
             }
 
             //JSONからC#への変換
-            Console.WriteLine("Create C# Files? ('yes' to connect and create json, or just RETURN to continue)");
+            Console.WriteLine("Create C# Files? ('yes' to create, or just RETURN to pass)");
             if (Console.ReadLine() == "yes")
             {
                 ConvertJsonFilesToCSharpFiles(jsonDirName, GetTargetDirectory());
@@ -58,7 +59,7 @@ namespace ServiceCodeGenerator
             {
                 string fileName = Path.Combine(saveDir, $"{serviceName}.json");
 
-                var metaObjectQiValue = session.GetService(serviceName).GetMetaObject();
+                var metaObjectQiValue = (session.GetService(serviceName) as QiObject).GetMetaObject();
                 var metaObject = MetaObject.Create(metaObjectQiValue);
                 string jsonText = JsonConvert.SerializeObject(metaObject, Formatting.Indented);
 

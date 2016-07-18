@@ -14,7 +14,7 @@ namespace StandardSamplesWithServices
         public static void Execute(QiSession session)
         {
             string serviceName = "CSharpSoundDownloaderSpare";
-            var audioDevice = new ALAudioDevice(session);
+            var audioDevice = ALAudioDevice.CreateService(session);
 
             var waveIn = new WaveInEvent();
 
@@ -39,9 +39,7 @@ namespace StandardSamplesWithServices
                 Array.Copy(e.Buffer, bufferToSend, e.BytesRecorded);
 
                 //Postによって非同期化したいのでSourceServiceを使う
-                int p = audioDevice
-                    .SourceService["sendRemoteBufferToOutput"]
-                    .Post(bufferToSend.Length / 4, bufferToSend);
+                audioDevice.SendRemoteBufferToOutputAsync(bufferToSend.Length / 4, bufferToSend);
                 Console.WriteLine($"received data, {count}");
                 count++;
             };
@@ -57,7 +55,7 @@ namespace StandardSamplesWithServices
             #endregion
 
             #region 3/4 ロボットから音を拾う, ロボットのマイク監視モードに入る
-            var objBuilder = QiObjectBuilder.Create();
+            var objBuilder = Baku.LibqiDotNet.Libqi.QiObjectBuilder.Create();
             //コールバックであるprocessRemote関数を登録することでALAudioDevice側の仕様に対応
             objBuilder.AdvertiseMethod(
                 "processRemote::v(iimm)",
@@ -71,12 +69,12 @@ namespace StandardSamplesWithServices
                     byte[] raw = arg[3].ToBytes();
                     wavProvider.AddSamples(raw, 0, raw.Length);
 
-                    return QiValue.Void;
+                    return Baku.LibqiDotNet.Libqi.QiValue.Void;
                 });
 
             //上記のコールバック取得用サービスを登録
-            session.Listen("tcp://0.0.0.0:0").Wait();
-            ulong registeredId = session.RegisterService(serviceName, objBuilder.BuildObject()).GetUInt64(0UL);
+            session.Listen("tcp://0.0.0.0:0");
+            ulong registeredId = session.RegisterService(serviceName, objBuilder.BuildObject());
 
             #endregion
 

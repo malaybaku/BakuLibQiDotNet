@@ -18,7 +18,9 @@ namespace StandardSamplesWithServices
             {
                 Console.WriteLine("Please input address to connect (i.e. 'tcp://127.0.0.1:9559')");
                 string address = Console.ReadLine();
-                var session = QiSession.Create(address);
+                var session = QiSession.CreateSession();
+                session.Connect(address);
+
                 if (!session.IsConnected)
                 {
                     Console.WriteLine("Failed to connect. Program ends...");
@@ -27,7 +29,7 @@ namespace StandardSamplesWithServices
 
                 while (true)
                 {
-                    Console.WriteLine("Choose sample by input number 1, 2, 3, 4 or 5.");
+                    Console.WriteLine("Choose sample by input number 1, 2, 3, 4, 5, 6, or 7.");
                     Console.WriteLine("1. Motion Pose Initialize");
                     Console.WriteLine("2. Motion Stiffness On");
                     Console.WriteLine("3. Sensor Read");

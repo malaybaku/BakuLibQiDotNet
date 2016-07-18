@@ -14,17 +14,12 @@ namespace StandardSamplesWithServices
     {
         public static void Execute(QiSession session)
         {
-            var motion = new ALMotion(session);
-            var posture = new ALRobotPosture(session);
+            var motion = ALMotion.CreateService(session);
+            var posture = ALRobotPosture.CreateService(session);
 
             motion.WakeUp();
             posture.GoToPosture("StandInit", 0.5f);
             motion.Rest();
-        }
-
-        private static void sessionGetService(string v)
-        {
-            throw new NotImplementedException();
         }
     }
 }

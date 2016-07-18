@@ -10,7 +10,7 @@ namespace StandardSamplesWithServices
     {
         public static void Execute(QiSession session)
         {
-            var recorder = new ALVideoRecorder(session);
+            var recorder = ALVideoRecorder.CreateService(session);
 
             string savePath = "/home/nao/recordings/cameras";
 

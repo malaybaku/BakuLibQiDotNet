@@ -7,9 +7,9 @@ using Baku.LibqiDotNet;
 namespace StandardSamples
 {
     /// <summary>Choregraphe 2.4付属ドキュメントのPythonサンプルでSensorに相当する部分</summary>
-    static class Sensors
+    public static class Sensors
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session)
         {
             var mem = session.GetService("ALMemory");
             var sonar = session.GetService("ALSonar");
@@ -28,7 +28,7 @@ namespace StandardSamples
 
                 { "TorsoAngleX", "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value" },
                 { "TorsoAngleY", "Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value" }
-            }.Select(p => $"key={p.Key}, value={mem["getData"].Call(p.Value).Dump()}");
+            }.Select(p => $"key={p.Key}, value={mem["getData"].Call<IQiResult>(p.Value).Dump()}");
 
             foreach (var r in results)
             {
@@ -40,11 +40,11 @@ namespace StandardSamples
             sonar["subscribe"].Call("MySampleApplication");
             Console.WriteLine(
                 "Left: {0}",
-                mem["getData"].Call("Device/SubDeviceList/US/Left/Sensor/Value").Dump()
+                mem["getData"].Call<IQiResult>("Device/SubDeviceList/US/Left/Sensor/Value").Dump()
                 );
             Console.WriteLine(
                 "Right: {0}",
-                mem["getData"].Call("Device/SubDeviceList/US/Right/Sensor/Value").Dump()
+                mem["getData"].Call<IQiResult>("Device/SubDeviceList/US/Right/Sensor/Value").Dump()
                 );
 
             sonar["unsubscribe"].Call("MySampleApplication");

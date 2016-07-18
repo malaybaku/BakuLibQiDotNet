@@ -12,8 +12,8 @@ namespace StandardSamplesWithServices
     {
         public static void Execute(QiSession session)
         {
-            var mem = new ALMemory(session);
-            var sonar = new ALSonar(session);
+            var mem = ALMemory.CreateService(session);
+            var sonar = ALSonar.CreateService(session);
 
             //NOTE: PythonサンプルにはFSR(力センサ)の話題も載ってるがだいたい同じなので省略
 

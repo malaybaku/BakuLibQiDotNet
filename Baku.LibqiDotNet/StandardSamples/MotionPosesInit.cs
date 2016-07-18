@@ -8,9 +8,9 @@ namespace StandardSamples
     /// Motion -> Poses -> Init に相当する部分
     /// (Motion -> Poses -> Zero)というのも掲載されてるがほぼ同じため省略
     /// </summary>
-    static class MotionPosesInit
+    public static class MotionPosesInit
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session)
         {
 
             var motion = session.GetService("ALMotion");

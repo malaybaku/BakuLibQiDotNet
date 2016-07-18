@@ -8,9 +8,9 @@ using Baku.LibqiDotNet;
 
 namespace StandardSamples
 {
-    static class VisionRetrieveImage
+    public static class VisionRetrieveImage
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session, string savePngPath = "result.png")
         {
             byte[] rawImageData = DownloadRawImage(session);
             Console.WriteLine($"raw data length = {rawImageData.Length}");
@@ -21,8 +21,8 @@ namespace StandardSamples
                 int width = 320;
                 int channel = 3;
                 var img = GetImageFromRawData(rawImageData, width, height, channel);
-                img.Save("result.png", ImageFormat.Png);
-                Console.WriteLine("Front camera's image was saved to working directory with name 'result.png'");
+                img.Save(savePngPath, ImageFormat.Png);
+                Console.WriteLine($"Front camera's image was saved to working directory with name {savePngPath}");
             }
             catch (InvalidOperationException ex)
             {
@@ -31,14 +31,14 @@ namespace StandardSamples
 
         }
 
-        static byte[] DownloadRawImage(QiSession session)
+        static byte[] DownloadRawImage(IQiSession session)
         {
             var vd = session.GetService("ALVideoDevice");
 
             //忌々しいマジックナンバーを使っているが、パラメタについては
             //ALVideoDevice::subscribeのドキュメンテーションに載っているので参照されたく。
             //http://doc.aldebaran.com/2-1/naoqi/vision/alvideodevice-api.html?highlight=alvideodevice#ALVideoDeviceProxy::subscribeCamera__ssCR.iCR.iCR.iCR.iCR
-            string idName = (string)vd["subscribeCamera"].Call("mytestimage",
+            string idName = vd["subscribeCamera"].Call<string>("mytestimage",
                 //カメラ種類 0:正面, 1:下方, 2:深度
                 0,
                 //解像度 1:320x240
@@ -54,7 +54,7 @@ namespace StandardSamples
 
             try
             {
-                return vd["getImageRemote"].Call(idName)[6].ToBytes();
+                return vd["getImageRemote"].Call<IQiResult>(idName)[6].ToBytes();
             }
             finally
             {

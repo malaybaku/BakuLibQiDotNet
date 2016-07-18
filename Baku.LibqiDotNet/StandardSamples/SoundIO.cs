@@ -1,18 +1,15 @@
-﻿using Baku.LibqiDotNet;
-using NAudio.CoreAudioApi;
+﻿using System;
 using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NAudio.CoreAudioApi;
+using Baku.LibqiDotNet;
+using Baku.LibqiDotNet.Libqi;
 
 namespace StandardSamples
 {
     /// <summary>音声のリアルタイム入出力</summary>
     static class SoundIO
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session)
         {
             string serviceName = "CSharpSoundDownloaderSpare";
             var audioDevice = session.GetService("ALAudioDevice");
@@ -39,7 +36,7 @@ namespace StandardSamples
                 byte[] bufferToSend = new byte[e.BytesRecorded];
                 Array.Copy(e.Buffer, bufferToSend, e.BytesRecorded);
 
-                int p = audioDevice["sendRemoteBufferToOutput"].Post(bufferToSend.Length / 4, bufferToSend);
+                var f = audioDevice["sendRemoteBufferToOutput"].CallAsync(bufferToSend.Length / 4, bufferToSend);
                 Console.WriteLine($"received data, {count}");
                 count++;
             };
@@ -73,8 +70,8 @@ namespace StandardSamples
                 });
 
             //上記のコールバック取得用サービスを登録
-            session.Listen("tcp://0.0.0.0:0").Wait();
-            ulong registeredId = session.RegisterService(serviceName, objBuilder.BuildObject()).GetUInt64(0UL);
+            session.Listen("tcp://0.0.0.0:0");
+            ulong registeredId = (ulong)session.RegisterService(serviceName, objBuilder.BuildObject());
 
             #endregion
 

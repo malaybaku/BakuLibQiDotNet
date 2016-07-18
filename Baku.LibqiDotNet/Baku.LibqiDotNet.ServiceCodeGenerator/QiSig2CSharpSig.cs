@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Baku.LibqiDotNet.Libqi;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Baku.LibqiDotNet.ServiceCodeGenerator
@@ -12,24 +13,8 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         /// <returns>.NETの対応する型の文字列</returns>
         public static string GetReturnSignature(string src)
             => _returnSigs.ContainsKey(src) ? _returnSigs[src] :
-            JudgeObjectTypeReturned(src) ? nameof(QiObject) :
-            nameof(QiValue);
-
-        /// <summary>関数の戻り値が<see cref="QiObject"/>型であるかどうかを判定します。</summary>
-        /// <param name="src">戻り値のシグネチャ</param>
-        /// <returns>戻り値が<see cref="QiObject"/>かどうか</returns>
-        public static bool JudgeObjectTypeReturned(string src)
-            => src == QiSignatures.TypeObject;
-
-        /// <summary>
-        /// 戻り値の型文字列に応じてreturnキーワードを入れたり明示キャストを使ったりする処理を文字列ベースで設定
-        /// </summary>
-        /// <param name="returnSig"><see cref="GetReturnSignature(string)"/>で得た戻り値の型</param>
-        /// <returns>型に応じたreturn部分の適切な文頭表現</returns>
-        public static string GetReturnWordAndCast(string returnSig)
-            => (returnSig == "void") ? "" :
-            (returnSig == nameof(QiValue) || returnSig == nameof(QiObject)) ? "return " :
-            $"return ({returnSig})";
+            src == QiSignatures.TypeObject ? nameof(IQiSignal) : 
+            nameof(IQiResult);
 
         /// <summary>
         /// 引数部分に入力する、型名と引数名の一覧を取得します。外側のカッコは含まれません。
@@ -50,17 +35,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         /// <param name="argNames"></param>
         /// <returns></returns>
         public static string GetExpandedArgUsage(string tupleArgSrc, IReadOnlyList<string> argNames)
-            => string.Join(", ",
-                GetArgSignatures(tupleArgSrc)
-                    .Select((s, i) => GetPreprocessedArg(s, argNames[i]))
-                );
+            => string.Join(", ", argNames.ToArray());
 
         public static int GetArgCount(string tupleArgSrc) => GetArgSignatures(tupleArgSrc).Length;
 
         private static string[] GetArgSignatures(string tupleArgSrc)
         {
             //フォーマット不正なのか、引数文字列がタプルで囲われずに"m"とかだけのやつがあるので対策
-            tupleArgSrc = (tupleArgSrc.StartsWith("(")) ? tupleArgSrc : $"({tupleArgSrc})";
+            tupleArgSrc = tupleArgSrc.StartsWith("(") ? tupleArgSrc : $"({tupleArgSrc})";
 
             return QiSignatureValidityChecker
                 .SplitTupleSignatures(tupleArgSrc, true)
@@ -74,7 +56,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         private static string GetArgSignature(string src)
             => _argumentSigs.ContainsKey(src) ?
             _argumentSigs[src] :
-            nameof(QiAnyValue);
+            "object";
 
         /// <summary>IE型は配列に直るよう適切に変換し、QiMethod.Callに渡せる形式の引数表現を生成します。</token></summary>
         /// <param name="sig"><see cref="GetArgSignature"/>で取得した引数の型文字列</param>
@@ -146,11 +128,15 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
             [ListSigOf(QiSignatures.TypeFloat)] = "IEnumerable<float>",
             [ListSigOf(QiSignatures.TypeDouble)] = "IEnumerable<double>",
             [ListSigOf(QiSignatures.TypeString)] = "IEnumerable<string>",
+
+            //add: 実際に使われているのを確認したので追加
+            [DicSigOf(QiSignatures.TypeString + QiSignatures.TypeString)] = "IDictionary<string, string>"
         };
-
-
 
         private static string ListSigOf(string s)
             => QiSignatures.TypeListBegin + s + QiSignatures.TypeListEnd;
+
+        private static string DicSigOf(string sigPair)
+            => QiSignatures.TypeMapBegin + sigPair + QiSignatures.TypeMapEnd;
     }
 }

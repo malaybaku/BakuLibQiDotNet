@@ -34,7 +34,7 @@ namespace StandardSamplesWithServices
 
         static byte[] DownloadRawImage(QiSession session)
         {
-            var vd = new ALVideoDevice(session);
+            var vd = ALVideoDevice.CreateService(session);
 
             //忌々しいマジックナンバーを使っているが、パラメタについては
             //ALVideoDevice::subscribeのドキュメンテーションに載っているので参照されたく。

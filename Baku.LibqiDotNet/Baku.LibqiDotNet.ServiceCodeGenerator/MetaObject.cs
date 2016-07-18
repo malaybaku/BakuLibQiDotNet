@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Baku.LibqiDotNet.Libqi;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Baku.LibqiDotNet.ServiceCodeGenerator
@@ -18,9 +19,9 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         {
             return new MetaObject()
             {
-                methods = qv[0].MapValues.Select(v => MetaMethod.Create(v)).ToList(),
-                signals = qv[1].MapValues.Select(v => MetaSignal.Create(v)).ToList(),
-                properties = qv[2].MapValues.Select(v => MetaProperty.Create(v)).ToList(),
+                methods = qv[0].MapItems.Select(p => MetaMethod.Create(p.Value as QiValue)).ToList(),
+                signals = qv[1].MapItems.Select(p => MetaSignal.Create(p.Value as QiValue)).ToList(),
+                properties = qv[2].MapItems.Select(p => MetaProperty.Create(p.Value as QiValue)).ToList(),
                 description = qv[3].ToString()
             };
         }
@@ -66,7 +67,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public string description { get; set; }
 
-        public static MetaMethodParameter Create(QiValue qv)
+        public static MetaMethodParameter Create(IQiResult qv)
         {
             return new MetaMethodParameter()
             {

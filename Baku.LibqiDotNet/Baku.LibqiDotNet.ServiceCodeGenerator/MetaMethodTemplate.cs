@@ -8,18 +8,13 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
         public MetaMethodTemplate(MetaMethod methodInfo)
         {
             _src = methodInfo;
+            OriginalMethodName = _src.name; ;
 
-            ReturnValueSignature = QiSig2CSharpSig
-                .GetReturnSignature(_src.returnSignature);
-
-            CallObjectSuffixOrEmpty =
-                QiSig2CSharpSig.JudgeObjectTypeReturned(methodInfo.returnSignature) ?
-                "Object" : "";
-
-            OriginalMethodName = _src.name;;
+            ReturnValueSignature = QiSig2CSharpSig.GetReturnSignature(_src.returnSignature);
             MethodName = GetModifiedMethodName(_src.name);
 
             Description = XmlCommentize(methodInfo.description);
+            ReturnDescription = XmlCommentize(methodInfo.returnDescription);
 
             ArgumentCount = QiSig2CSharpSig.GetArgCount(methodInfo.parametersSignature);
 
@@ -35,7 +30,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
                     $"arg{i}_" + argInfo[i].name.Replace(" ", "") :
                     $"arg{i}";
 
-                argDescs[i] = (argInfo.Count > i) ? XmlCommentize(argInfo[i].description) : $"";
+                argDescs[i] = (argInfo.Count > i) ? XmlCommentize(argInfo[i].description) : "";
             }
             ArgumentNames = argNames;
             ArgumentDescriptions = argDescs;
@@ -49,10 +44,6 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
                 ArgumentNames
                 );
 
-
-            ReturnExpression = QiSig2CSharpSig.GetReturnWordAndCast(ReturnValueSignature);
-
-            ReturnDescription = XmlCommentize(methodInfo.returnDescription);
         }
 
         private readonly MetaMethod _src;
@@ -61,6 +52,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public string OriginalMethodName { get; }
         public string MethodName { get; }
+        public string AsyncMethodName => MethodName + "Async";
         public IReadOnlyList<string> ArgumentNames { get; }
 
 
@@ -71,7 +63,7 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public string ReturnValueSignature { get; }
 
-        public string ReturnExpression { get; }
+        public string ReturnExpression => (ReturnValueSignature != "void") ? "return " : "";
 
         public string ArgumentDeclaration { get; }
 
@@ -79,15 +71,14 @@ namespace Baku.LibqiDotNet.ServiceCodeGenerator
 
         public int ArgumentCount { get; }
 
-        public string CallObjectSuffixOrEmpty { get; }
+        public string CallTypeTemplateOrEmpty 
+            => (ReturnValueSignature != "void") ? $"<{ReturnValueSignature}>" : "";
 
 
         //メソッド名をパスカル記法に直す。これはC#流にするためでもあるが
         //予約語と衝突する("event"とか)関数名の定義を回避するためでもある。まあ大文字でも問題になる時はなるんだけどね。
         private string GetModifiedMethodName(string originalName)
-        {
-            return originalName[0].ToString().ToUpper() + originalName.Substring(1);
-        }
+            => originalName[0].ToString().ToUpper() + originalName.Substring(1);
 
         //XMLドキュメントコメントに不適切な文字を消す
         public static string XmlCommentize(string s)

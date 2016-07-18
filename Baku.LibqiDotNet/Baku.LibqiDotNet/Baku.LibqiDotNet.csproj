@@ -136,52 +136,25 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Enums.cs" />
-    <Compile Include="Core\QiMethodSignature.cs" />
-    <Compile Include="Core\QiMethod\QiMethod.cs" />
-    <Compile Include="Core\QiMethod\QiMethodArgumentInfo.cs" />
-    <Compile Include="Core\QiMethod\QiMethodInfo.cs" />
-    <Compile Include="Core\QiMethod\QiMethods.cs" />
-    <Compile Include="Core\QiValueCast.cs" />
-    <Compile Include="Utils\PathModifier.cs" />
-    <Compile Include="Utils\ReadOnlyDictionary.cs" />
-    <Compile Include="Utils\ReadOnlyList.cs" />
-    <Compile Include="ValueTypes\QiAnyValue.cs" />
-    <Compile Include="Core\QiApplication.cs" />
-    <Compile Include="Core\QiFuture.cs" />
-    <Compile Include="Core\QiObject.cs" />
-    <Compile Include="Core\QiObjectBuilder.cs" />
-    <Compile Include="Core\QiPromise.cs" />
-    <Compile Include="Core\QiSession.cs" />
-    <Compile Include="Core\QiSignatures.cs" />
-    <Compile Include="Core\QiType.cs" />
-    <Compile Include="Core\QiValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QiApi\DllImportSettings.cs" />
-    <Compile Include="QiApi\QiApiApplication.cs" />
-    <Compile Include="QiApi\QiApiFuture.cs" />
-    <Compile Include="QiApi\QiApiObject.cs" />
-    <Compile Include="QiApi\QiApiObjectBuilder.cs" />
-    <Compile Include="QiApi\QiApiPromise.cs" />
-    <Compile Include="QiApi\QiApiSession.cs" />
-    <Compile Include="QiApi\QiApiType.cs" />
-    <Compile Include="QiApi\QiApiValue.cs" />
-    <Compile Include="ValueTypes\QiByteData.cs" />
-    <Compile Include="ValueTypes\QiDynamic.cs" />
-    <Compile Include="ValueTypes\QiFloating.cs" />
-    <Compile Include="ValueTypes\QiIntegers.cs" />
-    <Compile Include="ValueTypes\QiList.cs" />
-    <Compile Include="ValueTypes\QiMap.cs" />
-    <Compile Include="ValueTypes\QiString.cs" />
-    <Compile Include="ValueTypes\QiTuple.cs" />
+    <Compile Include="QiSession.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface\Baku.LibqiDotNet.Interface.csproj">
+      <Project>{495ACCA7-627C-403F-BEA8-61F1B43D4E8B}</Project>
+      <Name>Baku.LibqiDotNet.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi\Baku.LibqiDotNet.Libqi.csproj">
+      <Project>{0a3fb94a-ef7c-470c-9270-8b6c2d4fec29}</Project>
+      <Name>Baku.LibqiDotNet.Libqi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIO\Baku.LibqiDotNet.SocketIO.csproj">
+      <Project>{f71f0c11-d691-48d4-94cd-5cca5fa1397a}</Project>
+      <Name>Baku.LibqiDotNet.SocketIO</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

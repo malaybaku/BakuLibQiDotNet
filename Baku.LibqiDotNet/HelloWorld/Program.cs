@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Baku.LibqiDotNet;
 using Baku.LibqiDotNet.Path;
 
@@ -12,9 +11,11 @@ namespace HelloWorld
             //作業ディレクトリだけでなく"dlls"というフォルダのライブラリも実行中に参照できるよう設定を変更
             PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
-            //HelloWorldの対象とするマシンのアドレスをIPとポート(ポートは通常9559)で指定
-            string address = "tcp://127.0.0.1:9559";
-            var session = QiSession.Create(address);
+            //HelloWorldの対象とするマシンのIPアドレスを指定(ポートは既定値のHTTP:8002/TCP:9559を使用)
+            var session = QiSession.CreateSocketIoSession();
+            session.Protocol = "http://";
+            session.Port = QiSession.DefaultHttpPort;
+            session.Connect("192.168.1.3");
 
             Console.WriteLine($"Connected? {session.IsConnected}");
             if (!session.IsConnected)
@@ -28,6 +29,9 @@ namespace HelloWorld
 
             //"say"関数に文字列引数を指定して実行
             tts["say"].Call("this is test");
+
+            var tts2 = session.GetService("ALTextToSpeech");
+            tts2["say"].Call("this is also test, do you understand?");
 
             session.Close();
         }

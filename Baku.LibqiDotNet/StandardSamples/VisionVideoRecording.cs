@@ -5,13 +5,11 @@ using Baku.LibqiDotNet;
 
 namespace StandardSamples
 {
-    static class VisionVideoRecording
+    public static class VisionVideoRecording
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session, string savePath = "/home/nao/recordings/cameras")
         {
             var recorder = session.GetService("ALVideoRecorder");
-
-            string savePath = "/home/nao/recordings/cameras";
 
             //Motion JPEGのaviにするパターン
             recorder["setResolution"].Call(1);

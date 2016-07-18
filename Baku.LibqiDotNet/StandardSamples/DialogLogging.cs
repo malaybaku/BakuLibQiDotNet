@@ -5,34 +5,31 @@ namespace StandardSamples
 {
     static class DialogLogging
     {
-        public static void Execute(QiSession session)
+        public static void Execute(IQiSession session)
         {
-            var mem = session.GetService("ALMemory");
-
-            //人の会話
-            //var subscriberHumanSpeech = mem.CallObject("subscriber", new QiString("Dialog/LastInput"));
-            var subscriberHumanSpeech = mem["subscriber"].CallObject("Dialog/LastInput");
-            ulong idHumanSpeech = subscriberHumanSpeech.ConnectSignal("signal", qv =>
+            EventHandler<QiSignalEventArgs> onHumanSpeech = (_, e) =>
             {
-                if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)
+                if (e.Data == null) return;
+
+                if (e.Data.Count > 0 && !string.IsNullOrEmpty(e.Data[0].ToQiString()))
                 {
-                    Console.WriteLine($"Human: {qv[0].ToString()}");
+                    Console.WriteLine($"Human: {e.Data[0].ToQiString()}");
                 }
                 else
                 {
                     Console.WriteLine("Human: Received unexpected data");
-                    Console.WriteLine(qv.Dump());
+                    Console.WriteLine(e.Data.Dump());
                 }
-            });
+            };
 
-            //ロボットの発話
-            var subscriberRobotSpeech = mem["subscriber"].CallObject("ALTextToSpeech/CurrentSentence");
-            ulong idRobotSpeech = subscriberRobotSpeech.ConnectSignal("signal", qv =>
+            EventHandler<QiSignalEventArgs> onRobotSpeech = (_, e) =>
             {
-                if (qv.Count > 0 && qv[0].ContentValueKind == QiValueKind.QiString)
+                if (e.Data == null) return;
+
+                if (e.Data.Count > 0 && !string.IsNullOrEmpty(e.Data[0].ToQiString()))
                 {
-                    string sentence = qv[0].ToString();
-                    if(!string.IsNullOrWhiteSpace(sentence))
+                    string sentence = e.Data[0].ToString();
+                    if (!string.IsNullOrWhiteSpace(sentence))
                     {
                         Console.WriteLine($"Robot: {sentence}");
                     }
@@ -40,15 +37,26 @@ namespace StandardSamples
                 else
                 {
                     Console.WriteLine("Robot: Received unexpected data");
-                    Console.WriteLine(qv.Dump());
+                    Console.WriteLine(e.Data.Dump());
                 }
-            });
+            };
+
+            var mem = session.GetService("ALMemory");
+
+            //人の会話
+            //var subscriberHumanSpeech = mem.CallObject("subscriber", new QiString("Dialog/LastInput"));
+            IQiSignal sigHumanSpeech = mem["subscriber"].Call<IQiSignal>("Dialog/LastInput");
+            sigHumanSpeech.Received += onHumanSpeech;
+
+            //ロボットの発話
+            IQiSignal sigRobotSpeech = mem["subscriber"].Call<IQiSignal>("ALTextToSpeech/CurrentSentence");
+            sigRobotSpeech.Received += onRobotSpeech;
 
             Console.WriteLine("Press ENTER to quit logging results.");
             Console.ReadLine();
 
-            subscriberHumanSpeech.DisconnectSignal(idHumanSpeech).Wait();
-            subscriberRobotSpeech.DisconnectSignal(idRobotSpeech).Wait();
+            sigHumanSpeech.Received -= onHumanSpeech;
+            sigRobotSpeech.Received -= onRobotSpeech;
         }
     }
 }

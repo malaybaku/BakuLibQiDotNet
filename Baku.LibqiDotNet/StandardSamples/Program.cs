@@ -16,9 +16,12 @@ namespace StandardSamples
 
             try
             {
-                Console.WriteLine("Please input address to connect (i.e. 'tcp://127.0.0.1:9559')");
+                Console.WriteLine("Please input address to connect (i.e. '127.0.0.1')");
                 string address = Console.ReadLine();
-                var session = QiSession.Create(address);
+
+                var session = QiSession.CreateSession();
+                session.Connect(address);
+
                 if (!session.IsConnected)
                 {
                     Console.WriteLine("Failed to connect. Program ends...");
