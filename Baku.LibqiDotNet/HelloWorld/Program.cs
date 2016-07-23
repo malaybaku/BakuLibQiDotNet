@@ -1,6 +1,7 @@
 ﻿using System;
 using Baku.LibqiDotNet;
 using Baku.LibqiDotNet.Path;
+using Baku.LibqiDotNet.Service;
 
 namespace HelloWorld
 {
@@ -12,7 +13,7 @@ namespace HelloWorld
             PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
 
             var session = QiSession.CreateSession();
-            session.Connect("127.0.0.1");
+            session.Connect("xxx.xxx.xxx.xxx");
 
             Console.WriteLine($"Connected? {session.IsConnected}");
             if (!session.IsConnected)
@@ -21,12 +22,10 @@ namespace HelloWorld
                 return;
             }
 
-            Console.WriteLine("Robot will say 'this is test.'");
-
             //最も基本的なモジュールの一つとして合成音声のモジュールを取得
-            var tts = session.GetService("ALTextToSpeech");
+            ALTextToSpeech tts = ALTextToSpeech.CreateService(session);
             //"say"関数に文字列引数を指定して実行
-            tts["say"].Call("this is test");
+            tts.Say("This is test.");
 
             session.Close();
         }
