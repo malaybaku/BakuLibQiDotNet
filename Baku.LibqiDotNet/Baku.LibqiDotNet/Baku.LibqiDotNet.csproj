@@ -2,160 +2,74 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B7294130-C4BB-44D9-B73D-2A8164C502DC}</ProjectGuid>
+    <ProjectGuid>{1AF2D985-F09B-42AB-9C58-07630736F475}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Baku.LibqiDotNet</RootNamespace>
     <AssemblyName>Baku.LibqiDotNet</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DefaultLanguage>ja-JP</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\x86\Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\x86\Release\Baku.LibqiDotNet.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <DocumentationFile>bin\x64\Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\x64\Release\Baku.LibqiDotNet.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <DocumentationFile>bin\Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\Baku.LibqiDotNet.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\UNITY_Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <DocumentationFile>bin\x86\UNITY_Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\UNITY_Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <DocumentationFile>bin\x64\UNITY_Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\UNITY_Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <DocumentationFile>bin\UNITY_Debug\Baku.LibqiDotNet.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Release|x86'">
-    <OutputPath>bin\x86\UNITY_Release\</OutputPath>
-    <DefineConstants>TRACE;UNITY</DefineConstants>
-    <DocumentationFile>bin\x86\UNITY_Release\Baku.LibqiDotNet.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Release|x64'">
-    <OutputPath>bin\x64\UNITY_Release\</OutputPath>
-    <DefineConstants>TRACE;UNITY</DefineConstants>
-    <DocumentationFile>bin\x64\UNITY_Release\Baku.LibqiDotNet.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_Release|AnyCPU'">
-    <OutputPath>bin\UNITY_Release\</OutputPath>
-    <DefineConstants>TRACE;UNITY</DefineConstants>
-    <DocumentationFile>bin\UNITY_Release\Baku.LibqiDotNet.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface\Baku.LibqiDotNet.Interface.csproj">
+      <Project>{8fe28d3f-95dd-4f8a-a471-74be85d96f19}</Project>
+      <Name>Baku.LibqiDotNet.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi\Baku.LibqiDotNet.Libqi.csproj">
+      <Project>{37005071-4804-43d9-8577-dfc05879c7c5}</Project>
+      <Name>Baku.LibqiDotNet.Libqi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Services\Baku.LibqiDotNet.Services.csproj">
+      <Project>{e00ebd37-d307-48c4-98a2-91ab3e26708c}</Project>
+      <Name>Baku.LibqiDotNet.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo\Baku.LibqiDotNet.SocketIo.csproj">
+      <Project>{75595330-9a2e-47c0-895c-6f6c742989fd}</Project>
+      <Name>Baku.LibqiDotNet.SocketIo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.Websocket.Client.Interface\Baku.Websocket.Client.Interface.csproj">
+      <Project>{3b919639-dda9-4207-8e68-1592c9bf992a}</Project>
+      <Name>Baku.Websocket.Client.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QiSession.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Baku.LibqiDotNet.Interface\Baku.LibqiDotNet.Interface.csproj">
-      <Project>{495ACCA7-627C-403F-BEA8-61F1B43D4E8B}</Project>
-      <Name>Baku.LibqiDotNet.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi\Baku.LibqiDotNet.Libqi.csproj">
-      <Project>{0a3fb94a-ef7c-470c-9270-8b6c2d4fec29}</Project>
-      <Name>Baku.LibqiDotNet.Libqi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIO\Baku.LibqiDotNet.SocketIO.csproj">
-      <Project>{f71f0c11-d691-48d4-94cd-5cca5fa1397a}</Project>
-      <Name>Baku.LibqiDotNet.SocketIO</Name>
-    </ProjectReference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

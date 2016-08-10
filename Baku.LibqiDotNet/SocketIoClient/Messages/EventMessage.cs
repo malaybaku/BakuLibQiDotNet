@@ -21,11 +21,21 @@ namespace SocketIOClient.Messages
             }
 
             //JToken -> JSONize by Newtonsoft, others -> serialization.
-            MessageText = 
-                (jsonObject is string) ? (string)jsonObject : 
-                (jsonObject as JToken)?.ToString(Newtonsoft.Json.Formatting.None) ??  
-                JsonTextSerialization.Serialize(jsonObject);
-
+            if (jsonObject is string)
+            {
+                MessageText = $"{{\"name\":\"{eventName}\", \"args\":[\"{(string)jsonObject}\"]}}";
+            }
+            else if ((jsonObject as JToken) != null)
+            {
+                MessageText = new JObject(
+                    new JProperty("name", eventName),
+                    new JProperty("args", new JArray(new object[] { jsonObject }))
+                    ).ToString(Newtonsoft.Json.Formatting.None);
+            }
+            else
+            {
+                MessageText = $"{{\"name\":\"{eventName}\", \"args\":[{JsonTextSerialization.Serialize(jsonObject)}]}}";
+            }
             _jtoken = (jsonObject as JToken) ?? JToken.Parse(MessageText);
         }
         public EventMessage(string eventName, object jsonObject) : this(eventName, jsonObject, null, null)

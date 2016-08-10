@@ -1,11 +1,12 @@
 ﻿using System;
+using Baku.Websocket.Client;
 
 namespace Baku.LibqiDotNet
 {
-    /// <summary>プラットフォームに合わせた適切な通信セッション<see cref="IQiSession"/>を生成する機能を提供します。</summary>
+    /// <summary>2種類の異なる通信セッション<see cref="IQiSession"/>をあまり区別せずに扱うためのクラスです。</summary>
     public class QiSession : IQiSession
     {
-        private QiSession(IQiSession session, int port, string protocol)
+        internal QiSession(IQiSession session, int port, string protocol)
         {
             _session = session;
             Port = port;
@@ -75,62 +76,36 @@ namespace Baku.LibqiDotNet
         /// <summary>HTTPで接続する場合のプロトコル文字列です。URLの指定時に用います。</summary>
         public static readonly string HttpProtocolPrefix = "http://";
 
+    }
 
-        /// <summary>プラットフォームに応じて適切な方式のセッションを選択、生成します。</summary>
-        public static QiSession CreateSession()
+    public abstract class QiSessionFactoryBase
+    {
+        /// <summary>
+        /// ネイティブライブラリをラップした実装のセッションを作成します。
+        /// 実行中のプラットフォームによってはサポートされていないことに注意して使用してください。
+        /// </summary>
+        /// <returns>セッション</returns>
+        public QiSession CreateLibqiSession()
         {
-            //本当にやりたいこと: プラットフォーム判定(Windows && 32bit / Mac && 64bitのときだけLibqiを尊重)
-            //…なのだが、Windows Phoneとかでうまく捌けないことを考えて苦肉の策をやるんですねえ。
-
-#if UNITY_STANDALONE_WIN
-            if (IntPtr.Size == 4)
-            {
-            }
-            else
-            {
-            }
-#elif UNITY_STANDALONE_OSX
-            if (IntPtr.Size == 8)
-            {
-            }
-            else
-            {
-            }
-#else
-            //純.NET版もこのケースに含むものとする
-            string osVer = Environment.OSVersion.ToString(); 
-            if ((osVer.Contains("Windows") && IntPtr.Size == 4) ||
-                (osVer.Contains("OSX") && IntPtr.Size == 8))
-            {
-                return CreateLibqiSession();
-            }
-            else
-            {
-                return CreateSocketIoSession();
-            }
-#endif
+            return new QiSession(Libqi.QiSession.Create(), QiSession.DefaultTcpPort, QiSession.TcpProtocolPrefix);
         }
 
         /// <summary>
-        /// 明示的にLibqi実装のセッションを作成します。
-        /// 実行中のプラットフォームによってはLibqi実装が利用できないことに十分注意して使用してください。
+        /// Socket.IOクライアントベースで実装されたセッションを作成します。
+        /// この実装ではLibqiの一部機能が利用できないことに注意して使用してください。
         /// </summary>
-        /// <returns>セッション。</returns>
-        public static QiSession CreateLibqiSession()
+        /// <returns>セッション</returns>
+        public QiSession CreateSocketIoSession()
         {
-            return new QiSession(Libqi.QiSession.Create(), DefaultTcpPort, TcpProtocolPrefix);
+            var ws = GetWebSocket();
+            return new QiSession(new SocketIo.QiSession(ws), QiSession.DefaultHttpPort, QiSession.HttpProtocolPrefix);
         }
 
         /// <summary>
-        /// 明示的にSocket.IO実装のセッションを作成します。
-        /// SocketIoでは一部機能が利用できないことに十分注意して使用してください。
+        /// サブクラスでオーバーライドすることでWebSocketの実装を提供します。
+        /// オーバーライドされない場合WebSocketによる接続はできないことに注意してください。
         /// </summary>
-        /// <returns>セッション。</returns>
-        public static QiSession CreateSocketIoSession()
-        {
-            return new QiSession(new SocketIo.QiSession(), DefaultHttpPort, HttpProtocolPrefix);
-        }
-
-
+        /// <returns></returns>
+        protected abstract IWebSocket GetWebSocket();
     }
 }

@@ -235,7 +235,7 @@ namespace Baku.LibqiDotNet.Libqi.QiApi
 
             var strBytes = new byte[byteLength];
             Marshal.Copy(utf8nullEndStringPtr, strBytes, 0, byteLength);
-            return Encoding.UTF8.GetString(strBytes);
+            return Encoding.UTF8.GetString(strBytes, 0, strBytes.Length);
         }
 
         #endregion

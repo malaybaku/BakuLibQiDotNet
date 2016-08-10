@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
-using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Linq;
 
 using SocketIOClient.Eventing;
 using SocketIOClient.Messages;
-using WebSocket4Net;
 using Newtonsoft.Json.Linq;
+using Baku.Websocket.Client;
 
 namespace SocketIOClient
 {
@@ -21,19 +19,23 @@ namespace SocketIOClient
         /// <summary>Allow one connection attempt at a time</summary>
 		private readonly static object padLock = new object();
 
+#if NET35
         private readonly Thread dequeueOutBoundMsgTask;
+#else
+        private readonly System.Threading.Tasks.Task dequeueOutBoundMsgTask;
+#endif
         private Timer socketHeartBeatTimer;
         private ConcurrentQueue<string> outboundQueue = new ConcurrentQueue<string>();
 		private int retryConnectionCount = 0;
 
-		/// <summary>Uri of Websocket server</summary>
-		private Uri uri;
-		/// <summary>WebSocket implementation</summary>
-		private WebSocket wsClient;
+        /// <summary>Uri of Websocket server</summary>
+        private Uri _uri;
+        /// <summary>WebSocket implementation</summary>
+        private IWebSocket wsClient;
 		/// <summary>RegistrationManager for dynamic events</summary>
 		private RegistrationManager registrationManager; 
-		/// <summary>By Default, use WebSocketVersion.Rfc6455</summary>
-		private WebSocketVersion socketVersion = WebSocketVersion.Rfc6455;
+		///// <summary>By Default, use WebSocketVersion.Rfc6455</summary>
+		//private WebSocketVersion socketVersion = WebSocketVersion.Rfc6455;
 
 		// Events
 		public event EventHandler Opened;
@@ -77,28 +79,30 @@ namespace SocketIOClient
 		public bool IsConnected => ReadyState == WebSocketState.Open;
 
         /// <summary> Get the connection state of websocket client (None, Connecting, Open, Closing, Closed)</summary>
-        public WebSocketState ReadyState => wsClient?.State ?? WebSocketState.None;
+        private WebSocketState ReadyState => wsClient?.State ?? WebSocketState.None;
 
 		// Constructors
-		public Client(string url) : this(url, WebSocketVersion.Rfc6455)
+		public Client()
 		{
-		}
-
-		public Client(string url, WebSocketVersion socketVersion)
-		{
-            uri = new Uri(url);
-
-			this.socketVersion = socketVersion;
-
             registrationManager = new RegistrationManager();
-            dequeueOutBoundMsgTask = new Thread(new ThreadStart(DequeuOutboundMessages));
-            //this.dequeuOutBoundMsgTask = Task.Factory.StartNew(() => dequeuOutboundMessages(), TaskCreationOptions.LongRunning);
+#if NET35
+            dequeueOutBoundMsgTask = new Thread(DequeueOutboundMessages);
             dequeueOutBoundMsgTask.Start();
-		}
+#else 
+            this.dequeueOutBoundMsgTask = System.Threading.Tasks.Task.Run(() => DequeueOutboundMessages());
+#endif
+        }
 
 		/// <summary>Initiate the connection with Socket.IO service</summary>
-		public void Connect()
+		public void Connect(string url, IWebSocket ws)
 		{
+            if (ReadyState == WebSocketState.Open)
+            {
+                Close();
+            }
+            wsClient = ws;
+
+            _uri = new Uri(url);
 			lock (padLock)
 			{
                 if (ReadyState == WebSocketState.Connecting || ReadyState == WebSocketState.Open)
@@ -109,20 +113,17 @@ namespace SocketIOClient
 				try
 				{
                     _connectionOpenEvent.Reset();
-                    HandShake = RequestHandshake(uri);// perform an initial HTTP request as a new, non-handshaken connection
+                    HandShake = RequestHandshake(_uri);// perform an initial HTTP request as a new, non-handshaken connection
 
 					if (HandShake == null || string.IsNullOrEmpty(HandShake.SID) || HandShake.HadError)
 					{
-                        LastErrorMessage = $"Error initializing handshake with {uri}";
+                        LastErrorMessage = $"Error initializing handshake with {_uri}";
                         OnError(this, new ErrorEventArgs(LastErrorMessage, new Exception()));
 					}
 					else
 					{
-						string wsScheme = (uri.Scheme == Uri.UriSchemeHttps ? "wss" : "ws");
-                        wsClient = new WebSocket(
-							string.Format("{0}://{1}:{2}{3}1/websocket/{4}", wsScheme, uri.Host, uri.Port, Path, HandShake.SID),
-                            "",
-                            socketVersion);
+                        string wsScheme = (_uri.Scheme == "https" ? "wss" : "ws");
+                        wsClient.InitializeUrl(string.Format("{0}://{1}:{2}{3}1/websocket/{4}", wsScheme, _uri.Host, _uri.Port, Path, HandShake.SID));
                         wsClient.AllowUnstrustedCertificate = true;
                         wsClient.EnableAutoSendPing = true; // #4 tkiley: Websocket4net client library initiates a websocket heartbeat, causes delivery problems
                         wsClient.Opened += wsClient_OpenEvent;
@@ -135,18 +136,14 @@ namespace SocketIOClient
 				}
 				catch (Exception ex)
 				{
-					Trace.WriteLine("Connect threw an exception..." + ex.Message);
                     OnError(this, new ErrorEventArgs("SocketIO.Client.Connect threw an exception", ex));
 				}
 			}
 		}
-		public IEndPointClient Connect(string endPoint)
-		{
-			var nsClient = new EndPointClient(this, endPoint);
-            Connect();
-            Send(new ConnectMessage(endPoint));
-			return nsClient;
-		}
+        private void Connect()
+        {
+            Connect(this._uri.AbsoluteUri, this.wsClient);
+        }
 
 		private void ReConnect()
 		{
@@ -162,7 +159,7 @@ namespace SocketIOClient
             Connect();
             // block while waiting for connection
             bool connected = _connectionOpenEvent.WaitOne(4000); 
-			Trace.WriteLine($"\tRetry-Connection successful: {connected}");
+			//Trace.WriteLine($"\tRetry-Connection successful: {connected}");
 			if (connected)
             {
                 retryConnectionCount = 0;
@@ -336,7 +333,7 @@ namespace SocketIOClient
 			// stop the heartbeat timer
 			if (socketHeartBeatTimer != null)
 			{
-                socketHeartBeatTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                //socketHeartBeatTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 socketHeartBeatTimer.Dispose();
                 socketHeartBeatTimer = null;
 			}
@@ -370,7 +367,7 @@ namespace SocketIOClient
                     }
 					catch
                     {
-                        Trace.WriteLine("exception raised trying to close websocket: can safely ignore, socket is being closed");
+                        //Trace.WriteLine("exception raised trying to close websocket: can safely ignore, socket is being closed");
                     }
 				}
                 wsClient = null;
@@ -380,20 +377,24 @@ namespace SocketIOClient
 		// websocket client events - open, messages, errors, closing
 		private void wsClient_OpenEvent(object sender, EventArgs e)
 		{
+#if NET35
+            socketHeartBeatTimer = new System.Threading.Timer(
+                OnHeartBeatTimerCallback, new object(),
+                (int)HandShake.HeartbeatInterval.TotalMilliseconds,
+                (int)HandShake.HeartbeatInterval.TotalMilliseconds
+                );
+#else
             socketHeartBeatTimer = new Timer(
-                OnHeartBeatTimerCallback, new object(), HandShake.HeartbeatInterval, HandShake.HeartbeatInterval);
+                OnHeartBeatTimerCallback, new object(), 
+                (int)HandShake.HeartbeatInterval.TotalMilliseconds, 
+                (int)HandShake.HeartbeatInterval.TotalMilliseconds
+                );
+#endif
 
             _connectionOpenEvent.Set();
 
             OnMessageEvent(new EventMessage() { Event = "open" });
-            try
-            {
-                Opened?.Invoke(this, EventArgs.Empty);
-            }
-			catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
+            Opened?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -401,7 +402,7 @@ namespace SocketIOClient
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void wsClient_MessageReceived(object sender, MessageReceivedEventArgs e)
+		private void wsClient_MessageReceived(object sender, WebSocketMessageReceivedEventArgs e)
 		{
 			IMessage iMsg = Message.Factory(e.Message);
 
@@ -429,7 +430,7 @@ namespace SocketIOClient
                     registrationManager.InvokeCallBack(iMsg.AckId, iMsg.MessageText);
 					break;
 				default:
-					Trace.WriteLine("unknown wsClient message Received...");
+					//Trace.WriteLine("unknown wsClient message Received...");
 					break;
 			}
 		}
@@ -453,7 +454,7 @@ namespace SocketIOClient
 			}
 		}
 
-		private void wsClient_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+		private void wsClient_Error(object sender, WebSocketErrorEventArgs e)
 		{
             OnError(sender, new ErrorEventArgs("SocketClient error", e.Exception));
 		}
@@ -480,24 +481,26 @@ namespace SocketIOClient
 			if (outboundQueue != null)
 			{
                 outboundQueue.Enqueue(Heartbeat.Instance.Encoded);
-                HeartBeatSent?.BeginInvoke(this, EventArgs.Empty, EndAsyncEvent, null);
+                //HeartBeatSent?.BeginInvoke(this, EventArgs.Empty, EndAsyncEvent, null);
+                HeartBeatSent?.Invoke(this, EventArgs.Empty);
 			}
 		}
-		private void EndAsyncEvent(IAsyncResult result)
-		{
-			try
-			{
-                var ar = (System.Runtime.Remoting.Messaging.AsyncResult)result;
-                (ar.AsyncDelegate as EventHandler)?.EndInvoke(result);
-			}
-			catch
-			{
-				// Handle any exceptions that were thrown by the invoked method
-				Trace.WriteLine("An event listener went kaboom!");
-			}
-		}
+		//private void EndAsyncEvent(IAsyncResult result)
+		//{
+		//	try
+		//	{
+  //              var ar = (System.Runtime.Remoting.Messaging.AsyncResult)result;
+  //              (ar.AsyncDelegate as EventHandler)?.EndInvoke(result);
+		//	}
+		//	catch
+		//	{
+		//		// Handle any exceptions that were thrown by the invoked method
+		//		//Trace.WriteLine("An event listener went kaboom!");
+		//	}
+		//}
+
 		/// <summary>While connection is open, dequeue and send messages to the socket server</summary>
-		private void DequeuOutboundMessages()
+		private void DequeueOutboundMessages()
 		{
 			while (outboundQueue != null)
 			{
@@ -524,7 +527,7 @@ namespace SocketIOClient
                     }
 					catch(Exception)
 					{
-						Trace.WriteLine("The outboundQueue is no longer open...");
+						//Trace.WriteLine("The outboundQueue is no longer open...");
 					}
 				}
 				else
@@ -547,11 +550,17 @@ namespace SocketIOClient
 		{
             try
             {
-                using (var client = new WebClient())
-                {
-                    string value = client.DownloadString(
-                        string.Format("{0}://{1}:{2}{3}1/{4}", uri.Scheme, uri.Host, uri.Port, Path, uri.Query));
+                string targetUrl = string.Format("{0}://{1}:{2}{3}1/{4}", uri.Scheme, uri.Host, uri.Port, Path, uri.Query);
 
+#if NET35
+                using (var client = new System.Net.WebClient())
+                {
+                    string value = client.DownloadString(targetUrl);
+#else
+                using (var client = new System.Net.Http.HttpClient())
+                {
+                    string value = client.GetStringAsync(targetUrl).Result;
+#endif
                     // 13052140081337757257:15:25:websocket,htmlfile,xhr-polling,jsonp-polling
                     return string.IsNullOrEmpty(value) ?
                         new SocketIOHandshake() { ErrorMessage = "Did not receive handshake string from server" } :
@@ -579,11 +588,16 @@ namespace SocketIOClient
 			if (disposing)
 			{
                 Close();
+#if NET35
                 _messageQueueEmptyEvent.Close();
                 _connectionOpenEvent.Close();
-			}
-			
-		}
+#else
+                _messageQueueEmptyEvent.Dispose();
+                _connectionOpenEvent.Dispose();
+#endif
+            }
+
+        }
 	}
 
 

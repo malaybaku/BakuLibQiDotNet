@@ -98,7 +98,7 @@ namespace Baku.LibqiDotNet
             //組み込み型は普通にTypeCodeで拾う
             if (IsEmbeddedType(t))
             {
-                return GetEmbeddedTypeData(result, Type.GetTypeCode(t));
+                return GetEmbeddedTypeData(result, LibqiTypeCodeGetter.GetTypeCode(t));
             }
 
             //バイナリデータ
@@ -126,32 +126,36 @@ namespace Baku.LibqiDotNet
             }
 
             //TEMP: 変なのを指定された場合はデフォルト値で返す(後で仕様変えるかも)
-            return (t.IsValueType) ? Activator.CreateInstance(t) : null;
+#if NET35
+            return t.IsValueType ? Activator.CreateInstance(t) : null;
+#else
+            return t.GetTypeInfo().IsValueType ? Activator.CreateInstance(t) : null;
+#endif
         }
 
-        private static object GetEmbeddedTypeData(IQiResult result, TypeCode tCode)
+        private static object GetEmbeddedTypeData(IQiResult result, LibqiTypeCode tCode)
         {
             switch (tCode)
             {
-                case TypeCode.Boolean: return result.ToBool();
-                case TypeCode.SByte: return result.ToSByte();
-                case TypeCode.Int16: return result.ToInt16();
-                case TypeCode.Int32: return result.ToInt32();
-                case TypeCode.Int64: return result.ToInt64();
-                case TypeCode.Byte: return result.ToByte();
-                case TypeCode.UInt16: return result.ToUInt16();
-                case TypeCode.UInt32: return result.ToUInt32();
-                case TypeCode.UInt64: return result.ToUInt64();
-                case TypeCode.Single: return result.ToFloat();
-                case TypeCode.Double: return result.ToDouble();
-                case TypeCode.String: return result.ToQiString();
+                case LibqiTypeCode.Boolean: return result.ToBool();
+                case LibqiTypeCode.SByte: return result.ToSByte();
+                case LibqiTypeCode.Int16: return result.ToInt16();
+                case LibqiTypeCode.Int32: return result.ToInt32();
+                case LibqiTypeCode.Int64: return result.ToInt64();
+                case LibqiTypeCode.Byte: return result.ToByte();
+                case LibqiTypeCode.UInt16: return result.ToUInt16();
+                case LibqiTypeCode.UInt32: return result.ToUInt32();
+                case LibqiTypeCode.UInt64: return result.ToUInt64();
+                case LibqiTypeCode.Single: return result.ToFloat();
+                case LibqiTypeCode.Double: return result.ToDouble();
+                case LibqiTypeCode.String: return result.ToQiString();
                 default:
                     throw new ArgumentException();
             }
         }
 
         private static bool IsEmbeddedType(Type t)
-            => _embeddedTypeCodes.Contains(Type.GetTypeCode(t));
+            => _embeddedTypeCodes.Contains(LibqiTypeCodeGetter.GetTypeCode(t));
 
         private static object GetSpecialEnumerableType(IQiResult result, Type t)
         {
@@ -205,21 +209,28 @@ namespace Baku.LibqiDotNet
 
         private static object GetDictionary(IQiResult result, Type t, int recurseDepthRemain)
         {
-            Type[] gtypes = t.GetGenericArguments();
-            Type keyType = gtypes[0];
-            Type valueType = gtypes[1];
-
+#if NET35
+            var genericTypeArgs = t.GetGenericArguments();
+#else
+            var genericTypeArgs = t.GetTypeInfo().GenericTypeArguments;
+#endif
+            Type keyType = genericTypeArgs[0];
+            Type valueType = genericTypeArgs[1];
             Type resType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
-
             //辞書型のインスタンスを取得
             object resDic = Activator.CreateInstance(resType);
 
+#if NET35
+            IEnumerable<PropertyInfo> props = resType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+#else
+            IEnumerable<PropertyInfo> props = resType.GetTypeInfo().DeclaredProperties;
+#endif
+
             //インデクサ(setterを拾う)
-            PropertyInfo indexer = resType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            PropertyInfo indexer = props
                 .First(p => p.GetIndexParameters()
-                    .Select(ip => ip.ParameterType)
-                    .SequenceEqual(new Type[] { keyType }));
+                .Select(ip => ip.ParameterType)
+                .SequenceEqual(new Type[] { keyType }));
 
             foreach (var p in result.MapItems)
             {
@@ -235,17 +246,22 @@ namespace Baku.LibqiDotNet
 
         private static object GetEnumerable(IQiResult result, Type t, int recurseDepthRemain)
         {
+#if NET35
             Type contentType = t.GetGenericArguments()[0];
+#else
+            Type contentType = t.GetTypeInfo().GenericTypeArguments[0];
+#endif
             Type resType = typeof(List<>).MakeGenericType(contentType);
 
             //リスト型変数を取得
             object resList = Activator.CreateInstance(resType);
             //Addメソッドを取得
             //NOTE: nameof(List<object>.Add) == "Add", 型引数に<object>としてるのは単にエラー回避のため
-            //MethodInfo addMethod = resType.GetMethod(nameof(List<object>.Add));
-            MethodInfo addMethod = resType.GetMethod(
-                nameof(List<object>.Add), new Type[] { contentType }
-                );
+#if NET35
+            MethodInfo addMethod = resType.GetMethod(nameof(List<object>.Add));
+#else
+            MethodInfo addMethod = resType.GetTypeInfo().GetDeclaredMethod(nameof(List<object>.Add));
+#endif
 
             for (int i = 0; i < result.Count; i++)
             {
@@ -256,22 +272,22 @@ namespace Baku.LibqiDotNet
             return resList;
         }
 
-        #region readonly type arrays
+#region readonly type arrays
 
-        private static readonly TypeCode[] _embeddedTypeCodes = new []
+        private static readonly LibqiTypeCode[] _embeddedTypeCodes = new []
         {
-            TypeCode.Boolean,
-            TypeCode.Byte,
-            TypeCode.UInt16,
-            TypeCode.UInt32,
-            TypeCode.UInt64,
-            TypeCode.SByte,
-            TypeCode.Int16,
-            TypeCode.Int32,
-            TypeCode.Int64,
-            TypeCode.String,
-            TypeCode.Single,
-            TypeCode.Double
+            LibqiTypeCode.Boolean,
+            LibqiTypeCode.Byte,
+            LibqiTypeCode.UInt16,
+            LibqiTypeCode.UInt32,
+            LibqiTypeCode.UInt64,
+            LibqiTypeCode.SByte,
+            LibqiTypeCode.Int16,
+            LibqiTypeCode.Int32,
+            LibqiTypeCode.Int64,
+            LibqiTypeCode.String,
+            LibqiTypeCode.Single,
+            LibqiTypeCode.Double
         };
 
         private static readonly Type[] _specialEnumerableType = new[]
@@ -284,8 +300,7 @@ namespace Baku.LibqiDotNet
             typeof(IEnumerable<double>)
         };
 
-        #endregion
+#endregion
 
     }
-
 }

@@ -164,7 +164,7 @@ namespace Baku.LibqiDotNet.Libqi
                 //リスト,辞書,タプルの場合, 外側ひっぺがして内側を比較したあとで次に進む
                 return (
                     msig[0] == asig[0] &&
-                    msig.Last() == asig.Last() && 
+                    msig[msig.Length - 1] == asig[asig.Length - 1] && 
                     msig.Length > 1 &&
                     asig.Length > 1 &&
                     CheckValiditySubroutine(msig.Substring(1, msig.Length - 2), asig.Substring(1, asig.Length - 2))

@@ -27,7 +27,7 @@ namespace Baku.LibqiDotNet.Libqi
             //直の組み込み型
             if (IsEmbeddedType(t))
             {
-                return GetEmbeddedTypeValue(value, Type.GetTypeCode(t));
+                return GetEmbeddedTypeValue(value, LibqiTypeCodeGetter.GetTypeCode(t));
             }
 
             //バイナリデータ
@@ -40,7 +40,7 @@ namespace Baku.LibqiDotNet.Libqi
             Type ieArgType = GetIEnumerableEmbeddedArgType(t);
             if (ieArgType != null)
             {
-                return GetIEnumerableEmbedded(value, Type.GetTypeCode(ieArgType));
+                return GetIEnumerableEmbedded(value, LibqiTypeCodeGetter.GetTypeCode(ieArgType));
             }
 
             //IDic
@@ -72,8 +72,14 @@ namespace Baku.LibqiDotNet.Libqi
                 if (pType == null)
                 {
                     pType = pair.GetType();
+#if NET35
                     keyProp = pType.GetProperty(nameof(KeyValuePair<int, int>.Key));
                     valueProp = pType.GetProperty(nameof(KeyValuePair<int, int>.Value));
+#else
+                    keyProp = pType.GetRuntimeProperty(nameof(KeyValuePair<int, int>.Key));
+                    valueProp = pType.GetRuntimeProperty(nameof(KeyValuePair<int, int>.Value));
+#endif
+
                 }
 
                 object pKey = keyProp.GetValue(pair, new object[0]);
@@ -97,14 +103,14 @@ namespace Baku.LibqiDotNet.Libqi
 
         /// <summary>指定された値が組み込み型かどうか判定します。</summary>
         private static bool IsEmbeddedType(Type t)
-            => _embeddedTypeCodes.Contains(Type.GetTypeCode(t));
+            => _embeddedLibqiTypeCodes.Contains(LibqiTypeCodeGetter.GetTypeCode(t));
 
         /// <summary>指定された型が組み込み型の<see cref="IEnumerable{T}"/>である場合IEnumerableの中身の型、そうでない場合nullを返します。</summary>
         private static Type GetIEnumerableEmbeddedArgType(Type t)
         {
             Type ieArgType = GetIEnumerableArgType(t);
 
-            if (ieArgType != null && _embeddedTypeCodes.Contains(Type.GetTypeCode(ieArgType)))
+            if (ieArgType != null && _embeddedLibqiTypeCodes.Contains(LibqiTypeCodeGetter.GetTypeCode(ieArgType)))
             {
                 return ieArgType;
             }
@@ -117,77 +123,95 @@ namespace Baku.LibqiDotNet.Libqi
         /// <summary>指定された型が<see cref="IEnumerable{T}"/>である場合IEnumerableの中身の型、そうでない場合nullを返します。</summary>
         private static Type GetIEnumerableArgType(Type t)
         {
+#if NET35
             return t.GetInterfaces()
                 .FirstOrDefault(
                     itf => itf.IsGenericType &&
                     itf.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 ?.GetGenericArguments()[0];
+#else
+            return t.GetTypeInfo().ImplementedInterfaces
+                .FirstOrDefault(
+                    itf => itf.GetTypeInfo().IsGenericType &&
+                    itf.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                ?.GenericTypeArguments[0];
+#endif
         }
 
         private static bool ImplementsIDictcionary(Type t)
-            => t.GetInterfaces()
-                .Any(itf => 
+        {
+#if NET35
+            return t.GetInterfaces()
+                .Any(itf =>
                     itf.IsGenericType &&
                     itf.GetGenericTypeDefinition() == typeof(IDictionary<,>)
                 );
+#else
+            return t.GetTypeInfo().ImplementedInterfaces
+                .Any(itf =>
+                    itf.GetTypeInfo().IsGenericType &&
+                    itf.GetGenericTypeDefinition() == typeof(IDictionary<,>)
+                );
+#endif
+        }
 
         /// <summary>組み込み型の値を対応する<see cref="QiInputValue"/>派生型に変換します。</summary>
-        private static QiInputValue GetEmbeddedTypeValue(object value, TypeCode tCode)
+        private static QiInputValue GetEmbeddedTypeValue(object value, LibqiTypeCode tCode)
         {
             switch (tCode)
             {
-                case TypeCode.Boolean: return new QiBool((bool)value);
-                case TypeCode.Byte: return new QiUInt8((byte)value);
-                case TypeCode.UInt16: return new QiUInt16((ushort)value);
-                case TypeCode.UInt32: return new QiUInt32((uint)value);
-                case TypeCode.UInt64: return new QiUInt64((ulong)value);
-                case TypeCode.SByte: return new QiInt8((sbyte)value);
-                case TypeCode.Int16: return new QiInt16((short)value);
-                case TypeCode.Int32: return new QiInt32((int)value);
-                case TypeCode.Int64: return new QiInt64((long)value);
-                case TypeCode.String: return new QiString((string)value);
-                case TypeCode.Single: return new QiFloat((float)value);
-                case TypeCode.Double: return new QiDouble((double)value);
+                case LibqiTypeCode.Boolean: return new QiBool((bool)value);
+                case LibqiTypeCode.Byte: return new QiUInt8((byte)value);
+                case LibqiTypeCode.UInt16: return new QiUInt16((ushort)value);
+                case LibqiTypeCode.UInt32: return new QiUInt32((uint)value);
+                case LibqiTypeCode.UInt64: return new QiUInt64((ulong)value);
+                case LibqiTypeCode.SByte: return new QiInt8((sbyte)value);
+                case LibqiTypeCode.Int16: return new QiInt16((short)value);
+                case LibqiTypeCode.Int32: return new QiInt32((int)value);
+                case LibqiTypeCode.Int64: return new QiInt64((long)value);
+                case LibqiTypeCode.String: return new QiString((string)value);
+                case LibqiTypeCode.Single: return new QiFloat((float)value);
+                case LibqiTypeCode.Double: return new QiDouble((double)value);
                 default:
                     throw new ArgumentException("Given type is not supported as an embedded type in Qi Framework");
             }
         }
 
         /// <summary>IEnumerable&lt;(組み込み型)&gt;の形式をした値を適切な<see cref="QiList{T}"/>に変換します。</summary>
-        private static QiInputValue GetIEnumerableEmbedded(object value, TypeCode contentTypeCode)
+        private static QiInputValue GetIEnumerableEmbedded(object value, LibqiTypeCode contentLibqiTypeCode)
         {
-            switch (contentTypeCode)
+            switch (contentLibqiTypeCode)
             {
-                case TypeCode.Boolean: return QiList.Create(value as IEnumerable<bool>);
-                case TypeCode.UInt16: return QiList.Create(value as IEnumerable<ushort>);
-                case TypeCode.UInt32: return QiList.Create(value as IEnumerable<uint>);
-                case TypeCode.UInt64: return QiList.Create(value as IEnumerable<ulong>);
-                case TypeCode.SByte: return QiList.Create(value as IEnumerable<sbyte>);
-                case TypeCode.Int16: return QiList.Create(value as IEnumerable<short>);
-                case TypeCode.Int32: return QiList.Create(value as IEnumerable<int>);
-                case TypeCode.Int64: return QiList.Create(value as IEnumerable<long>);
-                case TypeCode.String: return QiList.Create(value as IEnumerable<string>);
-                case TypeCode.Single: return QiList.Create(value as IEnumerable<float>);
-                case TypeCode.Double: return QiList.Create(value as IEnumerable<double>);
+                case LibqiTypeCode.Boolean: return QiList.Create(value as IEnumerable<bool>);
+                case LibqiTypeCode.UInt16: return QiList.Create(value as IEnumerable<ushort>);
+                case LibqiTypeCode.UInt32: return QiList.Create(value as IEnumerable<uint>);
+                case LibqiTypeCode.UInt64: return QiList.Create(value as IEnumerable<ulong>);
+                case LibqiTypeCode.SByte: return QiList.Create(value as IEnumerable<sbyte>);
+                case LibqiTypeCode.Int16: return QiList.Create(value as IEnumerable<short>);
+                case LibqiTypeCode.Int32: return QiList.Create(value as IEnumerable<int>);
+                case LibqiTypeCode.Int64: return QiList.Create(value as IEnumerable<long>);
+                case LibqiTypeCode.String: return QiList.Create(value as IEnumerable<string>);
+                case LibqiTypeCode.Single: return QiList.Create(value as IEnumerable<float>);
+                case LibqiTypeCode.Double: return QiList.Create(value as IEnumerable<double>);
                 default:
                     throw new ArgumentException("Given type is not supported as an embedded type in Qi Framework");
             }
         }
 
-        private static readonly TypeCode[] _embeddedTypeCodes = new[]
+        private static readonly LibqiTypeCode[] _embeddedLibqiTypeCodes = new[]
         {
-            TypeCode.Boolean,
-            TypeCode.Byte,
-            TypeCode.UInt16,
-            TypeCode.UInt32,
-            TypeCode.UInt64,
-            TypeCode.SByte,
-            TypeCode.Int16,
-            TypeCode.Int32,
-            TypeCode.Int64,
-            TypeCode.String,
-            TypeCode.Single,
-            TypeCode.Double
+            LibqiTypeCode.Boolean,
+            LibqiTypeCode.Byte,
+            LibqiTypeCode.UInt16,
+            LibqiTypeCode.UInt32,
+            LibqiTypeCode.UInt64,
+            LibqiTypeCode.SByte,
+            LibqiTypeCode.Int16,
+            LibqiTypeCode.Int32,
+            LibqiTypeCode.Int64,
+            LibqiTypeCode.String,
+            LibqiTypeCode.Single,
+            LibqiTypeCode.Double
         };
     }
 }

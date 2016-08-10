@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6861744C-2235-41EE-8663-082DEE49C616}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet.Libqi</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet.Libqi</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET35;UNITY</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\Enums.cs">
+      <Link>Core\Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiApplication.cs">
+      <Link>Core\QiApplication.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiFuture.cs">
+      <Link>Core\QiFuture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiMethodSignature.cs">
+      <Link>Core\QiMethodSignature.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiMethod\QiMethod.cs">
+      <Link>Core\QiMethod\QiMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiMethod\QiMethodArgumentInfo.cs">
+      <Link>Core\QiMethod\QiMethodArgumentInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiMethod\QiMethodInfo.cs">
+      <Link>Core\QiMethod\QiMethodInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiMethod\QiMethods.cs">
+      <Link>Core\QiMethod\QiMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiObject.cs">
+      <Link>Core\QiObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiObjectBuilder.cs">
+      <Link>Core\QiObjectBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiPromise.cs">
+      <Link>Core\QiPromise.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiSession.cs">
+      <Link>Core\QiSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiSignatures.cs">
+      <Link>Core\QiSignatures.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiType.cs">
+      <Link>Core\QiType.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiValue.cs">
+      <Link>Core\QiValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\Core\QiValueCast.cs">
+      <Link>Core\QiValueCast.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\DllImportSettings.cs">
+      <Link>QiApi\DllImportSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiApplication.cs">
+      <Link>QiApi\QiApiApplication.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiFuture.cs">
+      <Link>QiApi\QiApiFuture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiObject.cs">
+      <Link>QiApi\QiApiObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiObjectBuilder.cs">
+      <Link>QiApi\QiApiObjectBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiPromise.cs">
+      <Link>QiApi\QiApiPromise.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiSession.cs">
+      <Link>QiApi\QiApiSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiType.cs">
+      <Link>QiApi\QiApiType.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiValue.cs">
+      <Link>QiApi\QiApiValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiByteData.cs">
+      <Link>ValueTypes\QiByteData.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiDynamic.cs">
+      <Link>ValueTypes\QiDynamic.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiFloating.cs">
+      <Link>ValueTypes\QiFloating.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiInFactory.cs">
+      <Link>ValueTypes\QiInFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiInputValue.cs">
+      <Link>ValueTypes\QiInputValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiIntegers.cs">
+      <Link>ValueTypes\QiIntegers.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiList.cs">
+      <Link>ValueTypes\QiList.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiMap.cs">
+      <Link>ValueTypes\QiMap.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiString.cs">
+      <Link>ValueTypes\QiString.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiTuple.cs">
+      <Link>ValueTypes\QiTuple.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface.Net35\Baku.LibqiDotNet.Interface.Net35.csproj">
+      <Project>{7104be65-0e15-4ab1-a0bb-1c892e7aed8e}</Project>
+      <Name>Baku.LibqiDotNet.Interface.Net35</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

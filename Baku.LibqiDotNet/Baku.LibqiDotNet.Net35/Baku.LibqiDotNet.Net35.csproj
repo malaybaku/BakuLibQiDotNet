@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06A4C9EA-8365-4C40-A9F3-FF1DF20D9F49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet\QiSession.cs">
+      <Link>QiSession.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface.Net35\Baku.LibqiDotNet.Interface.Net35.csproj">
+      <Project>{7104be65-0e15-4ab1-a0bb-1c892e7aed8e}</Project>
+      <Name>Baku.LibqiDotNet.Interface.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi.Net35\Baku.LibqiDotNet.Libqi.Net35.csproj">
+      <Project>{6861744c-2235-41ee-8663-082dee49c616}</Project>
+      <Name>Baku.LibqiDotNet.Libqi.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Services.Net35\Baku.LibqiDotNet.Services.Net35.csproj">
+      <Project>{908818a2-aa91-481f-9c5c-7d8c2d977a66}</Project>
+      <Name>Baku.LibqiDotNet.Services.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo.Net35\Baku.LibqiDotNet.SocketIo.Net35.csproj">
+      <Project>{1ad8a941-3938-49e9-b6d5-b96f7dcc1735}</Project>
+      <Name>Baku.LibqiDotNet.SocketIo.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.WebSocket.Client.Interface.Net35\Baku.WebSocket.Client.Interface.Net35.csproj">
+      <Project>{ddcf1ca1-cd90-4e47-bf6b-1326c7343b03}</Project>
+      <Name>Baku.WebSocket.Client.Interface.Net35</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

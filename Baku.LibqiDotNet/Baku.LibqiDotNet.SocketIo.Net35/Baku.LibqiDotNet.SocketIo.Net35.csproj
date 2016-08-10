@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1AD8A941-3938-49E9-B6D5-B96F7DCC1735}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet.SocketIo</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet.SocketIo</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.NET35, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Unofficial.3.1\lib\net35\System.Threading.Tasks.NET35.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiFilteredSignalEventArgs.cs">
+      <Link>Core\QiFilteredSignalEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiFuture.cs">
+      <Link>Core\QiFuture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiMethod.cs">
+      <Link>Core\QiMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiMethods.cs">
+      <Link>Core\QiMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiObject.cs">
+      <Link>Core\QiObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiPromise.cs">
+      <Link>Core\QiPromise.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiSession.cs">
+      <Link>Core\QiSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiSignal.cs">
+      <Link>Core\QiSignal.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.SocketIo\Core\QiValue.cs">
+      <Link>Core\QiValue.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface.Net35\Baku.LibqiDotNet.Interface.Net35.csproj">
+      <Project>{7104be65-0e15-4ab1-a0bb-1c892e7aed8e}</Project>
+      <Name>Baku.LibqiDotNet.Interface.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.WebSocket.Client.Interface.Net35\Baku.WebSocket.Client.Interface.Net35.csproj">
+      <Project>{ddcf1ca1-cd90-4e47-bf6b-1326c7343b03}</Project>
+      <Name>Baku.WebSocket.Client.Interface.Net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIoClient.Net35\SocketIoClient.Net35.csproj">
+      <Project>{42722acf-2fea-4a7f-be8c-c8cb2b1a762f}</Project>
+      <Name>SocketIoClient.Net35</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

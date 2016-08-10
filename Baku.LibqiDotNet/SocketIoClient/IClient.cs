@@ -1,12 +1,12 @@
-using Newtonsoft.Json.Linq;
-using SocketIOClient.Messages;
 using System;
-using WebSocket4Net;
+using SocketIOClient.Messages;
+using Newtonsoft.Json.Linq;
+using Baku.Websocket.Client;
 
 namespace SocketIOClient
 {
-	/// <summary>C# Socket.IO client interface</summary>
-	interface IClient
+    /// <summary>C# Socket.IO client interface</summary>
+    public interface IClient
 	{
 		event EventHandler Opened;
 		event EventHandler<MessageEventArgs> ReceivedMessage;
@@ -15,10 +15,9 @@ namespace SocketIOClient
 
 		SocketIOHandshake HandShake { get; }
 		bool IsConnected { get; }
-        WebSocketState ReadyState { get; }
+        string Path { get; set; }
 
-		void Connect();
-		IEndPointClient Connect(string endPoint);
+		void Connect(string url, IWebSocket ws);
 
 		void Close();
 		void Dispose();

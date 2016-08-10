@@ -1,7 +1,8 @@
 using System;
-using System.Threading;
+
 using System.Collections.Generic;
 using System.Linq;
+
 
 //NOTE: This Source was automatically generated using "Baku.LibqiDotNet.ServiceCodeGenerator" project.
 
@@ -50,7 +51,16 @@ namespace Baku.LibqiDotNet.Service
 		{
 			if (!IsInitialized)
 			{
-				new Thread(this.InitializeService).Start();
+#if NET35
+                new System.Threading.Thread(this.InitializeService).Start();
+#else
+
+#if NET35
+                new System.Threading.Thread(this.InitializeService).Start();
+#else
+                new System.Threading.Tasks.Task(this.InitializeService).Start();
+#endif
+#endif
 			}
 		}
 

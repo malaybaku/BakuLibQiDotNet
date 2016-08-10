@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{908818A2-AA91-481F-9C5C-7D8C2D977A66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet.Services</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet.Services</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet.Services\NonStandardServices\ALFrameManager.cs">
+      <Link>NonStandardServices\ALFrameManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\NonStandardServices\ALPythonBridge.cs">
+      <Link>NonStandardServices\ALPythonBridge.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALAnimatedSpeech.cs">
+      <Link>StandardServices\Audio\ALAnimatedSpeech.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALAudioDevice.cs">
+      <Link>StandardServices\Audio\ALAudioDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALSoundDetection.cs">
+      <Link>StandardServices\Audio\ALSoundDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALSoundLocalization.cs">
+      <Link>StandardServices\Audio\ALSoundLocalization.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALSpeechRecognition.cs">
+      <Link>StandardServices\Audio\ALSpeechRecognition.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALTextToSpeech.cs">
+      <Link>StandardServices\Audio\ALTextToSpeech.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Audio\ALVoiceEmotionAnalysis.cs">
+      <Link>StandardServices\Audio\ALVoiceEmotionAnalysis.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALBehaviorManager.cs">
+      <Link>StandardServices\Core\ALBehaviorManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALConnectionManager.cs">
+      <Link>StandardServices\Core\ALConnectionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALDiagnosis.cs">
+      <Link>StandardServices\Core\ALDiagnosis.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALExpressionWatcher.cs">
+      <Link>StandardServices\Core\ALExpressionWatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALKnowledge.cs">
+      <Link>StandardServices\Core\ALKnowledge.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALMemory.cs">
+      <Link>StandardServices\Core\ALMemory.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALMood.cs">
+      <Link>StandardServices\Core\ALMood.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALNotificationManager.cs">
+      <Link>StandardServices\Core\ALNotificationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALPreferenceManager.cs">
+      <Link>StandardServices\Core\ALPreferenceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALResourceManager.cs">
+      <Link>StandardServices\Core\ALResourceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALServiceManager.cs">
+      <Link>StandardServices\Core\ALServiceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALSystem.cs">
+      <Link>StandardServices\Core\ALSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALTabletService.cs">
+      <Link>StandardServices\Core\ALTabletService.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALUserInfo.cs">
+      <Link>StandardServices\Core\ALUserInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALUserSession.cs">
+      <Link>StandardServices\Core\ALUserSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\ALWorldRepresentation.cs">
+      <Link>StandardServices\Core\ALWorldRepresentation.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Core\PackageManager.cs">
+      <Link>StandardServices\Core\PackageManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\DCM\DCM.cs">
+      <Link>StandardServices\DCM\DCM.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALAutonomousBlinking.cs">
+      <Link>StandardServices\Interaction\ALAutonomousBlinking.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALAutonomousLife.cs">
+      <Link>StandardServices\Interaction\ALAutonomousLife.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALBackgroundMovement.cs">
+      <Link>StandardServices\Interaction\ALBackgroundMovement.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALBasicAwareness.cs">
+      <Link>StandardServices\Interaction\ALBasicAwareness.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALDialog.cs">
+      <Link>StandardServices\Interaction\ALDialog.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALListeningMovement.cs">
+      <Link>StandardServices\Interaction\ALListeningMovement.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Interaction\ALSpeakingMovement.cs">
+      <Link>StandardServices\Interaction\ALSpeakingMovement.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALAnimationPlayer.cs">
+      <Link>StandardServices\Motion\ALAnimationPlayer.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALMotion.cs">
+      <Link>StandardServices\Motion\ALMotion.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALNavigation.cs">
+      <Link>StandardServices\Motion\ALNavigation.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALRecharge.cs">
+      <Link>StandardServices\Motion\ALRecharge.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALRobotPosture.cs">
+      <Link>StandardServices\Motion\ALRobotPosture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Motion\ALTracker.cs">
+      <Link>StandardServices\Motion\ALTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALEngagementZones.cs">
+      <Link>StandardServices\PeoplePerception\ALEngagementZones.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALFaceCharacteristics.cs">
+      <Link>StandardServices\PeoplePerception\ALFaceCharacteristics.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALFaceDetection.cs">
+      <Link>StandardServices\PeoplePerception\ALFaceDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALGazeAnalysis.cs">
+      <Link>StandardServices\PeoplePerception\ALGazeAnalysis.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALPeoplePerception.cs">
+      <Link>StandardServices\PeoplePerception\ALPeoplePerception.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALSittingPeopleDetection.cs">
+      <Link>StandardServices\PeoplePerception\ALSittingPeopleDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\PeoplePerception\ALWavingDetection.cs">
+      <Link>StandardServices\PeoplePerception\ALWavingDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALBattery.cs">
+      <Link>StandardServices\SensorAndLeds\ALBattery.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALBodyTemperature.cs">
+      <Link>StandardServices\SensorAndLeds\ALBodyTemperature.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALChestButton.cs">
+      <Link>StandardServices\SensorAndLeds\ALChestButton.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALFsr.cs">
+      <Link>StandardServices\SensorAndLeds\ALFsr.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALLaser.cs">
+      <Link>StandardServices\SensorAndLeds\ALLaser.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALLeds.cs">
+      <Link>StandardServices\SensorAndLeds\ALLeds.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALSensors.cs">
+      <Link>StandardServices\SensorAndLeds\ALSensors.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALSonar.cs">
+      <Link>StandardServices\SensorAndLeds\ALSonar.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALTactileGesture.cs">
+      <Link>StandardServices\SensorAndLeds\ALTactileGesture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\SensorAndLeds\ALTouch.cs">
+      <Link>StandardServices\SensorAndLeds\ALTouch.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALBacklightingDetection.cs">
+      <Link>StandardServices\Vision\ALBacklightingDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALBarcodeReader.cs">
+      <Link>StandardServices\Vision\ALBarcodeReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALCloseObjectDetection.cs">
+      <Link>StandardServices\Vision\ALCloseObjectDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALColorBlobDetection.cs">
+      <Link>StandardServices\Vision\ALColorBlobDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALDarknessDetection.cs">
+      <Link>StandardServices\Vision\ALDarknessDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALLandmarkDetection.cs">
+      <Link>StandardServices\Vision\ALLandmarkDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALLocalization.cs">
+      <Link>StandardServices\Vision\ALLocalization.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALMovementDetection.cs">
+      <Link>StandardServices\Vision\ALMovementDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALPhotoCapture.cs">
+      <Link>StandardServices\Vision\ALPhotoCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALRedBallDetection.cs">
+      <Link>StandardServices\Vision\ALRedBallDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALSegmentation3D.cs">
+      <Link>StandardServices\Vision\ALSegmentation3D.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVideoDevice.cs">
+      <Link>StandardServices\Vision\ALVideoDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVideoRecorder.cs">
+      <Link>StandardServices\Vision\ALVideoRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVisionRecognition.cs">
+      <Link>StandardServices\Vision\ALVisionRecognition.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVisualCompass.cs">
+      <Link>StandardServices\Vision\ALVisualCompass.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVisualSpaceHistory.cs">
+      <Link>StandardServices\Vision\ALVisualSpaceHistory.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface.Net35\Baku.LibqiDotNet.Interface.Net35.csproj">
+      <Project>{7104be65-0e15-4ab1-a0bb-1c892e7aed8e}</Project>
+      <Name>Baku.LibqiDotNet.Interface.Net35</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

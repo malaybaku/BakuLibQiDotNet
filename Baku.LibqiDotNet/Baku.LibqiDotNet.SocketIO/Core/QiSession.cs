@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
 using SocketIOClient;
 using SocketIOClient.Messages;
-using System.Linq;
+using Baku.Websocket.Client;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
     public class QiSession : IQiSession
     {
-        private Client Socket { get; set; }
+        public QiSession(IWebSocket ws)
+        {
+            _ws = ws;                 
+        }
+
+        private readonly IWebSocket _ws;
+
+        private IClient Socket { get; set; }
+
 
         internal QiFuture EmitAndReceiveFuture(string eventName, JObject data, uint id)
         {
@@ -36,15 +45,16 @@ namespace Baku.LibqiDotNet.SocketIo
 
             Task.Run(() =>
             {
-                Socket = new Client(address);
+                Socket = new Client();
                 Socket.Path = "/1.0/";
                 Socket.ReceivedMessage += OnReceiveMessage;
                 Socket.On("reply", OnReply);
                 Socket.On("error", OnError);
                 Socket.On("signal", OnSignal);
                 Socket.On("disconnect", OnDisconnect);
-                Socket.Connect();
+                Socket.Connect(address, _ws);
             });
+
             return _connectionPromise.CreateFuture();
         }
 
@@ -76,7 +86,7 @@ namespace Baku.LibqiDotNet.SocketIo
 
         public bool IsConnected { get; private set; } //=> Socket.IsConnected;
 
-        #region NOT Supported
+#region NOT Supported
         public IQiFuture ListenAsync(string address, bool standAlone)
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");
@@ -91,7 +101,7 @@ namespace Baku.LibqiDotNet.SocketIo
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");
         }
-        #endregion
+#endregion
 
 
         private QiPromise _connectionPromise = null;
@@ -149,7 +159,7 @@ namespace Baku.LibqiDotNet.SocketIo
 
         internal event EventHandler<QiFilteredSignalEventArgs> Signal;
 
-        #region private
+#region private
 
         private void OnReply(IMessage data)
         {
@@ -215,6 +225,6 @@ namespace Baku.LibqiDotNet.SocketIo
             _sentPromise.Clear();
         }
 
-        #endregion
+#endregion
     }
 }

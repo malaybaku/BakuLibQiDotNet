@@ -41,13 +41,14 @@ namespace Baku.LibqiDotNet.Libqi
             return QiApiApplication.Create(args);
         }
 
-        /// <summary>
-        /// 既定の方法でアプリケーションを初期化します。
-        /// NOTE: この関数はコマンドライン引数の最初の引数(アプリケーション名)を自動で使用します。
-        /// </summary>
-        /// <returns>初期化されたアプリケーション</returns>
-        public static QiApplication Create()
-            => Create(new string[] { Environment.GetCommandLineArgs()[0] });
+        //廃止: このやり方は.NETっぽくない。
+        ///// <summary>
+        ///// 既定の方法でアプリケーションを初期化します。
+        ///// NOTE: この関数はコマンドライン引数の最初の引数(アプリケーション名)を自動で使用します。
+        ///// </summary>
+        ///// <returns>初期化されたアプリケーション</returns>
+        //public static QiApplication Create()
+        //    => Create(new string[] { Environment.GetCommandLineArgs()[0] });
 
     }
 

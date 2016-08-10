@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E83B87CA-3C34-410C-9700-ED52E166EDA0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet.Net45</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet.Net45</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\net45\WebSocket4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PathModifier.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QiSessionFactory.cs" />
+    <Compile Include="WebSocket.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface\Baku.LibqiDotNet.Interface.csproj">
+      <Project>{8fe28d3f-95dd-4f8a-a471-74be85d96f19}</Project>
+      <Name>Baku.LibqiDotNet.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi\Baku.LibqiDotNet.Libqi.csproj">
+      <Project>{37005071-4804-43d9-8577-dfc05879c7c5}</Project>
+      <Name>Baku.LibqiDotNet.Libqi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Services\Baku.LibqiDotNet.Services.csproj">
+      <Project>{e00ebd37-d307-48c4-98a2-91ab3e26708c}</Project>
+      <Name>Baku.LibqiDotNet.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo\Baku.LibqiDotNet.SocketIo.csproj">
+      <Project>{75595330-9a2e-47c0-895c-6f6c742989fd}</Project>
+      <Name>Baku.LibqiDotNet.SocketIo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet\Baku.LibqiDotNet.csproj">
+      <Project>{1af2d985-f09b-42ab-9c58-07630736f475}</Project>
+      <Name>Baku.LibqiDotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.Websocket.Client.Interface\Baku.Websocket.Client.Interface.csproj">
+      <Project>{3b919639-dda9-4207-8e68-1592c9bf992a}</Project>
+      <Name>Baku.Websocket.Client.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIoClient\SocketIoClient.csproj">
+      <Project>{f77f3888-4606-4032-a062-72131c2e9a6a}</Project>
+      <Name>SocketIoClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

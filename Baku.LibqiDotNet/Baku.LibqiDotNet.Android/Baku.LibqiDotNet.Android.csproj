@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5A0CC379-0468-43F3-91AD-9FB61B4F484F}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Baku.LibqiDotNet.Android</RootNamespace>
+    <AssemblyName>Baku.LibqiDotNet.Android</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\monoandroid23\WebSocket4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet.Net45\QiSessionFactory.cs">
+      <Link>QiSessionFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Net45\WebSocket.cs">
+      <Link>WebSocket.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Interface\Baku.LibqiDotNet.Interface.csproj">
+      <Project>{8FE28D3F-95DD-4F8A-A471-74BE85D96F19}</Project>
+      <Name>Baku.LibqiDotNet.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Libqi\Baku.LibqiDotNet.Libqi.csproj">
+      <Project>{37005071-4804-43d9-8577-dfc05879c7c5}</Project>
+      <Name>Baku.LibqiDotNet.Libqi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.Services\Baku.LibqiDotNet.Services.csproj">
+      <Project>{e00ebd37-d307-48c4-98a2-91ab3e26708c}</Project>
+      <Name>Baku.LibqiDotNet.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo\Baku.LibqiDotNet.SocketIo.csproj">
+      <Project>{75595330-9a2e-47c0-895c-6f6c742989fd}</Project>
+      <Name>Baku.LibqiDotNet.SocketIo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.LibqiDotNet\Baku.LibqiDotNet.csproj">
+      <Project>{1af2d985-f09b-42ab-9c58-07630736f475}</Project>
+      <Name>Baku.LibqiDotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Baku.Websocket.Client.Interface\Baku.Websocket.Client.Interface.csproj">
+      <Project>{3B919639-DDA9-4207-8E68-1592C9BF992A}</Project>
+      <Name>Baku.Websocket.Client.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIoClient\SocketIoClient.csproj">
+      <Project>{f77f3888-4606-4032-a062-72131c2e9a6a}</Project>
+      <Name>SocketIoClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
