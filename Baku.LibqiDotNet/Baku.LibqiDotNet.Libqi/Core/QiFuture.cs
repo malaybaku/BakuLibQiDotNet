@@ -15,15 +15,11 @@ namespace Baku.LibqiDotNet.Libqi
 
         #region IQiFuture
 
-        /// <summary>
-        /// 指定した時間まで待機します。
-        /// </summary>
+        /// <summary>指定した時間まで待機します。</summary>
         /// <param name="timeout">待機時間の上限(ミリ秒)</param>
-        /// <returns>待機後の、このインスタンス自身</returns>
         public void Wait(int timeout) => QiApiFuture.Wait(this, timeout);
 
         /// <summary>無期限に待機します。</summary>
-        /// <returns>待機後の、このインスタンス自身</returns>
         public void Wait() => Wait(InfiniteTimeout);
 
         /// <summary>エラーが起きたかどうかを待機しつつ確認します。</summary>
@@ -85,6 +81,8 @@ namespace Baku.LibqiDotNet.Libqi
         /// <summary>エラーがある場合、それを文字列として取得します。</summary>
         public string ErrorMessage => QiApiFuture.GetError(this);
 
+        /// <summary>処理完了時に呼ばれるコールバック関数を登録します。</summary>
+        /// <param name="cb">コールバック関数</param>
         public void AddCallback(Action cb)
             => AddCallback(new Action<IQiFuture>(_ => cb()));
 
@@ -136,35 +134,64 @@ namespace Baku.LibqiDotNet.Libqi
 
     }
 
+    /// <summary><see cref="QiFuture"/>のうち戻り値の型が明示されたものを表します。</summary>
+    /// <typeparam name="T">戻り値の型</typeparam>
     public class QiFuture<T> : IQiFuture<T>
     {
+        /// <summary>元となる<see cref="QiFuture"/>値を用いてインスタンスを初期化します。</summary>
+        /// <param name="future">元となる非同期呼び出しデータ</param>
         public QiFuture(QiFuture future)
         {
             _future = future;
         }
         private QiFuture _future;
 
+        /// <summary>処理が実行中であるかを取得します。</summary>
         public bool IsRunning => _future.IsRunning;
+        /// <summary>処理が終了済であるかを取得します。</summary>
         public bool IsFinished => _future.IsFinished;
+        /// <summary>処理がキャンセル済みであるかを取得します。</summary>
         public bool IsCanceled => _future.IsCanceled;
+        /// <summary>処理がエラー終了したかどうかを取得します。</summary>
         public bool HasError => _future.HasError;
+        /// <summary>エラーがある場合、それを文字列として取得します。</summary>
         public string ErrorMessage => _future.ErrorMessage;
 
+        /// <summary>指定した時間まで待機します。</summary>
+        /// <param name="timeout">待機時間の上限(ミリ秒)</param>
         public void Wait(int timeout) => _future.Wait(timeout);
+        /// <summary>無期限に待機します。</summary>
         public void Wait() => _future.Wait();
+        /// <summary>エラーが起きたかどうかを待機しつつ確認します。</summary>
+        /// <param name="timeout">待機時間の上限(ミリ秒)</param>
+        /// <returns>エラーの有無</returns>
         public bool CheckHasError(int timeout) => _future.CheckHasError(timeout);
+        /// <summary>エラーが起きたかどうかを無期限待機ののち確認します。</summary>
+        /// <returns>エラーの有無</returns>
         public bool CheckHasError() => _future.CheckHasError();
+        /// <summary>値を持っているかどうかを待機ののち確認します。</summary>
+        /// <param name="timeout">待機時間の上限(ミリ秒)</param>
+        /// <returns>値の所持の有無</returns>
         public bool CheckHasValue(int timeout) => _future.CheckHasValue(timeout);
+        /// <summary>値を持っているかどうかを無期限待機ののち確認します。</summary>
+        /// <returns>値の所持の有無</returns>
         public bool CheckHasValue() => _future.CheckHasValue();
+        /// <summary>結果取得をキャンセルします。</summary>
         public void Cancel() => _future.Cancel();
-        public void AddCallback(Action cb) => _future.AddCallback(cb);
 
+        /// <summary>処理完了時に呼ばれるコールバック関数を登録します。</summary>
+        /// <param name="cb">コールバック関数</param>
+        public void AddCallback(Action cb) => _future.AddCallback(cb);
+        /// <summary>処理完了時に呼ばれるコールバック関数を登録します。</summary>
+        /// <param name="cb">コールバック関数</param>
         public void AddCallback(Action<T> cb)
         {
             var apiCallback = new QiApiFutureCallback((fut, _) => cb(new QiFuture<T>(new QiFuture(fut)).Get()));
             QiApiFuture.AddCallback(_future, apiCallback);
         }
 
+        /// <summary>結果の値を取得します。</summary>
+        /// <returns>非同期呼び出しで得られる想定の型のデータ</returns>
         public T Get()
         {
             if (typeof(T) == typeof(IQiObject) || typeof(T) == typeof(IQiSignal))
@@ -178,6 +205,7 @@ namespace Baku.LibqiDotNet.Libqi
         }
     }
 
+    /// <summary><see cref="QiFuture"/>に拡張機能を提供します。</summary>
     public static class QiFutureExtensions
     {
         /// <summary>

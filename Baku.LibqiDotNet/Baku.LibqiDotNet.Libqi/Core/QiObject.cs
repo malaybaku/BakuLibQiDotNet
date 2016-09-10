@@ -18,12 +18,14 @@ namespace Baku.LibqiDotNet.Libqi
 
         #region IQiObject
 
+        /// <summary>[NOT SUPPORTED]実装された場合はサービス名を取得します。</summary>
         public string Name
         {
-            get { throw new NotImplementedException(); }
+            get { throw new NotSupportedException(); }
         }
 
         private string _description = null;
+        /// <summary>サービスの説明文を取得します。</summary>
         public string Description
         {
             get
@@ -38,6 +40,9 @@ namespace Baku.LibqiDotNet.Libqi
             }
         }
 
+        /// <summary>メソッド名を指定して対応するメソッドを取得します。</summary>
+        /// <param name="methodName">メソッド名</param>
+        /// <returns>名称を指定されたメソッド</returns>
         public IQiMethod this[string methodName] => Methods[methodName];
 
         /// <summary>(動作未確認)オブジェクトのプロパティ値を取得します。</summary>
@@ -72,6 +77,7 @@ namespace Baku.LibqiDotNet.Libqi
         private static readonly string signalName = "signal";
 
         private event EventHandler<QiSignalEventArgs> _received;
+        /// <summary>シグナルを受信すると発生します。</summary>
         public event EventHandler<QiSignalEventArgs> Received
         {
             add
@@ -138,10 +144,6 @@ namespace Baku.LibqiDotNet.Libqi
         /// <summary>シグナル(イベント)にハンドラを登録します。</summary>
         /// <param name="signature">シグナルの名前("signal"など)</param>
         /// <param name="callback">そのシグナルに対するコールバック関数</param>
-        /// <returns>
-        /// コールバックへの対応を表した整数。<see cref="DisconnectSignal(ulong)"/>でハンドラを解除する場合は必要ですが、
-        /// <see cref="DisconnectSignal(Action{QiValue})"/>を用いる場合は不要です。
-        /// </returns>
         private void ConnectSignal(string signature, Action<QiValue> callback)
         {
             if (_handler != null)

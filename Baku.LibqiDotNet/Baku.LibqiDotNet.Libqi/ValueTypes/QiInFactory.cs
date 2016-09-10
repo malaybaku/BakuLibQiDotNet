@@ -6,11 +6,15 @@ using System.Reflection;
 
 namespace Baku.LibqiDotNet.Libqi
 {
+    /// <summary>一般的なデータをLibqiの関数に渡す変換処理を提供します。</summary>
     public static class QiInFactory
     {
         /// <summary>引数の辞書、IE、クラスのプロパティの深さ上限を取得、設定します。</summary>
         public static int RecurseParseDepthLimit { get; set; } = 6;
 
+        /// <summary>与えられたデータに基づいてメソッドへ渡せるデータを生成します。</summary>
+        /// <param name="value">Libqiの関数へ渡すデータ</param>
+        /// <returns>Libqi関数へ受け渡し可能な形式に変換されたデータ</returns>
         public static QiInputValue Create(object value)
         {
             return CreateSub(value, RecurseParseDepthLimit);

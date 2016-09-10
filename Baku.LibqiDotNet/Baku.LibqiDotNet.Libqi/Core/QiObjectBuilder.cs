@@ -18,12 +18,6 @@ namespace Baku.LibqiDotNet.Libqi
 
         internal IntPtr Handle { get; }
 
-        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        //~QiObjectBuilder()
-        //{
-        //    QiApiObjectBuilder.DestroyBuilder(this);
-        //}
-
         /// <summary>関数を登録します。</summary>
         /// <param name="signature">関数のフルシグネチャ</param>
         /// <param name="method">実際の関数</param>

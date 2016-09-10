@@ -38,11 +38,17 @@ namespace SocketIOClient
 		//private WebSocketVersion socketVersion = WebSocketVersion.Rfc6455;
 
 		// Events
+        /// <summary>接続時に発生します。</summary>
 		public event EventHandler Opened;
+        /// <summary>メッセージの受信時に発生します。</summary>
 		public event EventHandler<MessageEventArgs> ReceivedMessage;
+        /// <summary>再接続を行う際に発生します。</summary>
 		public event EventHandler ConnectionRetry;
+        /// <summary>ハートビート送信時に発生します。</summary>
 		public event EventHandler HeartBeatSent;
+        /// <summary>通信切断時に発生sます。</summary>
 		public event EventHandler Closed;
+        /// <summary>エラー発生時に発生します。</summary>
 		public event EventHandler<ErrorEventArgs> Error;
 
 		/// <summary>ResetEvent for Outbound MessageQueue Empty Event - all pending messages have been sent</summary>
@@ -57,6 +63,7 @@ namespace SocketIOClient
         /// </summary>
         public int RetryConnectionAttempts { get; set; } = 3;
 
+        /// <summary>直近のエラーメッセージを取得、設定します。</summary>
 		public string LastErrorMessage { get; set; } = "";
 
         private string _path = "/socket.io/";
@@ -81,7 +88,7 @@ namespace SocketIOClient
         /// <summary> Get the connection state of websocket client (None, Connecting, Open, Closing, Closed)</summary>
         private WebSocketState ReadyState => wsClient?.State ?? WebSocketState.None;
 
-		// Constructors
+        /// <summary>既定の設定でインスタンスを初期化します。</summary>
 		public Client()
 		{
             registrationManager = new RegistrationManager();
@@ -196,6 +203,10 @@ namespace SocketIOClient
 		{
             registrationManager.AddOnEvent(eventName, action);
 		}
+        /// <summary>イベント名、エンドポイント、コールバックをセットとして登録します。</summary>
+        /// <param name="eventName">イベント名</param>
+        /// <param name="endPoint">エンドポイント</param>
+        /// <param name="action">イベント名に対応するコールバック処理</param>
 		public void On(string eventName, string endPoint, Action<IMessage> action)
 		{
             registrationManager.AddOnEvent(eventName, endPoint, action);
@@ -208,6 +219,8 @@ namespace SocketIOClient
 		/// </summary>
 		/// <param name="eventName"></param>
 		/// <param name="payload">must be a string or a Json Serializable object</param>
+        /// <param name="endPoint">エンドポイント</param>
+        /// <param name="callback">コールバック関数</param>
 		/// <remarks>ArgumentOutOfRangeException will be thrown on reserved event names</remarks>
 		public void Emit(string eventName, object payload, string endPoint, Action<JToken> callback)
 		{
@@ -266,6 +279,9 @@ namespace SocketIOClient
 		public void Emit(string eventName, object payload) => Emit(eventName, payload, "", null);
 
         //specific for event 
+        /// <summary>イベント名とイベント内容のJSONオブジェクトを指定してイベント情報を送信します。</summary>
+        /// <param name="eventName">イベント名</param>
+        /// <param name="payload">イベント名とともに送信されるデータ</param>
         public void Emit(string eventName, JObject payload)
         {
             var msg = new EventMessage(
@@ -287,6 +303,8 @@ namespace SocketIOClient
             _messageQueueEmptyEvent.Reset();
             outboundQueue?.Enqueue(msg.Encoded);
         }		
+        /// <summary>文字列を指定してメッセージを送信します。</summary>
+        /// <param name="msg">送信するメッセージ</param>
 		public void Send(string msg) => Send(new TextMessage() { MessageText = msg });
 
 		/// <summary>
@@ -576,6 +594,7 @@ namespace SocketIOClient
             }
         }
 
+        /// <summary>接続を切断し、リソースを解放します。</summary>
         public void Dispose()
 		{
 			Dispose(true);

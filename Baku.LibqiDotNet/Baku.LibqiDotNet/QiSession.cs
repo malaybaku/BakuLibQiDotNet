@@ -82,6 +82,9 @@ namespace Baku.LibqiDotNet
 
     }
 
+    /// <summary>
+    /// LibqiまたはSocket.io実装のセッションを生成する抽象的なファクトリを表します。
+    /// </summary>
     public abstract class QiSessionFactoryBase
     {
         /// <summary>

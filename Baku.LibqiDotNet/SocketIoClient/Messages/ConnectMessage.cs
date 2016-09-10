@@ -9,19 +9,27 @@ namespace SocketIOClient.Messages
     /// </remarks>
     public class ConnectMessage : Message
 	{
+        /// <summary>接続時のクエリ文字列を取得します。</summary>
 		public string Query { get; private set; }
 
+        /// <summary>イベント名を取得します。</summary>
         public override string Event => "connect";
 
+        /// <summary>既定の設定でインスタンスを初期化します。</summary>
 		public ConnectMessage() : base()
 		{
             MessageType = SocketIOMessageTypes.Connect;
 		}
+        /// <summary>エンドポイントを指定してインスタンスを初期化します。</summary>
+        /// <param name="endPoint">エンドポイント</param>
 		public ConnectMessage(string endPoint) : this()
 		{
             Endpoint = endPoint;
 		}
 
+        /// <summary>受信したメッセージから対応する接続メッセージを生成します。</summary>
+        /// <param name="rawMessage">受信時のsocket.ioプロトコル準拠なメッセージ</param>
+        /// <returns>対応するメッセージ</returns>
 		public static ConnectMessage Deserialize(string rawMessage)
 		{
             //  1:: [path] [query]
@@ -46,6 +54,7 @@ namespace SocketIOClient.Messages
 			return msg;
 		}
 
+        /// <summary>設定をもとにした送信時のメッセージ文字列を取得します。</summary>
         public override string Encoded
 		{
 			get

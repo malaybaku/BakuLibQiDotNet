@@ -3,8 +3,12 @@ using System;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
+    /// <summary>Socket.ioによる非同期イベント処理の送受信器を表します。</summary>
     public class QiSignal : IQiSignal
     {
+        /// <summary>取得したJObjectと取得元セッションを用いてシグナルインスタンスを初期化します。</summary>
+        /// <param name="session">データの取得元セッション</param>
+        /// <param name="jobj">シグナル情報を表すJSONオブジェクト</param>
         public QiSignal(QiSession session, JObject jobj)
         {
             _session = session;
@@ -13,9 +17,11 @@ namespace Baku.LibqiDotNet.SocketIo
             Id = (int)jobj["pyobject"];
         }
 
+        /// <summary>シグナルに対応づけられた一意な番号を取得します。</summary>
         public int Id { get; }
 
         private event EventHandler<QiSignalEventArgs> _received;
+        /// <summary>イベントを受信すると発生します。</summary>
         public event EventHandler<QiSignalEventArgs> Received
         {
             add
@@ -68,6 +74,7 @@ namespace Baku.LibqiDotNet.SocketIo
         private readonly QiSession _session;
         private long? _linkId;
 
+        /// <summary>シグナルに対応するSocket.IOのイベント名を取得します。</summary>
         public string SignalName => "signal";
 
         private void RaiseReceived(IQiResult qv) => _received?.Invoke(this, new QiSignalEventArgs(qv));

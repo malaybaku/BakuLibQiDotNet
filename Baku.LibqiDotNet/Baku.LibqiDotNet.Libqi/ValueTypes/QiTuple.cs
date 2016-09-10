@@ -49,7 +49,7 @@ namespace Baku.LibqiDotNet.Libqi
 
         /// <summary>
         /// 全ての要素が<see cref="QiDynamic"/>であるようなタプルを生成します。
-        /// このようなタプルは<see cref="QiMethod.Call"/>の引数として渡す処理に適しています。
+        /// このようなタプルは<see cref="QiMethod.CallAsync"/>の引数として渡す処理に適しています。
         /// </summary>
         /// <param name="values">タプルの要素</param>
         /// <returns>生成されたタプル</returns>

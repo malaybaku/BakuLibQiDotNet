@@ -1,19 +1,27 @@
 ﻿
 namespace SocketIOClient.Messages
 {
+    /// <summary>プレーンなテキストメッセージを表します。</summary>
     public class TextMessage : Message
     {
+        /// <summary>既定の内容でインスタンスを初期化します。</summary>
         public TextMessage()
         {
             MessageType = SocketIOMessageTypes.Message;
         }
+        /// <summary>送信するメッセージを指定してインスタンスを初期化します。</summary>
+        /// <param name="textMessage">送信するメッセージ</param>
 		public TextMessage(string textMessage) : this()
 		{
             MessageText = textMessage;
 		}
 
+        /// <summary>イベント文字列を取得します。</summary>
         public override string Event => "message";
 
+        /// <summary>生のSocket.IO文字列から対応するテキストメッセージを取得します。</summary>
+        /// <param name="rawMessage">Socket.IOのプロトコルに従った文字列</param>
+        /// <returns>デシリアライズされたメッセージ</returns>
         public static TextMessage Deserialize(string rawMessage)
         {
             //  '3:' [message id ('+')] ':' [message endpoint] ':' [data]

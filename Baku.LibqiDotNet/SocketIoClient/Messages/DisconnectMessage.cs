@@ -9,17 +9,24 @@ namespace SocketIOClient.Messages
     /// </remarks>
     public class DisconnectMessage : Message
 	{
+        /// <summary>イベント名を取得します。</summary>
         public override string Event => "disconnect";
 
+        /// <summary>既定の設定でインスタンスを初期化します。</summary>
 		public DisconnectMessage() : base()
 		{
             MessageType = SocketIOMessageTypes.Disconnect;
 		}
+        /// <summary>エンドポイントを指定してインスタンスを初期化します。</summary>
+        /// <param name="endPoint">エンドポイント</param>
 		public DisconnectMessage(string endPoint) : this()
 		{
             Endpoint = endPoint;
 		}
 
+        /// <summary>受信したメッセージから対応する切断メッセージを取得します。</summary>
+        /// <param name="rawMessage">受信したsocket.ioプロトコル準拠なメッセージ</param>
+        /// <returns>対応する切断メッセージ</returns>
 		public static DisconnectMessage Deserialize(string rawMessage)
 		{
             //  0::
@@ -34,6 +41,7 @@ namespace SocketIOClient.Messages
 			return msg;
 		}
 
+        /// <summary>切断メッセージを取得します。</summary>
         public override string Encoded => $"0::{Endpoint}";
 
     }

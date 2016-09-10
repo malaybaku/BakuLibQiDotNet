@@ -3,12 +3,19 @@ using Newtonsoft.Json.Linq;
 
 namespace SocketIOClient.Messages
 {
+    /// <summary>イベントメッセージを表します。</summary>
     public class EventMessage : Message
     {
+        /// <summary>既定の設定でインスタンスを初期化します。</summary>
         public EventMessage()
         {
             MessageType = SocketIOMessageTypes.Event;
         }
+        /// <summary>イベント名、JSONオブジェクト、エンドポイント、コールバックを指定してインスタンスを初期化します。</summary>
+        /// <param name="eventName">イベント名</param>
+        /// <param name="jsonObject">JSONオブジェクト</param>
+        /// <param name="endpoint">エンドポイント</param>
+        /// <param name="callBack">コールバック処理</param>
         public EventMessage(string eventName, object jsonObject, string endpoint, Action<JToken> callBack) : this()
         {
             Event = eventName;
@@ -38,6 +45,9 @@ namespace SocketIOClient.Messages
             }
             _jtoken = (jsonObject as JToken) ?? JToken.Parse(MessageText);
         }
+        /// <summary>イベント名、JSONオブジェクトを指定してインスタンスを初期化します。</summary>
+        /// <param name="eventName">イベント名</param>
+        /// <param name="jsonObject">JSONオブジェクト</param>
         public EventMessage(string eventName, object jsonObject) : this(eventName, jsonObject, null, null)
         {
         }
@@ -62,10 +72,15 @@ namespace SocketIOClient.Messages
 			}
 		}
 
+        /// <summary>コールバック処理を取得します。</summary>
         public Action<JToken> Callback { get; private set; }
 
+        /// <summary>JSONオブジェクトから抽出した引数一覧を取得します。</summary>
         public JObject Args => _jtoken["args"] as JObject;
 
+        /// <summary>受信した文字列から対応するメッセージを生成します。</summary>
+        /// <param name="rawMessage">生のsocket.ioプロトコル準拠な文字列</param>
+        /// <returns>対応するメッセージ</returns>
         public static EventMessage Deserialize(string rawMessage)
         {
             //  '5:' [message id ('+')] ':' [message endpoint] ':' [json encoded event]
@@ -101,6 +116,7 @@ namespace SocketIOClient.Messages
 
         }
 
+        /// <summary>メッセージとして送信できる文字列を取得します。</summary>
 		public override string Encoded
 		{
 			get

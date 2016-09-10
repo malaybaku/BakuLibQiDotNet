@@ -9,8 +9,10 @@ namespace SocketIOClient.Messages
     public abstract class Message : IMessage
     {
         private static readonly Regex re = new Regex(@"\d:\d?:\w?:");
+        /// <summary>Socket.ioでデータを区切る文字です。</summary>
         public  static readonly char[] SPLITCHARS = new[] { ':' };
 
+        /// <summary>受信時の状態から加工していないそのままの文字列を取得します。</summary>
 		public string RawMessage { get; protected set; }
 
 		/// <summary>
@@ -57,11 +59,14 @@ namespace SocketIOClient.Messages
             }
         }
        
+        /// <summary>メッセージインスタンスを初期化します。</summary>
         public Message() 
         {
             MessageType = SocketIOMessageTypes.Message;
         }
 
+        /// <summary>生のメッセージ文字列を用いてインスタンスを初期化します。</summary>
+        /// <param name="rawMessage">メッセージ文字列</param>
         public Message(string rawMessage) : this()
         {
             RawMessage = rawMessage;
@@ -80,7 +85,10 @@ namespace SocketIOClient.Messages
         }
 
 		private static readonly Regex _reMessageType = new Regex("^[0-8]{1}:", RegexOptions.IgnoreCase);
-		public static IMessage Factory(string rawMessage)
+        /// <summary>生のメッセージをもとに対応する種類のメッセージを生成します。</summary>
+        /// <param name="rawMessage">Socket.ioプロトコル準拠な生の文字列</param>
+        /// <returns>対応するメッセージ</returns>
+        public static IMessage Factory(string rawMessage)
 		{
             //bad format message
             if (!_reMessageType.IsMatch(rawMessage))

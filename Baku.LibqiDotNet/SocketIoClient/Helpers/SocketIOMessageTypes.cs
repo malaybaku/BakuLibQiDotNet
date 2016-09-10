@@ -1,11 +1,13 @@
 ﻿namespace SocketIOClient
 {
+    /// <summary>Socket.io's message types.</summary>
     public enum SocketIOMessageTypes
     {
         /// <summary>Signals disconnection. If no endpoint is specified, disconnects the entire socket.</summary>
         Disconnect = 0,
         /// <summary>Only used for multiple sockets. Signals a connection to the endpoint. Once the server receives it, it's echoed back to the client.</summary> 
         Connect = 1,
+        /// <summary>Heart beat message, to ensure the connection</summary>
         Heartbeat = 2,
         /// <summary>A regular message</summary>
         Message = 3,

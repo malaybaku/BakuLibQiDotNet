@@ -4,16 +4,24 @@ using Newtonsoft.Json.Linq;
 
 namespace SocketIOClient.Messages
 {
+    /// <summary>JSONデータからなるメッセージを表します。</summary>
     public class JSONMessage : Message
     {
+        /// <summary>既定値でインスタンスを初期化します。</summary>
         public JSONMessage()
         {
             MessageType = SocketIOMessageTypes.JSONMessage;
         }
+        /// <summary>JSONオブジェクトを指定してインスタンスを初期化します、。</summary>
+        /// <param name="jsonObject">JSONオブジェクト</param>
         public JSONMessage(object jsonObject) : this()
         {
             SetMessage(jsonObject);
-        }		
+        }
+        /// <summary>JSONオブジェクトとAck Idおよびエンドポイントを指定してインスタンスを初期化します、。</summary>
+        /// <param name="jsonObject">JSONオブジェクト</param>
+        /// <param name="ackId">ACK ID</param>
+        /// <param name="endpoint">エンドポイント</param>
         public JSONMessage(object jsonObject, int? ackId, string endpoint) : this()
         {
             AckId = ackId;
@@ -21,16 +29,24 @@ namespace SocketIOClient.Messages
             SetMessage(jsonObject);
         }
 
+        /// <summary>JSONオブジェクトと考えられるデータを用いてメッセージを設定します。</summary>
+        /// <param name="value">JSONオブジェクト</param>
         public void SetMessage(object value)
         {
             MessageText = Serialize(value);
         }
+        /// <summary>デシリアライズする型を指定してメッセージをデシリアライズします。</summary>
+        /// <typeparam name="T">デシリアライズ先の型</typeparam>
+        /// <returns>指定した型のデータ</returns>
         public virtual T Message<T>()
         {
             //FIXME: no error handling!
             return DeserializeFrom<T>(MessageText);
         }
 
+        /// <summary>Socket.ioのメッセージ文字列から対応するメッセージを生成します。</summary>
+        /// <param name="rawMessage">生のsocket.io文字列</param>
+        /// <returns>対応するメッセージ</returns>
         public static JSONMessage Deserialize(string rawMessage)
         {
             //  '4:' [message id ('+')] ':' [message endpoint] ':' [json]
@@ -52,6 +68,9 @@ namespace SocketIOClient.Messages
 			return jsonMsg;
         }
 
+        /// <summary>JSONオブジェクトからメッセージを生成します。</summary>
+        /// <param name="jobj">JSONオブジェクト</param>
+        /// <returns>JSONオブジェクトをメッセージとしたメッセージ</returns>
         public static JSONMessage CreateFromJObject(JObject jobj)
         {
             return new JSONMessage

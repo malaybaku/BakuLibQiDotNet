@@ -10,8 +10,11 @@ using Baku.Websocket.Client;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
+    /// <summary>Socket.ioを利用するセッションを表します。</summary>
     public class QiSession : IQiSession
     {
+        /// <summary>通信に用いるWebSocketを用いてインスタンスを初期化します。</summary>
+        /// <param name="ws">通信に使用するWebSocket</param>
         public QiSession(IWebSocket ws)
         {
             _ws = ws;                 
@@ -32,8 +35,12 @@ namespace Baku.LibqiDotNet.SocketIo
             return promise.CreateFuture();
         }
 
+        /// <summary>Socket.ioで通信する場合のポート番号のデフォルト値です。</summary>
         public static readonly int DefaultPortNumber = 8002;
 
+        /// <summary>接続先に接続します。</summary>
+        /// <param name="address">接続先アドレス</param>
+        /// <returns>接続の非同期処理を表す値</returns>
         public IQiFuture ConnectAsync(string address)
         {
             if (string.IsNullOrEmpty(address)) throw new ArgumentException();
@@ -58,18 +65,27 @@ namespace Baku.LibqiDotNet.SocketIo
             return _connectionPromise.CreateFuture();
         }
 
+        /// <summary>接続先と切断します。</summary>
         public void Close()
         {
             IsConnected = false;
             Socket?.Close();
         }
 
+        /// <summary>
+        /// この実装ではGetEndPoints関数はサポートされていません。
+        /// 常に<see cref="NotImplementedException"/>をスローします。
+        /// </summary>
+        /// <returns>結果は取得できません。</returns>
         public IQiResult GetEndpoints()
         {
             //NOTE: そも、socket.ioの方法でEndPoint見れるかどうかから検証する必要があることに注意
             throw new NotImplementedException();
         }
 
+        /// <summary>サービス名を指定してサービスを非同期で取得します。</summary>
+        /// <param name="name">サービス名</param>
+        /// <returns>指定した名前のサービス</returns>
         public IQiFuture<IQiObject> GetServiceAsync(string name)
         {
             var p = new QiPromise(this);
@@ -84,21 +100,36 @@ namespace Baku.LibqiDotNet.SocketIo
             return CallAsync("ServiceDirectory", "service", name).WillReturns<IQiObject>();
         }
 
+        /// <summary>セッションが接続済みかを取得します。</summary>
         public bool IsConnected { get; private set; } //=> Socket.IsConnected;
         
+        /// <summary>
+        /// サービスの登録/登録解除が可能かを取得します。この実装ではつねに<see langword="false"/>を返します。
+        /// </summary>
         public bool IsServiceRegistrationSupported { get; } = false;
 
 #region NOT Supported
+        /// <summary>[NOT SUPPORTED]</summary>
+        /// <param name="address"></param>
+        /// <param name="standAlone"></param>
+        /// <returns></returns>
         public IQiFuture ListenAsync(string address, bool standAlone)
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");
         }
 
+        /// <summary>[NOT SUPPORTED]</summary>
+        /// <param name="name"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public IQiFuture<uint> RegisterServiceAsync(string name, IQiObject obj)
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");
         }
 
+        /// <summary>[NOT SUPPORTED]</summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
         public IQiFuture UnregisterServiceAsync(uint idx)
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");

@@ -13,12 +13,6 @@ namespace Baku.LibqiDotNet.Libqi
         }
         internal IntPtr Handle { get; }
 
-        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        //~QiType()
-        //{
-        //    QiApiType.Destroy(this);
-        //}
-
         /// <summary>型の種類を取得します。</summary>
         public QiTypeKind TypeKind => QiApiType.GetKind(this);
 

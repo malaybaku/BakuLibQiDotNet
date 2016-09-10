@@ -7,8 +7,8 @@
     <ProjectGuid>{DDCF1CA1-CD90-4E47-BF6B-1326C7343B03}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Baku.WebSocket.Client.Interface.Net35</RootNamespace>
-    <AssemblyName>Baku.WebSocket.Client.Interface.Net35</AssemblyName>
+    <RootNamespace>Baku.WebSocket.Client.Interface</RootNamespace>
+    <AssemblyName>Baku.WebSocket.Client.Interface</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Baku.WebSocket.Client.Interface.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Baku.WebSocket.Client.Interface.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

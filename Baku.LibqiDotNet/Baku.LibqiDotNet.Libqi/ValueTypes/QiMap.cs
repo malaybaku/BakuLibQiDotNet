@@ -80,6 +80,12 @@ namespace Baku.LibqiDotNet.Libqi
             return items.ToQiMap();
         }
 
+        /// <summary>キーと値の一覧を与えて辞書型データを作成します。</summary>
+        /// <typeparam name="K">キーのデータ型</typeparam>
+        /// <typeparam name="V">値のデータ型</typeparam>
+        /// <param name="keys">キーの一覧</param>
+        /// <param name="values">値の一覧</param>
+        /// <returns>キーと値を順にペアにした辞書型データ</returns>
         public static QiMap<K, V> Create<K, V>(IEnumerable<K> keys, IEnumerable<V> values)
             where K : QiInputValue
             where V : QiInputValue

@@ -7,11 +7,9 @@ namespace Baku.LibqiDotNet
     {
         /// <summary>指定した時間まで待機します。</summary>
         /// <param name="timeout">待機時間の上限(ミリ秒)</param>
-        /// <returns>待機後の、このインスタンス自身</returns>
         void Wait(int timeout);
 
         /// <summary>無期限に待機します。</summary>
-        /// <returns>待機後の、このインスタンス自身</returns>
         void Wait();
 
         /// <summary>エラーが起きたかどうかを待機しつつ確認します。</summary>

@@ -6,6 +6,7 @@ using Baku.LibqiDotNet.Utils;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
+    /// <summary>JSONオブジェクト情報に基づくメソッド一覧を表します。</summary>
     public class QiMethods
     {
         internal QiMethods(QiSession session, QiObject parentObj, JObject methods)
@@ -18,6 +19,10 @@ namespace Baku.LibqiDotNet.SocketIo
                 .ToReadOnlyDictionary();
         }
 
+        /// <summary>メソッド名を指定してメソッドを取得します。</summary>
+        /// <param name="name">メソッド名</param>
+        /// <returns>指定された名前のメソッド</returns>
+        /// <exception cref="KeyNotFoundException" />
         public QiMethod this[string name]
         {
             get

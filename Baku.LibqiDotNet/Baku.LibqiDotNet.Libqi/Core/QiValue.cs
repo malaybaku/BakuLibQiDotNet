@@ -165,6 +165,8 @@ namespace Baku.LibqiDotNet.Libqi
             QiApiValue.GetString(NonDynamicValue) :
             ContentValueKind.ToString();
 
+        /// <summary>データが文字列であると想定して値を取得します。</summary>
+        /// <returns>格納された値</returns>
         public string ToQiString() 
             => (ContentValueKind == QiValueKind.QiString) ? QiApiValue.GetString(NonDynamicValue) : "";
 

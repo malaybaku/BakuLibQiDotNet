@@ -18,12 +18,6 @@ namespace Baku.LibqiDotNet.Libqi
 
         internal IntPtr Handle { get; }
 
-        /// <summary>この変数が保持しているアンマネージリソースを解放します。</summary>
-        //~QiPromise()
-        //{
-        //    QiApiPromise.Destroy(this);
-        //}
-
         /// <summary>
         /// 値を設定します。
         /// </summary>

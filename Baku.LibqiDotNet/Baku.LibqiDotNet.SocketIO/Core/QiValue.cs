@@ -5,9 +5,11 @@ using Newtonsoft.Json.Linq;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
+    /// <summary>Socket.ioで送受信するJSONに基づいた非同期処理データを表します。</summary>
     public class QiValue : IQiResult
     {
-        //TODO: jobjだけじゃなくてJValueとか、あるいはJTokenに一般対応すべきなのか？
+        /// <summary>指定したJTokenでインスタンスを初期化します。</summary>
+        /// <param name="token">実際のデータを表すJSONトークンデータ</param>
         public QiValue(JToken token)
         {
             _token = token;
@@ -17,6 +19,11 @@ namespace Baku.LibqiDotNet.SocketIo
 
         //地味に難しいうえに需要が低い。
         //(とはいえ書かないとQiMap相当の処理でコケるのでナメちゃダメだよ)
+        /// <summary>
+        /// データが辞書型データであると想定し、キー指定によって値を取得します。
+        /// </summary>
+        /// <param name="key">キーとなるデータ</param>
+        /// <returns>キーに対応した値</returns>
         public IQiResult this[IQiResult key]
         {
             get
@@ -51,6 +58,12 @@ namespace Baku.LibqiDotNet.SocketIo
             }
         }
 
+        /// <summary>
+        /// データがリストまたはタプル型であると想定し、インデクス指定で要素を取得します。
+        /// リストまたはタプルの要素数を得るには<see cref="Count"/>値を取得してください。
+        /// </summary>
+        /// <param name="index">リストまたはタプルのインデクス(0以上の値)。境界値チェックは行われません。</param>
+        /// <returns>指定したインデクスでの要素の値</returns>
         public IQiResult this[int index]
         {
             get
@@ -70,8 +83,13 @@ namespace Baku.LibqiDotNet.SocketIo
             }
         }
 
+        /// <summary>
+        /// データがリスト、タプル、辞書型データのいずれかであると想定して要素数を取得します。
+        /// これらの型ではない場合、要素数として0を返します。
+        /// </summary>
         public int Count => (_token as JArray)?.Count ?? 0;
 
+        /// <summary>データが辞書型データであると想定してキーの一覧を取得します。</summary>
         public IEnumerable<IQiResult> Keys
         {
             get
@@ -84,6 +102,7 @@ namespace Baku.LibqiDotNet.SocketIo
             }
         }
 
+        /// <summary>データが辞書型データであると想定してキー/値のペア一覧を取得します。</summary>
         public IEnumerable<KeyValuePair<IQiResult, IQiResult>> MapItems
         {
             get
@@ -108,21 +127,44 @@ namespace Baku.LibqiDotNet.SocketIo
         public override string ToString() => ((string)_token) ?? _token.ToString();
 
         //TODO: バイナリは受け取れるハズだがどう受け取っているかは要チェック(多分b64文字列か)
+        /// <summary>データがバイト配列の場合そのデータを取得し、そうでなければ要素数0のバイト配列を取得します。</summary>
+        /// <returns>バイト配列に変換されたデータ</returns>
         public byte[] ToBytes() => ((byte[])_token) ?? new byte[0];
-
+        /// <summary>データがブール値と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public bool ToBool() => (bool)_token;
+        /// <summary>データが符号あり1バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public sbyte ToSByte() => (sbyte)_token;
+        /// <summary>データが符号あり2バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public short ToInt16() => (short)_token;
+        /// <summary>データが符号あり4バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public int ToInt32() => (int)_token;
+        /// <summary>データが符号あり8バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public long ToInt64() => (long)_token;
+        /// <summary>データが符号なし1バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public byte ToByte() => (byte)_token;
+        /// <summary>データが符号なし2バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public ushort ToUInt16() => (ushort)_token;
+        /// <summary>データが符号なし4バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public uint ToUInt32() => (uint)_token;
+        /// <summary>データが符号なし8バイト整数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public ulong ToUInt64() => (ulong)_token;
-
+        /// <summary>データが単精度小数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public float ToFloat() => (float)_token;
+        /// <summary>データが倍精度小数と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public double ToDouble() => (double)_token;
-
+        /// <summary>データが文字列と想定してデータを取得します。</summary>
+        /// <returns>取得したデータ</returns>
         public string ToQiString() => (string)_token ?? "";
 
     }

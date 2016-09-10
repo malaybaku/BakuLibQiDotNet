@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace SocketIOClient.Messages
 {
+    /// <summary>Ackメッセージを表します。</summary>
     public sealed class AckMessage : Message
 	{
 		private static Regex reAckId = new Regex(@"^(\d{1,})");
@@ -11,6 +12,7 @@ namespace SocketIOClient.Messages
 
 		private static object ackLock = new object();
 		private static int _akid = 0;
+        /// <summary>Ack IDとして使用可能な次の値を取得します。</summary>
 		public static int NextAckID
 		{
 			get
@@ -27,13 +29,18 @@ namespace SocketIOClient.Messages
 			}
 		}
 
+        /// <summary>コールバック処理を取得、設定します。</summary>
 		public Action Callback;
 
+        /// <summary>既定の設定でインスタンスを初期化します。</summary>
 		public AckMessage() : base()
         {
             MessageType = SocketIOMessageTypes.ACK;
         }
 		
+        /// <summary>受信メッセージから対応するAckメッセージを生成します。</summary>
+        /// <param name="rawMessage">socket.ioプロトコル準拠なメッセージ</param>
+        /// <returns>対応するメッセージ</returns>
 		public static AckMessage Deserialize(string rawMessage)
         {
             //  '6:::' [message id] '+' [data]
@@ -65,6 +72,8 @@ namespace SocketIOClient.Messages
             }
 			return msg;
         }
+
+        /// <summary>設定をもとに送信メッセージを取得します。</summary>
 		public override string Encoded
 		{
 			get
