@@ -74,6 +74,9 @@ namespace Baku.LibqiDotNet.Libqi
         /// <returns>未確認</returns>
         public QiFuture CloseAsync() => QiApiSession.Close(this);
 
+        /// <summary>サービス登録/登録解除がサポートされているかを取得します。</summary>
+        public bool IsServiceRegistrationSupported { get; } = true;
+
         /// <summary>
         /// (動作未確認)セッションに対応したURLを取得します。
         /// </summary>

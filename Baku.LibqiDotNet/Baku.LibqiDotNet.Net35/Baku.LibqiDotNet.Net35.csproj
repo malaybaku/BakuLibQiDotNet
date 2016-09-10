@@ -37,8 +37,21 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\net35\WebSocket4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Baku.LibqiDotNet.Net45\PathModifier.cs">
+      <Link>PathModifier.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Net45\QiSessionFactory.cs">
+      <Link>QiSessionFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Net45\WebSocket.cs">
+      <Link>WebSocket.cs</Link>
+    </Compile>
     <Compile Include="..\Baku.LibqiDotNet\QiSession.cs">
       <Link>QiSession.cs</Link>
     </Compile>

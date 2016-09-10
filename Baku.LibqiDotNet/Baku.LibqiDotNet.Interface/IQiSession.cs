@@ -15,21 +15,25 @@
         /// <summary>サービス名を指定してサービスを取得します。</summary>
         IQiFuture<IQiObject> GetServiceAsync(string name);
 
+        /// <summary>インターフェースがサービスの登録/登録解除をサポートしているかを取得します。</summary>
+        bool IsServiceRegistrationSupported { get; }
+
         //NOTE: ここから下はsocket.ioではサポートしないでよい
 
-        /// <summary>セッションをリスンします。</summary>
+        /// <summary>セッションをリスンします。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="address">リスン先アドレスです。例えばアクセスを制限しない場合は"tcp://0.0.0.0:0"を指定します。</param>
         /// <param name="standAlone">アプリケーションがスタンドアロンである場合はtrueにします。通常は設定する必要はありません。</param>
-        /// <returns>リスン結果への予約</returns>
+        /// <returns>リスン結果への予約。</returns>
+        /// <exception cref="System.NotSupportedException"/>
         IQiFuture ListenAsync(string address, bool standAlone);
 
-        /// <summary>サービスに名前を付けて登録します。</summary>
+        /// <summary>サービスに名前を付けて登録します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="name">登録するサービス名</param>
         /// <param name="obj">登録するサービス本体</param>
         /// <returns><see cref="UnregisterServiceAsync(uint)"/>の引数で渡すためのIDをGetUInt64で取得してください。</returns>
         IQiFuture<uint> RegisterServiceAsync(string name, IQiObject obj);
 
-        /// <summary>IDを指定し、サービスの登録を解除します。</summary>
+        /// <summary>IDを指定し、サービスの登録を解除します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="idx">解除したいサービスにつけられたID</param>
         IQiFuture UnregisterServiceAsync(uint idx);
 
@@ -51,7 +55,7 @@
         public static IQiObject GetService(this IQiSession session, string name)
             => session.GetServiceAsync(name).Get();
 
-        /// <summary>セッションをリスンします。</summary>
+        /// <summary>セッションをリスンします。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
         /// <param name="address">リスン先アドレスです。例えばアクセスを制限しない場合は"tcp://0.0.0.0:0"を指定します。</param>
         /// <param name="standAlone">アプリケーションがスタンドアロンである場合はtrueにします。通常は設定する必要はありません。</param>
@@ -59,7 +63,7 @@
         public static void Listen(this IQiSession session, string address, bool standAlone = false)
             => session.ListenAsync(address, standAlone).Wait();
 
-        /// <summary>サービスに名前を付けて登録します。</summary>
+        /// <summary>サービスに名前を付けて登録します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
         /// <param name="name">登録するサービス名</param>
         /// <param name="obj">登録するサービス本体</param>
@@ -67,7 +71,7 @@
         public static uint RegisterService(this IQiSession session, string name, IQiObject obj)
             => session.RegisterServiceAsync(name, obj).Get();
 
-        /// <summary>IDを指定し、サービスの登録を解除します。</summary>
+        /// <summary>IDを指定し、サービスの登録を解除します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
         /// <param name="idx">解除したいサービスにつけられたID</param>
         public static void UnregisterService(this IQiSession session, uint idx)

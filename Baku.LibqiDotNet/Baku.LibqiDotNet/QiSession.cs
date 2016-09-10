@@ -38,6 +38,10 @@ namespace Baku.LibqiDotNet
         public IQiFuture<IQiObject> GetServiceAsync(string name)
             => _session.GetServiceAsync(name);
 
+        /// <summary>実際のインスタンスがサービス登録/解除をサポートしているかを取得します。</summary>
+        public bool IsServiceRegistrationSupported
+            => _session.IsServiceRegistrationSupported;
+
         /// <summary>セッションをリスンします。</summary>
         /// <param name="address">リスン先アドレスです。例えばアクセスを制限しない場合は"tcp://0.0.0.0:0"を指定します。</param>
         /// <param name="standAlone">アプリケーションがスタンドアロンである場合はtrueにします。通常は設定する必要はありません。</param>

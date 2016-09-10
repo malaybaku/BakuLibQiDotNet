@@ -85,6 +85,8 @@ namespace Baku.LibqiDotNet.SocketIo
         }
 
         public bool IsConnected { get; private set; } //=> Socket.IsConnected;
+        
+        public bool IsServiceRegistrationSupported { get; } = false;
 
 #region NOT Supported
         public IQiFuture ListenAsync(string address, bool standAlone)

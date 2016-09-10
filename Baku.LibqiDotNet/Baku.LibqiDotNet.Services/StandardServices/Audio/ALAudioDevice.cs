@@ -571,7 +571,7 @@ namespace Baku.LibqiDotNet.Service
 		/// <param name="arg0_nbOfFrames">Number of 16 bits samples per channel to send.</param>
 		/// <param name="arg1_pBuffer">Buffer to send</param>
 		/// <returns>True if the operation is successfull - False otherwise</returns>
-        public bool SendLocalBufferToOutput(int arg0_nbOfFrames, int arg1_pBuffer)
+        public bool SendLocalBufferToOutput(int arg0_nbOfFrames, byte[] arg1_pBuffer)
         {
             return SourceService["sendLocalBufferToOutput"].Call<bool>(arg0_nbOfFrames, arg1_pBuffer);
         }
@@ -580,7 +580,7 @@ namespace Baku.LibqiDotNet.Service
 		/// <param name="arg0_nbOfFrames">Number of 16 bits samples per channel to send.</param>
 		/// <param name="arg1_pBuffer">Buffer to send</param>
 		/// <returns>True if the operation is successfull - False otherwise</returns>
-        public IQiFuture<bool> SendLocalBufferToOutputAsync(int arg0_nbOfFrames, int arg1_pBuffer)
+        public IQiFuture<bool> SendLocalBufferToOutputAsync(int arg0_nbOfFrames, byte[] arg1_pBuffer)
         {
             return SourceService["sendLocalBufferToOutput"].CallAsync<bool>(arg0_nbOfFrames, arg1_pBuffer);
         }
