@@ -109,6 +109,8 @@ namespace SocketIOClient
             }
             wsClient = ws;
 
+            //DelayToAvoidBug();
+
             _uri = new Uri(url);
 			lock (padLock)
 			{
@@ -503,19 +505,6 @@ namespace SocketIOClient
                 HeartBeatSent?.Invoke(this, EventArgs.Empty);
 			}
 		}
-		//private void EndAsyncEvent(IAsyncResult result)
-		//{
-		//	try
-		//	{
-  //              var ar = (System.Runtime.Remoting.Messaging.AsyncResult)result;
-  //              (ar.AsyncDelegate as EventHandler)?.EndInvoke(result);
-		//	}
-		//	catch
-		//	{
-		//		// Handle any exceptions that were thrown by the invoked method
-		//		//Trace.WriteLine("An event listener went kaboom!");
-		//	}
-		//}
 
 		/// <summary>While connection is open, dequeue and send messages to the socket server</summary>
 		private void DequeueOutboundMessages()
@@ -617,7 +606,8 @@ namespace SocketIOClient
             }
 
         }
-	}
+
+    }
 
 
 }

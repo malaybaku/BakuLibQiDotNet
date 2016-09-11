@@ -258,6 +258,6 @@ namespace Baku.LibqiDotNet.SocketIo
             _sentPromise.Clear();
         }
 
-#endregion
+        #endregion
     }
 }

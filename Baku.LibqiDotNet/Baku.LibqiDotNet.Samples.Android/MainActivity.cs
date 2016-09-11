@@ -10,7 +10,6 @@ namespace Baku.LibqiDotNet.Samples.Android
     public class MainActivity : Activity
     {
         int count = 1;
-        Task t = null;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -28,12 +27,21 @@ namespace Baku.LibqiDotNet.Samples.Android
             {
                 button.Text = string.Format("{0} clicks!", count++);
 
-                t = Task.Run(() =>
+                Task.Run(() =>
                 {
-                    var s = new QiSessionFactory().CreateSocketIoSession();
-                    s.Connect("192.168.1.3");
-                    var tts = ALTextToSpeech.CreateService(s);
-                    tts.Say("Hello, I am from android, Xamarin. Where are you from?");
+                    var targetIp = FindViewById<EditText>(Resource.Id.MyEditText).Text;
+                    var session = new QiSessionFactory().CreateSocketIoSession();
+
+                    //Connect with timeout 4sec
+                    var connectFuture = session.ConnectAsync(targetIp);
+                    connectFuture.Wait(4000);
+                    if (connectFuture.IsFinished && !connectFuture.HasError)
+                    {
+                        var tts = ALTextToSpeech.CreateService(session);
+                        tts.Say("Hello, from Xamarin!");
+                    }
+
+                    session.Close();
                 });
             };
         }

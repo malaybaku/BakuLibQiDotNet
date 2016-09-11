@@ -15,6 +15,8 @@ namespace Baku.LibqiDotNet
 
         private IQiSession _session;
 
+        internal IQiSession Session => _session;
+
         /// <summary>接続先のポート番号を取得、設定します。</summary>
         public int Port { get; set; }
 

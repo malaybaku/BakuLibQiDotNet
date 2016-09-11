@@ -5,7 +5,7 @@ using System.Linq;
 namespace Baku.LibqiDotNet.Libqi
 {
     /// <summary>Qi Frameworkのモジュールに定義された関数の一覧を表します。</summary>
-    public sealed class QiMethods : IQiMethods
+    public sealed class QiMethods
     {
         internal QiMethods(QiObject qiObj)
         {

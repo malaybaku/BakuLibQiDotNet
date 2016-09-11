@@ -58,5 +58,6 @@ namespace SocketIOClient
 		/// <summary>メッセージを送信します。</summary>
         /// <param name="msg">メッセージ</param>
 		void Send(IMessage msg);
+
 	}
 }

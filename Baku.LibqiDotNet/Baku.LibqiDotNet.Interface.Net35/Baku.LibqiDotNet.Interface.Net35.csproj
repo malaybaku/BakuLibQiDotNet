@@ -61,9 +61,6 @@
     <Compile Include="..\Baku.LibqiDotNet.Interface\Method\IQiMethod.cs">
       <Link>Method\IQiMethod.cs</Link>
     </Compile>
-    <Compile Include="..\Baku.LibqiDotNet.Interface\Method\IQiMethods.cs">
-      <Link>Method\IQiMethods.cs</Link>
-    </Compile>
     <Compile Include="..\Baku.LibqiDotNet.Interface\Utils\ReadOnlyDictionary.cs">
       <Link>Utils\ReadOnlyDictionary.cs</Link>
     </Compile>
