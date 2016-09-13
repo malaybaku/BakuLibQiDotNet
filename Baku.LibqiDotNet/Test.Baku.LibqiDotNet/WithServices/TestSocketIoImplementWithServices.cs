@@ -18,64 +18,34 @@ namespace Test.Baku.LibqiDotNet
         #region Wrapper
 
         [OneTimeSetUp]
-        public override void SetUpConnection()
-        {
-            base.SetUpConnection();
-        }
-
+        public override void SetUpConnection() => base.SetUpConnection();
         [OneTimeTearDown]
-        public override void CloseAllConnection()
-        {
-            base.CloseAllConnection();
-        }
+        public override void CloseAllConnection() => base.CloseAllConnection();
 
         [Test]
-        public override void TestMotionSummary()
-        {
-            base.TestMotionSummary();
-        }
-
+        public override void TestMotionSummary() => base.TestMotionSummary();
         [Test]
-        public override void TestDialogEvents()
-        {
-            base.TestDialogEvents();
-        }
-
+        public override void TestDialogEvents() => base.TestDialogEvents();
         [Test]
-        public override void TestMotionPose()
-        {
-            base.TestMotionPose();
-        }
-
+        public override void TestArrayResult() => base.TestArrayResult();
         [Test]
-        public override void TestSensors()
-        {
-            base.TestSensors();
-        }
-
+        public override void TestMotionPose() => base.TestMotionPose();
         [Test]
-        public override void TestHelloWorld()
-        {
-            base.TestHelloWorld();
-        }
-
+        public override void TestMemoryData() => base.TestMemoryData();
         [Test]
-        public override void TestBinaryOutput()
-        {
-            base.TestBinaryOutput();
-        }
-
+        public override void TestMemoryEvent() => base.TestMemoryEvent();
         [Test]
-        public override void TestNotFoundMethod()
-        {
-            base.TestNotFoundMethod();
-        }
-
+        public override void TestMemoryKeyList() => base.TestMemoryKeyList();
         [Test]
-        public override void TestComplicatedArg()
-        {
-            base.TestComplicatedArg();
-        }
+        public override void TestSensors() => base.TestSensors();
+        [Test]
+        public override void TestHelloWorld() => base.TestHelloWorld();
+        [Test]
+        public override void TestBinaryOutput() => base.TestBinaryOutput();
+        [Test]
+        public override void TestNotFoundMethod() => base.TestNotFoundMethod();
+        [Test]
+        public override void TestComplicatedArg() => base.TestComplicatedArg();
 
         #endregion
 

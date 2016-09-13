@@ -167,6 +167,10 @@ namespace Baku.LibqiDotNet
             {
                 return GetStringArray(result);
             }
+            else if (t == typeof(float[]) || t == typeof(IEnumerable<float>))
+            {
+                return GetFloatArray(result);
+            }
             else if (t == typeof(double[]) || t == typeof(IEnumerable<double>))
             {
                 return GetDoubleArray(result);
@@ -191,6 +195,15 @@ namespace Baku.LibqiDotNet
             for (int i = 0; i < resArray.Length; i++)
             {
                 resArray[i] = result[i].ToQiString();
+            }
+            return resArray;
+        }
+        private static float[] GetFloatArray(IQiResult result)
+        {
+            var resArray = new float[result.Count];
+            for (int i = 0; i < resArray.Length; i++)
+            {
+                resArray[i] = result[i].ToFloat();
             }
             return resArray;
         }
@@ -296,6 +309,8 @@ namespace Baku.LibqiDotNet
             typeof(IEnumerable<int>),
             typeof(string[]),
             typeof(IEnumerable<string>),
+            typeof(float[]),
+            typeof(IEnumerable<float>),
             typeof(double[]),
             typeof(IEnumerable<double>)
         };

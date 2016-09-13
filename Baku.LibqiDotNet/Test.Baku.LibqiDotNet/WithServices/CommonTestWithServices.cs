@@ -36,6 +36,23 @@ namespace Test.Baku.LibqiDotNet
             Assert.IsTrue(summary.Split('\n').Length > 1);
         }
 
+        public virtual void TestArrayResult()
+        {
+            double[] angles = ALMotion.CreateService(Session).GetAngles("Body", true).Get<double[]>();
+            if (angles.Length == 0)
+            {
+                Assert.Fail("Received zero-length float[] for robot angles.");
+            }
+            //check if value is not default.
+            for (int i = 0;i < angles.Length; i++)
+            {
+                if (angles[i] != 0)
+                {
+                    Assert.Pass("Success, non-zero value was returned as robot's angle");
+                }
+            }
+        }
+
         public virtual void TestDialogEvents()
         {
             Assert.IsTrue(DialogEventWithServices.TryDetectSignalEvent(Session));
@@ -50,6 +67,66 @@ namespace Test.Baku.LibqiDotNet
             posture.GoToPosture("StandInit", 0.5f);
         }
 
+        public virtual void TestMemoryData()
+        {
+            var memory = ALMemory.CreateService(Session);
+
+            //memory data functionality
+            string memKey = "MyApplication/MyData";
+            int testInput = 42;
+
+            //CRAD-like
+            memory.InsertData(memKey, testInput);
+            int testOutput = memory.GetData(memKey).Get<int>();
+            memory.RemoveData(memKey);
+
+            Assert.AreEqual(testInput, testOutput);
+        }
+
+        public virtual void TestMemoryEvent()
+        {
+            int testInput = 42;
+            string eventName = "MyApplication/MyEvent";
+
+            //be true if event handler was called successfully
+            bool isHandlerCorrectlyCalled = false;
+            EventHandler<QiSignalEventArgs> onReceiveSignal = (_, e) =>
+            {
+                if (e.Data.Count > 0 && e.Data[0].ToInt32() == testInput)
+                {
+                    isHandlerCorrectlyCalled = true;
+                }
+            };
+
+            var memory = ALMemory.CreateService(Session);
+
+            IQiSignal signal = memory.Subscriber(eventName);
+            signal.Received += onReceiveSignal;
+            //wait for handler register completed (↑ line actually does things async)
+            Thread.Sleep(100);
+
+            memory.RaiseEvent(eventName, testInput);
+
+            //wait for event message (there might took some time to arrive message)
+            Thread.Sleep(100);
+
+            signal.Received -= onReceiveSignal;
+            memory.RemoveEvent(eventName);
+
+            Assert.IsTrue(isHandlerCorrectlyCalled);
+        }
+
+        public virtual void TestMemoryKeyList()
+        {
+            var memory = ALMemory.CreateService(Session);
+
+            string[] memoryDataKeys = memory.GetDataListName();
+            Assert.IsTrue(memoryDataKeys.Length > 0);
+
+            string[] memoryEventKeys = memory.GetEventList();
+            Assert.IsTrue(memoryEventKeys.Length > 0);
+        }
+
         public virtual void TestSensors()
         {
             Assert.Fail("Pass this test because simulator does not support sensor data I/O");
@@ -60,7 +137,7 @@ namespace Test.Baku.LibqiDotNet
 
         public virtual void TestHelloWorld()
         {
-            Session.GetService("ALTextToSpeech")["say"].Call("Hello, World");
+            ALTextToSpeech.CreateService(Session).Say("Hello, World");
         }
 
         public virtual void TestBinaryOutput()

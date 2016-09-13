@@ -45,7 +45,7 @@
     <Compile Include="ScenariosWithServices\SensorsWithServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WithoutServices\CommonTest.cs" />
-    <Compile Include="WithoutServices\ConnectionSetting.cs" />
+    <Compile Include="ConnectionSetting.cs" />
     <Compile Include="WithoutServices\TestLibqiImplement.cs" />
     <Compile Include="WithoutServices\TestSocketIoImplement.cs" />
     <Compile Include="WithServices\CommonTestWithServices.cs" />
