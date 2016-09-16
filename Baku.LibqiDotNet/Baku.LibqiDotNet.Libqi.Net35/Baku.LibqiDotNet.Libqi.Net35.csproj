@@ -112,6 +112,9 @@
     <Compile Include="..\Baku.LibqiDotNet.Libqi\QiApi\QiApiValue.cs">
       <Link>QiApi\QiApiValue.cs</Link>
     </Compile>
+    <Compile Include="..\Baku.LibqiDotNet.Libqi\TaskUtil\TaskUtil.cs">
+      <Link>TaskUtil\TaskUtil.cs</Link>
+    </Compile>
     <Compile Include="..\Baku.LibqiDotNet.Libqi\ValueTypes\QiByteData.cs">
       <Link>ValueTypes\QiByteData.cs</Link>
     </Compile>

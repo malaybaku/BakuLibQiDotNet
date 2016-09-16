@@ -14,22 +14,21 @@ namespace StandardSamples
 
             //人の会話
             var subscriberHumanSpeech = mem.Subscriber("Dialog/LastInput");
-            subscriberHumanSpeech.Received += OnHumanSpeech;
+            subscriberHumanSpeech.Connect(OnHumanSpeech);
 
             //ロボットの発話
             var subscriberRobotSpeech = mem.Subscriber("ALTextToSpeech/CurrentSentence");
-            subscriberRobotSpeech.Received += OnRobotSpeech;
+            subscriberRobotSpeech.Connect(OnRobotSpeech);
 
             Console.WriteLine("Press ENTER to quit logging results.");
             Console.ReadLine();
 
-            subscriberHumanSpeech.Received -= OnHumanSpeech;
-            subscriberRobotSpeech.Received -= OnRobotSpeech;
+            subscriberHumanSpeech.Disconnect(OnHumanSpeech);
+            subscriberRobotSpeech.Disconnect(OnRobotSpeech);
         }
 
-        private static void OnHumanSpeech(object sender, QiSignalEventArgs e)
+        private static void OnHumanSpeech(IQiResult data)
         {
-            var data = e.Data;
             if (data.Count > 0 && !string.IsNullOrEmpty(data[0].ToQiString()))
             {
                 Console.WriteLine($"Human: {data[0].ToQiString()}");
@@ -41,9 +40,8 @@ namespace StandardSamples
             }
         }
 
-        private static void OnRobotSpeech(object sender, QiSignalEventArgs e)
+        private static void OnRobotSpeech(IQiResult data)
         {
-            var data = e.Data;
             if (data.Count > 0 && !string.IsNullOrEmpty(data[0].ToQiString()))
             {
                 string sentence = data[0].ToQiString();

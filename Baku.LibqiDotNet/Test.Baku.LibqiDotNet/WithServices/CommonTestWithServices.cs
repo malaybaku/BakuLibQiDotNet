@@ -90,9 +90,9 @@ namespace Test.Baku.LibqiDotNet
 
             //be true if event handler was called successfully
             bool isHandlerCorrectlyCalled = false;
-            EventHandler<QiSignalEventArgs> onReceiveSignal = (_, e) =>
+            Action<IQiResult> onReceiveSignal = res =>
             {
-                if (e.Data.Count > 0 && e.Data[0].ToInt32() == testInput)
+                if (res.Count > 0 && res[0].ToInt32() == testInput)
                 {
                     isHandlerCorrectlyCalled = true;
                 }
@@ -101,16 +101,14 @@ namespace Test.Baku.LibqiDotNet
             var memory = ALMemory.CreateService(Session);
 
             IQiSignal signal = memory.Subscriber(eventName);
-            signal.Received += onReceiveSignal;
-            //wait for handler register completed (↑ line actually does things async)
-            Thread.Sleep(100);
 
+            signal.Connect(onReceiveSignal);
             memory.RaiseEvent(eventName, testInput);
 
-            //wait for event message (there might took some time to arrive message)
+            //RaiseEventの終了からイベント受信までラグがあるので少し待たないとダメ
             Thread.Sleep(100);
 
-            signal.Received -= onReceiveSignal;
+            signal.Disconnect(onReceiveSignal);
             memory.RemoveEvent(eventName);
 
             Assert.IsTrue(isHandlerCorrectlyCalled);

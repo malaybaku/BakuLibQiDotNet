@@ -76,30 +76,41 @@ namespace Baku.LibqiDotNet.Libqi
 
         private static readonly string signalName = "signal";
 
-        private event EventHandler<QiSignalEventArgs> _received;
-        /// <summary>シグナルを受信すると発生します。</summary>
-        public event EventHandler<QiSignalEventArgs> Received
+        private event Action<IQiResult> _received;
+        private void OnSignalReceived(QiValue qv) => _received?.Invoke(qv);
+
+        /// <summary>シグナル受信時の処理を登録します。</summary>
+        /// <param name="handler">受信時に呼ばれるハンドラ関数</param>
+        /// <returns>登録の非同期処理状態</returns>
+        public IQiFuture ConnectAsync(Action<IQiResult> handler)
         {
-            add
+            if (_received == null)
             {
-                if (_received == null)
-                {
-                    ConnectSignal(signalName, OnSignalReceived);
-                }
-                _received += value;
+                _received += handler;
+                return RegisterSignalAsync(signalName, OnSignalReceived);
             }
-            remove
+            else
             {
-                _received -= value;
-                if (_received == null)
-                {
-                    DisconnectSignal();
-                }
+                _received += handler;
+                return QiPromise.AlreadyFinished;
             }
         }
 
-        private void OnSignalReceived(QiValue qv)
-            => _received?.Invoke(this, new QiSignalEventArgs(qv));
+        /// <summary>シグナル受信時の処理を登録解除します。</summary>
+        /// <param name="handler"><see cref="ConnectAsync(Action{IQiResult})"/>で登録したハンドラ関数</param>
+        /// <returns>登録解除の非同期処理状態</returns>
+        public IQiFuture DisconnectAsync(Action<IQiResult> handler)
+        {
+            _received -= handler;
+            if (_received == null)
+            {
+                return UnregisterSignalAsync();
+            }
+            else
+            {
+                return QiPromise.AlreadyFinished;
+            }
+        }
 
         #endregion
 
@@ -128,19 +139,6 @@ namespace Baku.LibqiDotNet.Libqi
         public QiFuture CallDirect(string signature, QiValue argsTuple)
             => QiApiObject.Call(this, signature, argsTuple);
 
-        //廃止: 元からFutureベースで非同期が完成してんだからこんな小細工に頼るな
-        ///// <summary>
-        ///// 自力でシグネチャを正しく定義してタプルを渡し、関数を非同期で呼び出します。
-        ///// デバッグ目的で公開されており、普通は<see cref="this[string]"/>で選択した<see cref="QiMethod"/>で
-        ///// <see cref="QiMethod.Post(QiInputValue[])"/>を使用してください。
-        ///// </summary>
-        ///// <param name="signature">関数名と引数タプルの合わさった文字列("ping::()"など)</param>
-        ///// <param name="argsTuple">引数の入ってるタプル</param>
-        ///// <returns>非同期呼び出しの状態確認を行うために使われるID</returns>
-        //public int PostDirect(string signature, QiValue argsTuple)
-        //    => QiApiObject.Post(this, signature, argsTuple);
-
-
         /// <summary>シグナル(イベント)にハンドラを登録します。</summary>
         /// <param name="signature">シグナルの名前("signal"など)</param>
         /// <param name="callback">そのシグナルに対するコールバック関数</param>
@@ -159,9 +157,32 @@ namespace Baku.LibqiDotNet.Libqi
             _subscribeId = f.Get();
         }
 
-        /// <summary>識別IDを指定してシグナルの登録を解除します。</summary>
-        private QiFuture DisconnectSignal()
+        private IQiFuture RegisterSignalAsync(string signature, Action<QiValue> callback)
         {
+            if (_handler != null)
+            {
+                throw new InvalidOperationException("handler is aldeady set");
+            }
+
+            _handler = new QiSignalHandler(callback);
+            var f = QiApiObject.SignalConnect(this, signature, _handler.ApiCallback, IntPtr.Zero);
+
+            f.AddCallback(result =>
+            {
+                var qv = (result as QiValue);
+                if (qv != null)
+                {
+                    _subscribeId = qv.ToUInt64();
+                }
+            });
+
+            return f;
+        }
+
+        /// <summary>識別IDを指定してシグナルの登録を解除します。</summary>
+        private IQiFuture UnregisterSignalAsync()
+        {
+            //FIXME: この実装だとRegisterSignalAsync完了前にUnregisterSignalAsync呼び出した場合の挙動がちょっと悪い
             if (_handler != null && _subscribeId.HasValue)
             {
                 QiFuture f = QiApiObject.SignalDisconnect(this, _subscribeId.Value);
@@ -182,7 +203,7 @@ namespace Baku.LibqiDotNet.Libqi
         private ulong? _subscribeId = null;
         private QiSignalHandler _handler = null;
 
-        #endregion
+#endregion
 
         /// <summary>マネージドハンドラとアンマネージドハンドラを両方持っておくためのホルダー</summary>
         class QiSignalHandler

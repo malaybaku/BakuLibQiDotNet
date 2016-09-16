@@ -80,11 +80,11 @@ namespace Baku.LibqiDotNet.Libqi
 
         /// <summary>エラーがある場合、それを文字列として取得します。</summary>
         public string ErrorMessage => QiApiFuture.GetError(this);
-
+    
         /// <summary>処理完了時に呼ばれるコールバック関数を登録します。</summary>
         /// <param name="cb">コールバック関数</param>
         public void AddCallback(Action cb)
-            => AddCallback(new Action<IQiFuture>(_ => cb()));
+            => AddCallback(_ => cb());
 
         #endregion
 
@@ -108,23 +108,21 @@ namespace Baku.LibqiDotNet.Libqi
         /// <returns>呼び出し結果</returns>
         public IQiObject GetObject() => QiApiFuture.GetObject(this);
 
-
-        //NOTE: これさ、アンマネージに渡したapiCallbackがGCされて死ぬよくあるパターンでは？
-        /// <summary>(動作未確認)動作完了時のコールバック関数を登録します。</summary>
-        /// <param name="cb">コールバック関数</param>
-        /// <param name="userData">ユーザーデータ</param>
-        public void AddCallback(Action<IQiFuture, IntPtr> cb, IntPtr userData)
+        /// <summary>
+        /// 非同期処理の終了時に呼び出すコールバック関数を登録します。
+        /// 既に処理が終わっている場合はコールバック関数がただちに非同期で呼び出されます。
+        /// </summary>
+        /// <param name="callback">処理終了時のコールバック</param>
+        public void AddCallback(Action<IQiResult> callback)
         {
-            var apiCallback = new QiApiFutureCallback((fut, udata) => cb(new QiFuture(fut), udata));
-            QiApiFuture.AddCallback(this, apiCallback, userData);
-        }
-
-        /// <summary>(動作未確認)動作完了時のコールバック関数を登録します。</summary>
-        /// <param name="cb">コールバック関数</param>
-        public void AddCallback(Action<IQiFuture> cb)
-        {
-            var apiCallback = new QiApiFutureCallback((fut, _) => cb(new QiFuture(fut)));
-            QiApiFuture.AddCallback(this, apiCallback);
+            //C言語APIのAddCallbackを直でラップした実装は何かセグフォとか起こすので
+            //マネージ側を非同期化する
+            TaskUtil.Run(() =>
+            {
+                var qf = QiApiFuture.Clone(this);
+                qf.Wait();
+                callback(qf.GetValue());
+            });
         }
 
         /// <summary>待機を行わないことを表します。</summary>
@@ -185,10 +183,7 @@ namespace Baku.LibqiDotNet.Libqi
         /// <summary>処理完了時に呼ばれるコールバック関数を登録します。</summary>
         /// <param name="cb">コールバック関数</param>
         public void AddCallback(Action<T> cb)
-        {
-            var apiCallback = new QiApiFutureCallback((fut, _) => cb(new QiFuture<T>(new QiFuture(fut)).Get()));
-            QiApiFuture.AddCallback(_future, apiCallback);
-        }
+            => _future.AddCallback(res => cb(res.Get<T>()));
 
         /// <summary>結果の値を取得します。</summary>
         /// <returns>非同期呼び出しで得られる想定の型のデータ</returns>

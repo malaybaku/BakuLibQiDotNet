@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace Baku.LibqiDotNet.SocketIo
 {
@@ -20,54 +20,76 @@ namespace Baku.LibqiDotNet.SocketIo
         /// <summary>シグナルに対応づけられた一意な番号を取得します。</summary>
         public int Id { get; }
 
-        private event EventHandler<QiSignalEventArgs> _received;
-        /// <summary>イベントを受信すると発生します。</summary>
-        public event EventHandler<QiSignalEventArgs> Received
+        /// <summary>シグナル受信時の処理を登録します。</summary>
+        /// <param name="handler">受信時に呼ばれるハンドラ関数</param>
+        /// <returns>登録の非同期処理状態</returns>
+        public IQiFuture ConnectAsync(Action<IQiResult> handler)
         {
-            add
+            if (_received == null)
             {
-                if (_received == null)
-                {
-                    ConnectAsync();
-                }
-                _received += value;
+                _received += handler;
+                return EnableSignalReceiveAsync();
             }
-            remove
+            else
             {
-                _received -= value;
-                if (_received == null)
-                {
-                    DisconnectAsync();
-                }
+                _received += handler;
+                return QiPromise.CreateFinishedFuture(_session, 0);
             }
         }
 
+        /// <summary>シグナル受信時の処理を登録解除します。</summary>
+        /// <param name="handler"><see cref="ConnectAsync(Action{IQiResult})"/>で登録したハンドラ関数</param>
+        /// <returns>登録解除の非同期処理状態</returns>
+        public IQiFuture DisconnectAsync(Action<IQiResult> handler)
+        {
+            _received -= handler;
+            if (_received == null)
+            {
+                return DisableSignalReceiveAsync();
+            }
+            else
+            {
+                return QiPromise.CreateFinishedFuture(_session, 0);
+            }
+        }
+
+        private event Action<IQiResult> _received;
        
-        private void OnConnectAsyncEnded(object sender, EventArgs e)
+        private void OnEnableSignalReceiveAsyncEnded(object sender, EventArgs e)
         {
             var future = sender as QiFuture;
             if (future == null) return;
             _linkId = future.GetValue().ToInt64();
 
-            future.Finished -= OnConnectAsyncEnded;
+            future.Finished -= OnEnableSignalReceiveAsyncEnded;
         }
 
-        private void ConnectAsync()
+        private IQiFuture EnableSignalReceiveAsync()
         {
             var future = _session.CallAsync(Id, "registerEvent", "signal") as QiFuture;
 
             if (future != null)
             {
-                future.Finished += OnConnectAsyncEnded;
+                future.Finished += OnEnableSignalReceiveAsyncEnded;
+                return future;
+            }
+            else
+            {
+                return QiPromise.CreateFinishedFuture(_session, 0);
             }
         }
 
-        private void DisconnectAsync()
+        private IQiFuture DisableSignalReceiveAsync()
         {
             if (_linkId.HasValue)
             {
-                _session.CallAsync(Id, "unregisterEvent", "signal", _linkId.Value);
+                var future = _session.CallAsync(Id, "unregisterEvent", "signal", _linkId.Value);
                 _linkId = null;
+                return future;
+            }
+            else
+            {
+                return QiPromise.CreateFinishedFuture(_session, 0);
             }
         }
 
@@ -77,7 +99,7 @@ namespace Baku.LibqiDotNet.SocketIo
         /// <summary>シグナルに対応するSocket.IOのイベント名を取得します。</summary>
         public string SignalName => "signal";
 
-        private void RaiseReceived(IQiResult qv) => _received?.Invoke(this, new QiSignalEventArgs(qv));
+        private void RaiseReceived(IQiResult qv) => _received?.Invoke(qv);
 
         private void OnSessionSignal(object sender, QiFilteredSignalEventArgs e)
         {

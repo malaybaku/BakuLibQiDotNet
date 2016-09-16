@@ -46,6 +46,13 @@ namespace Baku.LibqiDotNet.SocketIo
 
         /// <summary>処理が成功、キャンセル、エラーのいずれかで終了すると発生します。</summary>
         public event EventHandler Finished;
+
+        internal static QiFuture CreateFinishedFuture(QiSession session, JToken result)
+        {
+            var p = new QiPromise(session);
+            p.Finish(result);
+            return p.CreateFuture();
+        }
     }
 
     /// <summary>Promiseの実行状態を表します。</summary>

@@ -56,6 +56,15 @@ namespace Baku.LibqiDotNet.Libqi
         public static QiPromise Create(bool asyncCallback, QiFutureCancel cb, IntPtr userdata)
             => QiApiPromise.CreateCancelable(asyncCallback, cb, userdata);
 
+        internal static QiFuture AlreadyFinished
+        {
+            get
+            {
+                var p = QiPromise.Create();
+                p.SetValue(QiValue.Void);
+                return p.GetFuture();
+            }
+        }
     }
 
     /// <summary>

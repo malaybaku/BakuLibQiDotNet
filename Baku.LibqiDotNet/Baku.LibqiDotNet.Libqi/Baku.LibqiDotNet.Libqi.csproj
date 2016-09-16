@@ -69,6 +69,7 @@
     <Compile Include="QiApi\QiApiSession.cs" />
     <Compile Include="QiApi\QiApiType.cs" />
     <Compile Include="QiApi\QiApiValue.cs" />
+    <Compile Include="TaskUtil\TaskUtil.cs" />
     <Compile Include="ValueTypes\QiByteData.cs" />
     <Compile Include="ValueTypes\QiDynamic.cs" />
     <Compile Include="ValueTypes\QiFloating.cs" />
