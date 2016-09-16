@@ -80,7 +80,7 @@
       <Name>Baku.LibqiDotNet.Libqi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Baku.LibqiDotNet.Net45\Baku.LibqiDotNet.Net45.csproj">
-      <Project>{E83B87CA-3C34-410C-9700-ED52E166EDA0}</Project>
+      <Project>{e83b87ca-3c34-410c-9700-ed52e166eda0}</Project>
       <Name>Baku.LibqiDotNet.Net45</Name>
     </ProjectReference>
     <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo\Baku.LibqiDotNet.SocketIo.csproj">
@@ -102,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="QiServiceTemplate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>QiServiceTemplate.cs</LastGenOutput>
     </Content>
   </ItemGroup>
