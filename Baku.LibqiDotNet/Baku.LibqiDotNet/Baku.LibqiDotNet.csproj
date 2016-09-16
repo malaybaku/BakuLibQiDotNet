@@ -45,10 +45,6 @@
       <Project>{37005071-4804-43d9-8577-dfc05879c7c5}</Project>
       <Name>Baku.LibqiDotNet.Libqi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Baku.LibqiDotNet.Services\Baku.LibqiDotNet.Services.csproj">
-      <Project>{e00ebd37-d307-48c4-98a2-91ab3e26708c}</Project>
-      <Name>Baku.LibqiDotNet.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Baku.LibqiDotNet.SocketIo\Baku.LibqiDotNet.SocketIo.csproj">
       <Project>{75595330-9a2e-47c0-895c-6f6c742989fd}</Project>
       <Name>Baku.LibqiDotNet.SocketIo</Name>

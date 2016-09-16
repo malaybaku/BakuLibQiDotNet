@@ -1,0 +1,127 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+using System;
+using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+
+//NOTE: This Source was automatically generated using "Baku.LibqiDotNet.ServiceCodeGenerator" project.
+
+namespace Baku.LibqiDotNet.Service
+{
+    /// <summary><#=ServiceDescription#></summary>
+    public class <#=ServiceName#>
+	{
+		internal <#=ServiceName#>(IQiSession session)
+		{
+			Session = session;
+		}
+
+        /// <summary>サービスの取得元セッションを指定してサービスを取得します。</summary>
+        /// <param name="session">サービスの取得元となるセッション</param>
+		public static <#=ServiceName#> CreateService(IQiSession session)
+		{
+			var result = new <#=ServiceName#>(session);
+			result.InitializeService();
+			return result;
+		}
+
+        /// <summary>
+		/// 内部情報が未初期化のサービスを取得します。初期化は<see ref="StartInitialize"/>関数で行います。
+		///</summary>
+        /// <param name="session">サービスの取得元となるセッション</param>
+		public static <#=ServiceName#> CreateUninitializedService(IQiSession session)
+		{
+			return new <#=ServiceName#>(session);
+		}
+
+		/// <summary>同期的にネットワーク経由でサービス情報を取得し、初期化します。</summary>
+		public void InitializeService()
+		{
+			if (!IsInitialized)
+			{
+			    SourceService = Session.GetService("<#=ServiceName#>");
+			}
+		}
+
+		/// <summary>
+		/// ネットワーク経由でサービス情報を取得し、初期化する処理を非同期的に開始します。
+		/// 初期化の完了は<see ref="IsInitialized"/>プロパティあるいは<see ref="Initialized"/>イベントを通じて行います。
+		///</summary>
+		public void StartInitializeService()
+		{
+			if (!IsInitialized)
+			{
+				new Thread(this.InitializeService).Start();
+			}
+		}
+
+		private readonly object _sourceServiceLock = new object();
+		private IQiObject _sourceService;
+
+        /// <summary>コード生成によってラップされる前のサービスを表すオブジェクトを取得します。</summary>
+        public IQiObject SourceService 
+		{ 
+			get { lock (_sourceServiceLock) { return _sourceService; } }
+			private set 
+			{ 
+				lock (_sourceServiceLock) 
+				{ 
+					_sourceService = value; 
+				}
+				if (value != null)
+				{
+					IsInitialized = true;
+					Initialized?.Invoke(this, EventArgs.Empty);
+				}
+			}
+		}
+
+		/// <summary>このサービスに関連付けられたセッション情報を取得します。</summary>
+		public IQiSession Session { get; }
+
+		/// <summary>このサービスが初期化済みであるかを取得します。</summary>
+		public bool IsInitialized { get; private set; }
+
+		/// <summary>このサービスの初期化が完了すると発生します。</summary>
+		public event EventHandler Initialized;
+
+<#
+	foreach (var mInfo in MethodInfos)
+    {
+#>
+        /// <summary><#=mInfo.Description#></summary>
+<# 
+		for (int i = 0;i < mInfo.ArgumentCount; i++)
+        {
+#>
+		<#=GetArgumentXmlDocumentComment(mInfo.ArgumentNames[i], mInfo.ArgumentDescriptions[i])#>
+<#
+		}
+#>
+		/// <returns><#=mInfo.ReturnDescription#></returns>
+        public <#=mInfo.ReturnValueSignature#> <#=mInfo.MethodName#>(<#=mInfo.ArgumentDeclaration#>)
+        {
+            <#=mInfo.ReturnExpression#>SourceService["<#=mInfo.OriginalMethodName#>"].Call<#=mInfo.CallTypeTemplateOrEmpty#>(<#=mInfo.ArgumentUsage#>);
+        }
+
+        /// <summary><#=mInfo.Description#></summary>
+<# 
+		for (int i = 0;i < mInfo.ArgumentCount; i++)
+        {
+#>
+		<#=GetArgumentXmlDocumentComment(mInfo.ArgumentNames[i], mInfo.ArgumentDescriptions[i])#>
+<#
+		}
+#>
+		/// <returns><#=mInfo.ReturnDescription#></returns>
+        public IQiFuture<#=mInfo.CallTypeTemplateOrEmpty#> <#=mInfo.AsyncMethodName#>(<#=mInfo.ArgumentDeclaration#>)
+        {
+            return SourceService["<#=mInfo.OriginalMethodName#>"].CallAsync<#=mInfo.CallTypeTemplateOrEmpty#>(<#=mInfo.ArgumentUsage#>);
+        }
+
+<#
+    }
+#>
+    }
+}
