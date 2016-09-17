@@ -76,7 +76,7 @@ namespace StandardSamples
                 byte[] bufferToSend = new byte[e.BytesRecorded];
                 Array.Copy(e.Buffer, bufferToSend, e.BytesRecorded);
 
-                audioDevice.SendLocalBufferToOutputAsync(bufferToSend.Length / 4, bufferToSend);
+                audioDevice.SendRemoteBufferToOutputAsync(bufferToSend.Length / 4, bufferToSend);
                 Console.WriteLine($"received data, {count}");
                 count++;
             };
