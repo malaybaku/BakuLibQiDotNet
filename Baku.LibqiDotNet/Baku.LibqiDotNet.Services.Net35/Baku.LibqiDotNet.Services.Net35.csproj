@@ -256,6 +256,7 @@
     <Compile Include="..\Baku.LibqiDotNet.Services\StandardServices\Vision\ALVisualSpaceHistory.cs">
       <Link>StandardServices\Vision\ALVisualSpaceHistory.cs</Link>
     </Compile>
+    <Compile Include="AsyncTaskStart\AsyncTaskStart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

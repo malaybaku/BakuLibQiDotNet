@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-//NOTE: This Source was automatically generated using "Baku.LibqiDotNet.ServiceCodeGenerator" project.
+//NOTE: This Source was automatically generated using "Baku.LibqiDotNet.ApiCodeGenerator" project.
 
 namespace Baku.LibqiDotNet.Service
 {

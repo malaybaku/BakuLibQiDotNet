@@ -43,6 +43,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncTaskStart\AsyncTaskStart.cs" />
     <Compile Include="NonStandardServices\ALFrameManager.cs" />
     <Compile Include="NonStandardServices\ALPythonBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,6 +118,13 @@
     <Compile Include="StandardServices\Vision\ALVisionRecognition.cs" />
     <Compile Include="StandardServices\Vision\ALVisualCompass.cs" />
     <Compile Include="StandardServices\Vision\ALVisualSpaceHistory.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Script\GenSourcePlacement.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Script\srcsetting.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

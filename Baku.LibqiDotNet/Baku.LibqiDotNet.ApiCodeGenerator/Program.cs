@@ -5,11 +5,10 @@ using System.Reflection;
 
 using Newtonsoft.Json;
 using Baku.LibqiDotNet;
-using Baku.LibqiDotNet.Path;
-using Baku.LibqiDotNet.ServiceCodeGenerator;
 using Baku.LibqiDotNet.Libqi;
+using Baku.LibqiDotNet.ApiCodeGenerator;
 
-namespace ServiceCodeGenerator
+namespace ApiCodeGenerator
 {
     class Program
     {
@@ -20,7 +19,8 @@ namespace ServiceCodeGenerator
 
         static void Main(string[] args)
         {
-            PathModifier.AddEnvironmentPath("dlls", PathModifyMode.RelativeToEntryAssembly);
+            Baku.LibqiDotNet.Path.PathModifier.AddEnvironmentPath(
+                "dlls", Baku.LibqiDotNet.Path.PathModifyMode.RelativeToEntryAssembly);
 
             string jsonDirName = "Jsons";
 
@@ -73,6 +73,11 @@ namespace ServiceCodeGenerator
 
         static void ConvertJsonFilesToCSharpFiles(string srcDir, string destDir)
         {
+            if (!Directory.Exists(srcDir))
+            {
+                Console.WriteLine("Failed to convert JSON to C#: JSON file directory was not found");
+                return;
+            }
             Directory.CreateDirectory(destDir);
             Console.WriteLine($"Source Directory: {srcDir}");
             Console.WriteLine($"Destination Directory: {destDir}");

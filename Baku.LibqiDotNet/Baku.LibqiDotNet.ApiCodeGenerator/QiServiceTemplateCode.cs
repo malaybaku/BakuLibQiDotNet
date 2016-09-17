@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Baku.LibqiDotNet.ServiceCodeGenerator
+namespace Baku.LibqiDotNet.ApiCodeGenerator
 {
     //テンプレートコードで使うデータを生成するコードビハインド的な実装
     public partial class QiServiceTemplate

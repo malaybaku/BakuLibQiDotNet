@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Baku.LibqiDotNet.ServiceCodeGenerator
+namespace Baku.LibqiDotNet.ApiCodeGenerator
 {
     /// <summary><see cref="MetaMethod"/>を整形してC#ソースに乗る形に直す</summary>
     public class MetaMethodTemplate

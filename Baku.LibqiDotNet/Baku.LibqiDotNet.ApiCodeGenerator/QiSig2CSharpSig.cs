@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Baku.LibqiDotNet.ServiceCodeGenerator
+namespace Baku.LibqiDotNet.ApiCodeGenerator
 {
     /// <summary>qi FrameworkとBaku.LibqiDotNetのシグネチャを交換するための機能いろいろ</summary>
     public static class QiSig2CSharpSig

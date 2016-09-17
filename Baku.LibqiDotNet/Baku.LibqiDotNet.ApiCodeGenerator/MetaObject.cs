@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Baku.LibqiDotNet.ServiceCodeGenerator
+namespace Baku.LibqiDotNet.ApiCodeGenerator
 {
 
     public class MetaObject
