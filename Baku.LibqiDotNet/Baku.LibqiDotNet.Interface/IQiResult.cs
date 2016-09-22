@@ -285,7 +285,7 @@ namespace Baku.LibqiDotNet
             return resList;
         }
 
-#region readonly type arrays
+        #region readonly type arrays
 
         private static readonly LibqiTypeCode[] _embeddedTypeCodes = new []
         {
@@ -315,7 +315,7 @@ namespace Baku.LibqiDotNet
             typeof(IEnumerable<double>)
         };
 
-#endregion
+        #endregion
 
     }
 }

@@ -108,7 +108,7 @@ namespace Baku.LibqiDotNet.SocketIo
         /// </summary>
         public bool IsServiceRegistrationSupported { get; } = false;
 
-#region NOT Supported
+        #region NOT Supported
         /// <summary>[NOT SUPPORTED]</summary>
         /// <param name="address"></param>
         /// <param name="standAlone"></param>
@@ -134,7 +134,7 @@ namespace Baku.LibqiDotNet.SocketIo
         {
             throw new NotSupportedException("Socket.io based session does not supports service registration functionality");
         }
-#endregion
+        #endregion
 
 
         private QiPromise _connectionPromise = null;
@@ -192,7 +192,7 @@ namespace Baku.LibqiDotNet.SocketIo
 
         internal event EventHandler<QiFilteredSignalEventArgs> Signal;
 
-#region private
+        #region private
 
         private void OnReply(IMessage data)
         {
@@ -218,14 +218,17 @@ namespace Baku.LibqiDotNet.SocketIo
 
         private void OnError(IMessage data)
         {
-            var jobj = JObject.Parse((data as JSONMessage)?.MessageText ?? "");
+            //var jobj = JObject.Parse((data as JSONMessage)?.MessageText ?? "");
+            var jobj = JObject.Parse((data as EventMessage)?.MessageText ?? "{}");
             if (jobj == null) return;
+            var args = jobj["args"] as JObject;
+            if (args == null) return;
 
-            uint id = (uint)jobj["idm"];
+            uint id = (uint)args["idm"];
 
             if (_sentPromise.ContainsKey(id))
             {
-                string errorMessage = (string)jobj["resuilt"];
+                string errorMessage = (string)args["result"];
                 _sentPromise[id].Fail(errorMessage);
                 _sentPromise.Remove(id);
             }

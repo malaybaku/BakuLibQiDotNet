@@ -1,4 +1,6 @@
-﻿namespace Baku.LibqiDotNet
+﻿using System;
+
+namespace Baku.LibqiDotNet
 {
     /// <summary>接続先との接続を表します。</summary>
     public interface IQiSession
@@ -49,11 +51,11 @@
     {
         /// <summary>指定したアドレスへの接続を試みます。</summary>
         public static void Connect(this IQiSession session, string address)
-            => session.ConnectAsync(address).Wait();
+            => session.ConnectAsync(address).WaitAndThrowIfFailed();
 
         /// <summary>サービス名を指定してサービスを取得します。</summary>
         public static IQiObject GetService(this IQiSession session, string name)
-            => session.GetServiceAsync(name).Get();
+            => session.GetServiceAsync(name).WaitAndThrowIfFailed().Get();
 
         /// <summary>セッションをリスンします。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
@@ -61,7 +63,7 @@
         /// <param name="standAlone">アプリケーションがスタンドアロンである場合はtrueにします。通常は設定する必要はありません。</param>
         /// <returns>リスン結果への予約</returns>
         public static void Listen(this IQiSession session, string address, bool standAlone = false)
-            => session.ListenAsync(address, standAlone).Wait();
+            => session.ListenAsync(address, standAlone).WaitAndThrowIfFailed();
 
         /// <summary>サービスに名前を付けて登録します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
@@ -69,12 +71,12 @@
         /// <param name="obj">登録するサービス本体</param>
         /// <returns><see cref="IQiSession.UnregisterServiceAsync(uint)"/>の引数で渡すためのID</returns>
         public static uint RegisterService(this IQiSession session, string name, IQiObject obj)
-            => session.RegisterServiceAsync(name, obj).Get();
+            => session.RegisterServiceAsync(name, obj).WaitAndThrowIfFailed().Get();
 
         /// <summary>IDを指定し、サービスの登録を解除します。このメソッドをサポートしない実装では<see cref="System.NotSupportedException"/>がスローされます。</summary>
         /// <param name="session">処理を行うセッション</param>
         /// <param name="idx">解除したいサービスにつけられたID</param>
         public static void UnregisterService(this IQiSession session, uint idx)
-            => session.UnregisterServiceAsync(idx).Wait();
+            => session.UnregisterServiceAsync(idx).WaitAndThrowIfFailed();
     }
 }

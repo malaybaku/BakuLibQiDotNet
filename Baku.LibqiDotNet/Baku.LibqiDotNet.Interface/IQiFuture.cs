@@ -128,4 +128,26 @@ namespace Baku.LibqiDotNet
             return _future.Get();
         }
     }
+
+    internal static class QiFutureExtensions
+    {
+        internal static IQiFuture WaitAndThrowIfFailed(this IQiFuture future)
+        {
+            future.Wait();
+            if (future.HasError)
+            {
+                throw new InvalidOperationException(future.ErrorMessage);
+            }
+            return future;
+        }
+        internal static IQiFuture<T> WaitAndThrowIfFailed<T>(this IQiFuture<T> future)
+        {
+            future.Wait();
+            if (future.HasError)
+            {
+                throw new InvalidOperationException(future.ErrorMessage);
+            }
+            return future;
+        }
+    }
 }

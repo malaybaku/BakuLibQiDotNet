@@ -40,13 +40,13 @@ namespace Baku.LibqiDotNet
         /// <param name="signal">操作対象となるシグナルのインスタンス</param>
         /// <param name="handler">シグナル受信時に実行される関数</param>
         public static void Connect(this IQiSignal signal, Action<IQiResult> handler)
-            => signal.ConnectAsync(handler).Wait();
+            => signal.ConnectAsync(handler).WaitAndThrowIfFailed();
 
         /// <summary><see cref="IQiSignal.ConnectAsync(Action{IQiResult})"/>で登録した関数を登録解除します。</summary>
         /// <param name="signal">操作対象となるシグナルのインスタンス</param>
         /// <param name="handler">シグナル受信時に実行されるよう登録していた関数</param>
         public static void Disconnect(this IQiSignal signal, Action<IQiResult> handler)
-            => signal.DisconnectAsync(handler).Wait();
+            => signal.DisconnectAsync(handler).WaitAndThrowIfFailed();
 
     }
 }

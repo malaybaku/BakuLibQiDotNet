@@ -26,9 +26,8 @@ namespace Baku.LibqiDotNet
         /// <param name="method">メソッド</param>
         /// <param name="args">メソッドの引数</param>
         public static void Call(this IQiMethod method, params object[] args)
-        {
-            method.CallAsync(args).Wait();
-        }
+            => method.CallAsync(args)
+            .WaitAndThrowIfFailed();
 
         /// <summary>関数を同期的に呼び出し、結果を組み込み型あるいはよく用いられる組み込み型の配列として取得します。</summary>
         /// <typeparam name="T">戻り値の型</typeparam>
@@ -36,11 +35,9 @@ namespace Baku.LibqiDotNet
         /// <param name="args">メソッドの引数</param>
         /// <returns>関数の呼び出し結果</returns>
         public static T Call<T>(this IQiMethod method, params object[] args)
-        {
-            var f = method.CallAsync<T>(args);
-            f.Wait();
-            return f.Get();
-        }
+            => method.CallAsync<T>(args)
+            .WaitAndThrowIfFailed()
+            .Get();
 
     }
 }

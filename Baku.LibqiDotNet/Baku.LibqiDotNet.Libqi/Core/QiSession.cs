@@ -17,9 +17,41 @@ namespace Baku.LibqiDotNet.Libqi
 
         internal IntPtr Handle { get; }
 
+        ////サービス名一覧
+        //private string[] _serviceNames = new string[0];
+        //private void ResetServiceNames()
+        //{
+        //    _serviceNames = new string[0];
+        //}
+        //private string[] ServiceNames
+        //{
+        //    get
+        //    {
+        //        var result = new string[_serviceNames.Length];
+        //        Array.Copy(_serviceNames, result, _serviceNames.Length);
+        //        return result;
+        //    }
+        //    set
+        //    {
+        //        if (value == null) return;
+        //        _serviceNames = new string[value.Length];
+        //        Array.Copy(value, _serviceNames, value.Length);
+        //    }
+        //}
+
         /// <summary>セッションが接続済みであるかを取得します。</summary>
         public bool IsConnected => QiApiSession.IsConnected(this);
-
+        //{
+        //    get
+        //    {
+        //        bool result = QiApiSession.IsConnected(this);
+        //        if (!result)
+        //        {
+        //            ResetServiceNames();
+        //        }
+        //        return result;
+        //    }
+        //}
         /// <summary>非接続状態のセッションを新たに生成します。</summary>
         /// <returns>新規生成されたセッション</returns>
         public static IQiSession Create() => QiApiSession.Create();
@@ -37,8 +69,11 @@ namespace Baku.LibqiDotNet.Libqi
         /// <summary>指定したアドレスへの接続を試みます。</summary>
         /// <param name="address">接続先アドレス</param>
         /// <returns>接続結果への取得予約</returns>
-        public IQiFuture ConnectAsync(string address) => QiApiSession.Connect(this, address);
-
+        public IQiFuture ConnectAsync(string address)
+        {
+            //ResetServiceNames();
+            return QiApiSession.Connect(this, address);
+        }
         /// <summary>サービス名の一覧を取得します。</summary>
         /// <returns>サービス一覧</returns>
         public IQiFuture<IQiResult> GetServicesAsync()
@@ -52,10 +87,24 @@ namespace Baku.LibqiDotNet.Libqi
         public string[] GetServices()
         {
             IQiResult sList = GetServicesAsync().Get();
-            return Enumerable
-                .Range(0, sList.Count)
-                .Select(i => sList[i][ServiceNameIndexInServicesObject].ToString())
-                .ToArray();
+            var res = new string[sList.Count];
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = sList[i][ServiceNameIndexInServicesObject].ToString();
+            }
+            return res;
+            //if (ServiceNames.Length == 0)
+            //{
+            //    IQiResult sList = GetServicesAsync().Get();
+            //    var res = new string[sList.Count];
+            //    for (int i = 0; i < res.Length; i++)
+            //    {
+            //        res[i] = sList[i][ServiceNameIndexInServicesObject].ToString();
+            //    }
+            //    ServiceNames = res;
+            //}
+
+            //return ServiceNames;
         }
 
         /// <summary>サービス名を指定してサービスを取得します。</summary>
@@ -64,6 +113,13 @@ namespace Baku.LibqiDotNet.Libqi
         public IQiFuture<IQiObject> GetServiceAsync(string name)
         {
             ThrowIfNotConnected();
+
+            //セッション側にサービス情報が無いパターン
+            if(!GetServices().Contains(name))
+            {
+                throw new InvalidOperationException("Service was not found on session target");
+            }
+
             return QiApiSession.GetService(this, name).WillReturns<IQiObject>();
         }
 
@@ -72,7 +128,11 @@ namespace Baku.LibqiDotNet.Libqi
 
         /// <summary>セッションを閉じます。</summary>
         /// <returns>未確認</returns>
-        public QiFuture CloseAsync() => QiApiSession.Close(this);
+        public QiFuture CloseAsync()
+        {
+            //ResetServiceNames();
+            return QiApiSession.Close(this);
+        }
 
         /// <summary>サービス登録/登録解除がサポートされているかを取得します。</summary>
         public bool IsServiceRegistrationSupported { get; } = true;

@@ -261,14 +261,21 @@ namespace Baku.LibqiDotNet.Libqi
             return QiApiValue.KeysMap(NonDynamicValue);
         }
 
-        /// <summary>リストまたはタプルにインデクスでアクセスします。境界チェックは行われません。</summary>
+        /// <summary>リストまたはタプルにインデクスでアクセスします。SEGVリスクがあるため境界チェックを行います。</summary>
         /// <param name="index">取得したい要素のインデックス</param>
         /// <returns>指定した要素</returns>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="IndexOutOfRangeException"/> 
         public IQiResult this[int index]
         {
             //TODO: Map型でキーが整数だった場合、とかどう思いますかね
             get
             {
+                if (index < 0 || index >= NonDynamicValue.Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+
                 switch (ContentValueKind)
                 {
                     case QiValueKind.QiList:
@@ -285,6 +292,11 @@ namespace Baku.LibqiDotNet.Libqi
                 if (qv == null)
                 {
                     throw new InvalidOperationException("value type is not 'Baku.LibqiDotNet.Libqi.QiValue'");
+                }
+
+                if (index < 0 || index >= NonDynamicValue.Count)
+                {
+                    throw new IndexOutOfRangeException();
                 }
 
                 switch (ContentValueKind)
