@@ -123,6 +123,7 @@ namespace Baku.LibqiDotNet.UWP
             var dataWriter = new DataWriter(_ws.OutputStream);
             dataWriter.WriteString(msg);
             dataWriter.StoreAsync().AsTask().Wait();
+            dataWriter.DetachStream();
         }
     }
 }
